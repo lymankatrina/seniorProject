@@ -1,0 +1,28 @@
+{
+    "name": "seniorproject",
+    "version": "1.0.0",
+    "description": "A web api using Node.js and TypeScript built for San Juan Theater",
+    "main": "src/server.ts",
+    "scripts": {
+        "test": "jest --config jest.config.ts --coverage",
+        "build": "tsc -p tsconfig.build.json"
+    },
+    "author": "Katrina L. Lyman",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/jest": "^29.5.12",
+        "@types/node": "^20.12.6",
+        "@types/supertest": "^6.0.2",
+        "jest": "^29.7.0",
+        "nodemon": "^3.1.0",
+        "supertest": "^6.3.4",
+        "ts-jest": "^29.1.2",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.4"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2"
+    }
+}
