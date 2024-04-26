@@ -1,50 +1,32 @@
-import http from 'http';
 import express from 'express';
-import './config/logging';
-
-import { corsHandler } from './middleware/corsHandler';
-import { loggingHandler } from './middleware/loggingHandler';
+import { connectToDatabase } from './services/database.services';
 import routes from './routes/index';
 import { routeNotFound } from './middleware/routeNotFound';
-import { SERVER } from './config/config';
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+import { authMiddleware } from './middleware/authMiddleware';
 
-export const application = express();
-export let httpServer: ReturnType<typeof http.createServer>;
+dotenv.config();
 
-export const Main = () => {
-    logging.info('--------------------------------------------------');
-    logging.info('Initializing API');
-    logging.info('--------------------------------------------------');
-    application.use(express.urlencoded({ extended: true }));
-    application.use(express.json());
+const host = process.env.DEV_HOSTNAME;
+const port = process.env.SERVER_PORT || 3000;
 
-    logging.info('--------------------------------------------------');
-    logging.info('Logging & Configuration');
-    logging.info('--------------------------------------------------');
-    application.use(loggingHandler);
-    application.use(corsHandler);
+const app = express();
 
-    logging.info('--------------------------------------------------');
-    logging.info('Define Controller Routing');
-    logging.info('--------------------------------------------------');
-    application.use('/', routes);
+connectToDatabase()
+    .then(() => {
+        app.use(express.json());
+        app.use(cors());
+        app.use(authMiddleware);
+        app.use(express.static('public'));
+        app.use('/', routes);
+        app.use(routeNotFound);
 
-    logging.info('--------------------------------------------------');
-    logging.info('Define Routing Error');
-    logging.info('--------------------------------------------------');
-    application.use(routeNotFound);
-
-    logging.info('--------------------------------------------------');
-    logging.info('Starting Server');
-    logging.info('--------------------------------------------------');
-    httpServer = http.createServer(application);
-    httpServer.listen(SERVER.SERVER_PORT, () => {
-        logging.info('--------------------------------------------------');
-        logging.info(`Server Started on ${SERVER.SERVER_HOSTNAME}:${SERVER.SERVER_PORT}`);
-        logging.info('--------------------------------------------------');
+        app.listen(port, () => {
+            console.log(`Server started at ${host} port ${port}`);
+        });
+    })
+    .catch((error: Error) => {
+        console.error('Database connection failed', error);
+        process.exit();
     });
-};
-
-export const Shutdown = (callback: any) => httpServer && httpServer.close(callback);
-
-Main();

@@ -1,0 +1,1189 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Senior Project",
+        "summary": "This is an API for a small hometown movie theater",
+        "description": "This is created for a senior project for an applied technology degree from BYU-Idaho. It is built by Katrina Lyman with the needs of San Juan Theater in mind and under the supervision of Professor Blaine Robertson.",
+        "contact": {
+            "name": "Katrina Lyman",
+            "email": "lymankatrina@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://sanjuantheater.onrender.com",
+            "description": "Production server"
+        },
+        {
+            "url": "http://localhost:8080",
+            "description": "Development server"
+        }
+    ],
+    "paths": {
+        "/profile": {
+            "get": {
+                "tags": ["Authentication"],
+                "summary": "Get Profile",
+                "description": "This will return the user profile information for the current authenticated user.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/users/new": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "Create a new user",
+                "description": "Enter the required information to add a new user to the users collection",
+                "responses": {
+                    "201": {
+                        "description": "New User created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "firstName": "Horatio",
+                                    "lastName": "Crunch",
+                                    "userName": "Horatio Crunch",
+                                    "phone": "888-555-1234",
+                                    "email": "capncrunch@example.com",
+                                    "isAdmin": true
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "412": {
+                        "description": "Precondition Failed"
+                    },
+                    "500": {
+                        "description": "Failed to create a new family member"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "firstName": "Horatio",
+                                "middleName": "Magellan",
+                                "lastName": "Crunch",
+                                "birthDate": "1995-01-13",
+                                "parents": ["parent1IndividualId", "parent2IndividualId"],
+                                "phone": "888-555-1234",
+                                "email": "capncrunch@example.com",
+                                "household": "householdId",
+                                "headOfHousehold": true,
+                                "picture": "https://placehold.co/600x400.png"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/individuals/all": {
+            "get": {
+                "tags": ["Individuals"],
+                "summary": "Get all family members",
+                "description": "Get an array of all family members in the individuals collection",
+                "responses": {
+                    "200": {
+                        "description": "A list of family members.",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "firstName": "Horatio",
+                                    "middleName": "Magellan",
+                                    "lastName": "Crunch",
+                                    "birthDate": "1995-01-13",
+                                    "parents": ["parent1IndividualId", "parent2IndividualId"],
+                                    "phone": "888-555-1234",
+                                    "email": "capncrunch@example.com",
+                                    "household": "householdId",
+                                    "headOfHousehold": true,
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/individuals/{id}": {
+            "get": {
+                "tags": ["Individuals"],
+                "summary": "Get a family member by ID",
+                "description": "This will return a single family member by family member ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "firstName": "Horatio",
+                                    "middleName": "Magellan",
+                                    "lastName": "Crunch",
+                                    "birthDate": "1995-01-13",
+                                    "parents": ["parent1IndividualId", "parent2IndividualId"],
+                                    "phone": "888-555-1234",
+                                    "email": "capncrunch@example.com",
+                                    "household": "householdId",
+                                    "headOfHousehold": true,
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/individuals/update/{id}": {
+            "put": {
+                "tags": ["Individuals"],
+                "summary": "Update a family member by ID",
+                "description": "This will update a single family member by family member ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "firstName": "Horatio",
+                                    "middleName": "Magellan",
+                                    "lastName": "Crunch",
+                                    "birthDate": "1995-01-13",
+                                    "parents": ["parent1IndividualId", "parent2IndividualId"],
+                                    "phone": "888-555-1234",
+                                    "email": "capncrunch@example.com",
+                                    "household": "householdId",
+                                    "headOfHousehold": true,
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not updated"
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "firstName": "Horatio",
+                                "middleName": "Magellan",
+                                "lastName": "Crunch",
+                                "birthDate": "1995-01-13",
+                                "parents": ["parent1IndividualId", "parent2IndividualId"],
+                                "phone": "888-555-1234",
+                                "email": "capncrunch@example.com",
+                                "household": "householdId",
+                                "headOfHousehold": true,
+                                "picture": "https://placehold.co/600x400.png"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/individuals/delete/{id}": {
+            "delete": {
+                "tags": ["Individuals"],
+                "summary": "Delete a family member by ID",
+                "description": "This will delete a single family member by family member ID. This action cannot be reversed.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Individual Successfully deleted"
+                    },
+                    "400": {
+                        "description": "Individual Not Deleted"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Individual Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/anniversaries/new": {
+            "post": {
+                "tags": ["Anniversaries"],
+                "summary": "Create a new anniversary",
+                "description": "Enter the required information to add a new anniversary to the anniversaries collection",
+                "responses": {
+                    "201": {
+                        "description": "Anniversary created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "couple": ["individualId1", "individualId2"],
+                                    "anniversaryDate": "2001-06-22"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "412": {
+                        "description": "Precondition Failed"
+                    },
+                    "500": {
+                        "description": "Failed to create a new anniversary"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "couple": ["individualId1", "individualId2"],
+                                "anniversaryDate": "2001-06-22"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/anniversaries/all": {
+            "get": {
+                "tags": ["Anniversaries"],
+                "summary": "Get all anniversaries",
+                "description": "Get an array of all anniversaries in the anniversaries collection",
+                "responses": {
+                    "200": {
+                        "description": "A list of anniversaries.",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "couple": ["individualId1", "individualId2"],
+                                    "anniversaryDate": "2001-06-22"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/anniversaries/{id}": {
+            "get": {
+                "tags": ["Anniversaries"],
+                "summary": "Get an anniversary by ID",
+                "description": "This will return a single anniversary by anniversary ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "couple": ["individualId1", "individualId2"],
+                                    "anniversaryDate": "2001-06-22"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/anniversaries/update/{id}": {
+            "put": {
+                "tags": ["Anniversaries"],
+                "summary": "Update an anniversary by ID",
+                "description": "This will update a single anniversary by anniverary ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "couple": ["individualId1", "individualId2"],
+                                    "anniversaryDate": "2001-06-22"
+                                }
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not updated"
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "couple": ["individualId1", "individualId2"],
+                                "anniversaryDate": "2001-06-22"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/annieversaries/delete/{id}": {
+            "delete": {
+                "tags": ["Anniversaries"],
+                "summary": "Delete an anniversary by ID",
+                "description": "This will delete a single anniversary by anniversary ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Anniversary Successfully deleted"
+                    },
+                    "400": {
+                        "description": "Anniversary Not Deleted"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Anniversary Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/households/new": {
+            "post": {
+                "tags": ["Households"],
+                "summary": "Create a new household",
+                "description": "Enter the required information to add a new household to the households collection",
+                "responses": {
+                    "201": {
+                        "description": "Household created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "streetAddress": "123 Any Street",
+                                    "mailingAddress": "PO Box 1234",
+                                    "city": "Anytown",
+                                    "state": "UT",
+                                    "zip": "84000",
+                                    "country": "USA"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "412": {
+                        "description": "Precondition Failed"
+                    },
+                    "500": {
+                        "description": "Failed to create a new household"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "streetAddress": "123 Any Street",
+                                "mailingAddress": "PO Box 1234",
+                                "city": "Anytown",
+                                "state": "UT",
+                                "zip": "84000",
+                                "country": "USA"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/households/all": {
+            "get": {
+                "tags": ["Households"],
+                "summary": "Get all households",
+                "description": "Get an array of all households in the households collection",
+                "responses": {
+                    "200": {
+                        "description": "A list of households.",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "streetAddress": "123 Any Street",
+                                    "mailingAddress": "PO Box 1234",
+                                    "city": "Anytown",
+                                    "state": "UT",
+                                    "zip": "84000",
+                                    "country": "USA"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/households/{id}": {
+            "get": {
+                "tags": ["Households"],
+                "summary": "Get a household by household ID",
+                "description": "This will return a single household by household ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "streetAddress": "123 Any Street",
+                                    "mailingAddress": "PO Box 1234",
+                                    "city": "Anytown",
+                                    "state": "UT",
+                                    "zip": "84000",
+                                    "country": "USA"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/households/update/{id}": {
+            "put": {
+                "tags": ["Households"],
+                "summary": "Update a household by ID",
+                "description": "This will update a single household by household ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "streetAddress": "123 Any Street",
+                                    "mailingAddress": "PO Box 1234",
+                                    "city": "Anytown",
+                                    "state": "UT",
+                                    "zip": "84000",
+                                    "country": "USA"
+                                }
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not updated"
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "streetAddress": "123 Any Street",
+                                "mailingAddress": "PO Box 1234",
+                                "city": "Anytown",
+                                "state": "UT",
+                                "zip": "84000",
+                                "country": "USA"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/households/delete/{id}": {
+            "delete": {
+                "tags": ["Households"],
+                "summary": "Delete a household by ID",
+                "description": "This will delete a single household by household ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Household Successfully deleted"
+                    },
+                    "400": {
+                        "description": "Household Not Deleted"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Household Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/newsStories/new": {
+            "post": {
+                "tags": ["NewsStories"],
+                "summary": "Create a news story",
+                "description": "Enter the required information to add a news story to the newsStories collection",
+                "responses": {
+                    "201": {
+                        "description": "News Story created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "newsTitle": "Big News",
+                                    "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                    "dateCreated": "2024-04-16",
+                                    "status": "public",
+                                    "postedBy": "individualId",
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "412": {
+                        "description": "Precondition Failed"
+                    },
+                    "500": {
+                        "description": "Failed to create a news story"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "newsTitle": "Big News",
+                                "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                "dateCreated": "2024-04-16",
+                                "status": "public",
+                                "postedBy": "individualId",
+                                "picture": "https://placehold.co/600x400.png"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/newsStories/all": {
+            "get": {
+                "tags": ["NewsStories"],
+                "summary": "Get all news stories",
+                "description": "Get an array of all news stories in the news stories collection",
+                "responses": {
+                    "200": {
+                        "description": "A list of news stories.",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "newsTitle": "Big News",
+                                    "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                    "dateCreated": "2024-04-16",
+                                    "status": "public",
+                                    "postedBy": "individualId",
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/newsStories/{id}": {
+            "get": {
+                "tags": ["NewsStories"],
+                "summary": "Get a news story by ID",
+                "description": "This will return a single news story by news story ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "newsTitle": "Big News",
+                                    "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                    "dateCreated": "2024-04-16",
+                                    "status": "public",
+                                    "postedBy": "individualId",
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/newsStories/update/{id}": {
+            "put": {
+                "tags": ["NewsStories"],
+                "summary": "Update a news story by ID",
+                "description": "This will update a single news story by news story ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_id": "uniqueId",
+                                    "newsTitle": "Big News",
+                                    "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                    "dateCreated": "2024-04-16",
+                                    "status": "public",
+                                    "postedBy": "individualId",
+                                    "picture": "https://placehold.co/600x400.png"
+                                }
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not updated"
+                    },
+                    "400": {
+                        "description": "Error message"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "newsTitle": "Big News",
+                                "newsBody": "This is a big news item! Mark your calendars for the family Christmas Party!",
+                                "dateCreated": "2024-04-16",
+                                "status": "public",
+                                "postedBy": "individualId",
+                                "picture": "https://placehold.co/600x400.png"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/newsStories/delete/{id}": {
+            "delete": {
+                "tags": ["NewsStories"],
+                "summary": "Delete a news story by ID",
+                "description": "This will delete a single news story by news story ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "News story Successfully deleted"
+                    },
+                    "400": {
+                        "description": "News story Not Deleted"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "News story Not Found"
+                    },
+                    "500": {
+                        "description": "Error message"
+                    }
+                }
+            }
+        },
+        "/families/parents/{id}": {
+            "get": {
+                "tags": ["Relationships"],
+                "summary": "Get parents",
+                "description": "This will return a list of parents for the individual id provided.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "example": ["ParentId: uniqueId, Name: John Doe", "ParentId: uniqueId, Name: Jane Doe"]
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/families/children/{parentId}": {
+            "get": {
+                "tags": ["Relationships"],
+                "summary": "Get children",
+                "description": "This will return a list of individuals with the provided parentId listed in the parents array.",
+                "parameters": [
+                    {
+                        "name": "parentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "individualId": "uniqueId",
+                                    "fullName": "John Doe",
+                                    "birthDate": "2000-01-13"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/families/grandchildren/{grandparentId}": {
+            "get": {
+                "tags": ["Relationships"],
+                "summary": "Get grandchildren",
+                "description": "This will return a list of individuals whose parents have the provided parentId listed in the parents array.",
+                "parameters": [
+                    {
+                        "name": "grandparentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "individualId": "uniqueId",
+                                    "fullName": "John Doe",
+                                    "birthDate": "2000-01-13"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Individuals": {
+                "type": "object",
+                "required": ["id", "firstName", "lastName", "birthdate", "parents", "headOfHousehold"],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "birthdate": {
+                        "type": "String",
+                        "format": "YYYY-MM-DD"
+                    },
+                    "parents": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "objectId"
+                        }
+                    },
+                    "phone": {
+                        "type": "string",
+                        "format": "###-###-####"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "household": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "headOfHousehold": {
+                        "type": "boolean"
+                    },
+                    "picture": {
+                        "type": "string",
+                        "format": "url"
+                    }
+                }
+            },
+            "Anniversaries": {
+                "type": "object",
+                "required": ["id", "couple", "anniversaryDate"],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "parents": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "objectId"
+                        }
+                    },
+                    "anniversaryDate": {
+                        "type": "String",
+                        "format": "YYYY-MM-DD"
+                    }
+                }
+            },
+            "Households": {
+                "type": "object",
+                "required": ["id", "streetAddress", "city", "state", "zip", "country"],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "streetAddress": {
+                        "type": "string"
+                    },
+                    "mailingAddress": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "String"
+                    },
+                    "zip": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    }
+                }
+            },
+            "NewsStories": {
+                "type": "object",
+                "required": ["id", "newsTitle", "newsBody", "dateCreated", "status", "postedBy"],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "newsTitle": {
+                        "type": "string"
+                    },
+                    "newsBody": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "format": "enum[private or public]"
+                    },
+                    "dateCreated": {
+                        "type": "String",
+                        "format": "YYYY-MM-DD"
+                    },
+                    "postedBy": {
+                        "type": "string",
+                        "format": "objectId"
+                    },
+                    "picture": {
+                        "type": "string",
+                        "format": "url"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Users"
+        }
+    ],
+    "externalDocs": {
+        "description": "Find more info here",
+        "url": "https://docs.example.com"
+    }
+}

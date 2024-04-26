@@ -1,18 +1,18 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
+        "module": "commonjs",
         "esModuleInterop": true,
-        "outDir": "build",
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "types": ["jest"],
-        "moduleResolution": "Node16",
-        "module": "Node16",
-        "noEmit": true
+        "target": "es6",
+        "noImplicitAny": true,
+        "moduleResolution": "Node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "allowJs": true,
+        "paths": {
+            "*": ["node_modules/*"]
+        },
+        "resolveJsonModule": true
     },
-    "exclude": ["node_modules/"],
-    "include": ["src/**/*.ts", "test/**/*.ts"]
+    "include": ["src/**/*", "swagger_output.json"]
 }
