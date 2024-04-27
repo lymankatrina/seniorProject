@@ -7,7 +7,7 @@
         "start": "ts-node src/server.ts",
         "dev": "nodemon src/server.ts",
         "test": "jest --config jest.config.ts --coverage",
-        "build": "tsc -p tsconfig.build.json"
+        "build": "tsc"
     },
     "author": "Katrina L. Lyman",
     "license": "ISC",
