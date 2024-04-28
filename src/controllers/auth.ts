@@ -4,9 +4,9 @@ import path from 'path';
 
 const checkAuth = (req: Request, res: Response): void => {
   if (req.oidc.isAuthenticated()) {
-    res.sendFile(path.join(__dirname, '../../public/views/loggedIn.html'));
+    res.sendFile(path.join(__dirname, '../../loggedIn.html'));
   } else {
-    res.sendFile(path.join(__dirname, '../../public/index.html'));
+    res.sendFile(path.join(__dirname, '../../index.html'));
   }
 };
 
