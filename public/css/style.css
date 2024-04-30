@@ -3,5 +3,13 @@
 /* SCSS RGB */
 /* SCSS Gradient */
 @import url("https://fonts.googleapis.com/css2?family=Merienda+One&family=Quicksand:wght@300;400;500;600;700&display=swap");
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Quicksand", sans-serif;
+}
 
 /*# sourceMappingURL=style.css.map */

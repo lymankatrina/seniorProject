@@ -1,0 +1,9 @@
+header {
+  height: 100%;
+  display: grid;
+  grid-gap: 0;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1;
+  color: $licorice;
+  text-shadow: 0.4px 0.2px $taupe-gray;
+}
