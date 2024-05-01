@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 
-import path from 'path';
-
 const checkAuth = (req: Request, res: Response): void => {
   if (req.oidc.isAuthenticated()) {
-    res.sendFile(path.join(__dirname, '../../loggedIn.html'));
+    res.sendFile('loggedIn.html', { root: './public' });
   } else {
-    res.sendFile(path.join(__dirname, '../../index.html'));
+    res.sendFile('index.html', { root: './public' });
   }
 };
 

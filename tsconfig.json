@@ -14,5 +14,5 @@
     },
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "swagger_output.json", "src/controllers/auth.ts"]
+  "include": ["src/**/*"]
 }

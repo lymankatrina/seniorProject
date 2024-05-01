@@ -4,10 +4,10 @@
   "description": "A web api using Node.js and TypeScript built for San Juan Theater",
   "main": "dist/src/server.js",
   "scripts": {
+    "build": "tsc",
     "start": "node dist/src/server.js",
     "dev": "nodemon src/server.ts",
     "test": "jest --config jest.config.ts --coverage",
-    "build": "tsc",
     "compile:sass": "sass themes/style.scss public/css/style.css"
   },
   "author": "Katrina L. Lyman",
