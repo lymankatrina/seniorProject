@@ -4,7 +4,7 @@
   "description": "A web api using Node.js and TypeScript built for San Juan Theater",
   "main": "src/server.ts",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "test": "jest --config jest.config.ts --coverage",
     "build": "tsc",
