@@ -35,7 +35,7 @@ const dotenv = __importStar(require("dotenv"));
 const authMiddleware_1 = require("./middleware/authMiddleware");
 dotenv.config();
 const app = (0, express_1.default)();
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.PORT || 3000;
 (0, database_services_1.connectToDatabase)()
     .then(() => {
     app.use(express_1.default.json());
