@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const checkAuth = (req, res) => {
     if (req.oidc.isAuthenticated()) {
-        res.sendFile(path_1.default.join(__dirname, '../../public/views/loggedIn.html'));
+        res.sendFile(path_1.default.join(__dirname, '../../loggedIn.html'));
     }
     else {
-        res.sendFile(path_1.default.join(__dirname, '../../public/index.html'));
+        res.sendFile(path_1.default.join(__dirname, '../../index.html'));
     }
 };
 const callback = (req, res) => {
