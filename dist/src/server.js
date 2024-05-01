@@ -27,16 +27,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const database_services_1 = require("./services/database.services");
 const index_1 = __importDefault(require("./routes/index"));
 const routeNotFound_1 = require("./middleware/routeNotFound");
-const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const authMiddleware_1 = require("./middleware/authMiddleware");
 dotenv.config();
-const host = process.env.PROD_HOSTNAME;
-const port = process.env.SERVER_PORT || 3000;
 const app = (0, express_1.default)();
+const port = process.env.SERVER_PORT || 3000;
 (0, database_services_1.connectToDatabase)()
     .then(() => {
     app.use(express_1.default.json());
@@ -46,7 +45,7 @@ const app = (0, express_1.default)();
     app.use('/', index_1.default);
     app.use(routeNotFound_1.routeNotFound);
     app.listen(port, () => {
-        console.log(`Server started at ${host} port ${port}`);
+        console.log(`Connected to DB and Web Server is running on port ${port}`);
     });
 })
     .catch((error) => {
