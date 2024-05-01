@@ -4,7 +4,7 @@ const checkAuth = (req: Request, res: Response): void => {
   if (req.oidc.isAuthenticated()) {
     res.sendFile('loggedIn.html', { root: './public' });
   } else {
-    res.sendFile('index.html', { root: './public' });
+    res.sendFile('home.html', { root: './public' });
   }
 };
 
