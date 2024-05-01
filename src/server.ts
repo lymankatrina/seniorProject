@@ -1,15 +1,16 @@
 import express from 'express';
-import cors from 'cors';
 import { connectToDatabase } from './services/database.services';
 import routes from './routes/index';
 import { routeNotFound } from './middleware/routeNotFound';
+import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { authMiddleware } from './middleware/authMiddleware';
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT || 3000;
+
+const app = express();
 
 connectToDatabase()
   .then(() => {
@@ -21,7 +22,7 @@ connectToDatabase()
     app.use(routeNotFound);
 
     app.listen(port, () => {
-      console.log(`Connected to DB and Web Server is running on port ${port}`);
+      console.log(`Server is listening at port ${port}`);
     });
   })
   .catch((error: Error) => {
