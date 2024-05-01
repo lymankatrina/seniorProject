@@ -2,14 +2,22 @@
 /* SCSS HSL */
 /* SCSS RGB */
 /* SCSS Gradient */
-@import url("https://fonts.googleapis.com/css2?family=Merienda+One&family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url("https://use.typekit.net/vem8cxz.css");
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: "Quicksand", sans-serif;
+  font-family: "urbane-rounded", sans-serif;
+}
+
+p {
+  font-family: "ff-scala-sans-pro", sans-serif;
+}
+
+.divider {
+  border-bottom: 2px solid rgb(144, 139, 141);
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -1,0 +1,22 @@
+.logo {
+  line-height: 60px;
+  width: 245px;
+  overflow: hidden;
+  display: flex;
+  font-size: 30px;
+  text-align: right;
+  font-family: $font-two;
+}
+.log img {
+  width: 60px;
+  height: 60px;
+}
+
+.logo a {
+  text-decoration: none;
+  color: $red-cmyk;
+  position: absolute;
+  left: calc(50% -60px);
+  bottom: -10px;
+  background-color: $white;
+}

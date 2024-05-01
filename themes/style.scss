@@ -8,5 +8,13 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: $primary-font;
+  font-family: $font-two;
+}
+
+p {
+  font-family: $font-primary;
+}
+
+.divider {
+  border-bottom: 2px solid $taupe-gray;
 }
