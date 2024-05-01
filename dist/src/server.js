@@ -34,7 +34,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const authMiddleware_1 = require("./middleware/authMiddleware");
 dotenv.config();
-const host = process.env.DEV_HOSTNAME;
+const host = process.env.PROD_HOSTNAME;
 const port = process.env.SERVER_PORT || 3000;
 const app = (0, express_1.default)();
 (0, database_services_1.connectToDatabase)()

@@ -8,25 +8,25 @@ import { authMiddleware } from './middleware/authMiddleware';
 
 dotenv.config();
 
-const host = process.env.DEV_HOSTNAME;
+const host = process.env.PROD_HOSTNAME;
 const port = process.env.SERVER_PORT || 3000;
 
 const app = express();
 
 connectToDatabase()
-    .then(() => {
-        app.use(express.json());
-        app.use(cors());
-        app.use(authMiddleware);
-        app.use(express.static('public'));
-        app.use('/', routes);
-        app.use(routeNotFound);
+  .then(() => {
+    app.use(express.json());
+    app.use(cors());
+    app.use(authMiddleware);
+    app.use(express.static('public'));
+    app.use('/', routes);
+    app.use(routeNotFound);
 
-        app.listen(port, () => {
-            console.log(`Server started at ${host} port ${port}`);
-        });
-    })
-    .catch((error: Error) => {
-        console.error('Database connection failed', error);
-        process.exit();
+    app.listen(port, () => {
+      console.log(`Server started at ${host} port ${port}`);
     });
+  })
+  .catch((error: Error) => {
+    console.error('Database connection failed', error);
+    process.exit();
+  });
