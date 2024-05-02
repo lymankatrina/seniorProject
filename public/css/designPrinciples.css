@@ -1,0 +1,159 @@
+header,
+footer {
+  background-color: #0b0205ff;
+  color: #ffffffff;
+  text-align: center;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+header h2 {
+  background-color: #0b0205ff;
+  color: #ffffffff;
+}
+nav {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+}
+a {
+  color: #ffffffff;
+  font-family: 'usual', sans-serif;
+  text-align: center;
+  height: 2rem;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+a:hover {
+  color: #0b0205ff;
+  background-color: #ffffffff;
+  border-radius: 1rem;
+}
+nav a:link {
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'usual', sans-serif;
+}
+h2 {
+  color: #0b0205ff;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+p {
+  font-family: 'urbane-rounded', sans-serif;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 3rem;
+  font-size: 18px;
+  line-height: 24px;
+}
+section {
+  margin-left: 3rem;
+}
+h3 {
+  background-color: #5d576b;
+  color: #e6ebe0;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+ul {
+  font-family: 'usual', sans-serif;
+  font-size: 1rem;
+  padding: 1rem;
+  margin-left: 2rem;
+  line-height: 1.5rem;
+}
+.colorComboOne {
+  background-color: #0b0205;
+  color: #ffffff;
+}
+.colorComboTwo {
+  background-color: #ffffff;
+  color: #0b0205;
+  box-shadow: 0 4px 8px 0 rgba(144, 139, 141, 1);
+}
+.colorComboThree {
+  background-color: #00f100;
+  color: #0b0205;
+}
+.colorComboFour {
+  background-color: #f40b22;
+  color: #ffffff;
+}
+.colorComboFive {
+  background-color: #2ab7ca;
+  color: #0b0205;
+}
+.colorComboSix {
+  background-color: #908b8d;
+  color: #0b0205;
+}
+.accentColors {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.colorsOnGray {
+  grid-column: 1;
+  background-color: #908b8d;
+  border-radius: 1em;
+  margin: 0.5em;
+}
+.colorsOnBlack {
+  grid-column: 2;
+  background-color: #0b0205;
+  border-radius: 1em;
+  margin: 0.5em;
+}
+.colorsOnWhite {
+  grid.column: 3;
+  background-color: #ffffff;
+  border-radius: 1em;
+  box-shadow: 0 4px 8px 0 rgba(144, 139, 141, 1);
+  margin: 0.5em;
+}
+.color1 {
+  color: #f40b22;
+  font-size: 1.5em;
+}
+.color2 {
+  color: #00f100;
+  font-size: 1.5em;
+}
+.color3 {
+  color: #2ab7ca;
+  font-size: 1.5em;
+}
+.color4 {
+  color: white;
+  font-size: 1.5em;
+}
+.color5 {
+  color: #908b8d;
+  font-size: 1.5em;
+}
+.color6 {
+  color: #0b0205;
+  font-size: 1.5em;
+}
+.iconSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.icon {
+  padding: 1em;
+  grid-column: 1;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
