@@ -17,6 +17,15 @@ nav {
   flex-direction: column;
   font-size: 18px;
 }
+nav a {
+  color: #0b0205;
+  font-family: 'usual', sans-serif;
+  text-align: center;
+  height: 2rem;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+
 a {
   color: #ffffffff;
   font-family: 'usual', sans-serif;
@@ -58,8 +67,6 @@ section {
   margin-left: 3rem;
 }
 h3 {
-  background-color: #2ab7ca;
-  color: #e6ebe0;
   margin: 1rem;
   padding: 1rem;
   border-radius: 0.25rem;
@@ -90,7 +97,7 @@ ul {
 }
 .colorComboFour {
   background-color: #f40b22;
-  color: #ffffff;
+  color: #0b0205;
 }
 .colorComboFive {
   background-color: #2ab7ca;
