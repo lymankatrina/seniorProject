@@ -12,6 +12,7 @@ header h2 {
   color: #ffffffff;
 }
 nav {
+  background-color: #908b8d;
   display: flex;
   flex-direction: column;
   font-size: 18px;
@@ -27,7 +28,6 @@ a {
 a:hover {
   color: #0b0205ff;
   background-color: #ffffffff;
-  border-radius: 1rem;
 }
 nav a:link {
   text-decoration: none;
@@ -58,7 +58,7 @@ section {
   margin-left: 3rem;
 }
 h3 {
-  background-color: #5d576b;
+  background-color: #2ab7ca;
   color: #e6ebe0;
   margin: 1rem;
   padding: 1rem;
@@ -70,6 +70,10 @@ ul {
   padding: 1rem;
   margin-left: 2rem;
   line-height: 1.5rem;
+}
+.colors {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 .colorComboOne {
   background-color: #0b0205;
@@ -98,22 +102,22 @@ ul {
 }
 .accentColors {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 .colorsOnGray {
-  grid-column: 1;
+  grid-column: auto;
   background-color: #908b8d;
   border-radius: 1em;
   margin: 0.5em;
 }
 .colorsOnBlack {
-  grid-column: 2;
+  grid-column: auto;
   background-color: #0b0205;
   border-radius: 1em;
   margin: 0.5em;
 }
 .colorsOnWhite {
-  grid.column: 3;
+  grid.column: auto;
   background-color: #ffffff;
   border-radius: 1em;
   box-shadow: 0 4px 8px 0 rgba(144, 139, 141, 1);
@@ -143,13 +147,23 @@ ul {
   color: #0b0205;
   font-size: 1.5em;
 }
+.logos {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+.logo {
+  padding: 1em;
+  grid-column: auto;
+}
 .iconSection {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  align-items: center;
 }
 .icon {
   padding: 1em;
-  grid-column: 1;
+  grid-column: auto;
 }
 img {
   display: block;

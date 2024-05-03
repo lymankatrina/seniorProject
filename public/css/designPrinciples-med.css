@@ -3,4 +3,16 @@
     display: flex;
     flex-direction: row;
   }
+  .colors {
+    grid-template-columns: 1fr 1fr;
+  }
+  .accentColors {
+    grid-template-columns: 1fr 1fr;
+  }
+  .logos {
+    grid-template-columns: 1fr 1fr;
+  }
+  .iconSection {
+    grid-template-columns: 1fr 1fr;
+  }
 }
