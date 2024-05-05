@@ -3,13 +3,11 @@
     display: flex;
     flex-direction: row;
   }
-  .accentColors {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .logos {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .iconSection {
+  .accentColors,
+  .logos,
+  .iconSectionHome,
+  .personasContainer,
+  .colorSchemesLayout {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
