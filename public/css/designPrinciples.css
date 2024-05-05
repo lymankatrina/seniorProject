@@ -156,14 +156,14 @@ nav a:link {
   text-decoration: none;
 }
 /* nav and footer links */
-a {
+.footerLink {
   color: #ffffffff;
   text-align: center;
   height: 2rem;
   width: 100%;
   padding-top: 0.5rem;
 }
-a:hover {
+.footerLink:hover {
   color: #0b0205ff;
   background-color: #ffffffff;
 }
@@ -389,4 +389,11 @@ img {
 }
 .underlines {
   text-decoration: underline;
+}
+.designLink,
+.documentationLink {
+  color: #0b0205;
+}
+.headings {
+  margin: 2em;
 }
