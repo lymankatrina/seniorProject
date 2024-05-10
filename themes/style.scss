@@ -2,19 +2,14 @@
 
 @import 'partials/fonts';
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: $font-two;
-}
+@import 'partials/header';
 
-p {
-  font-family: $font-primary;
-}
+@import 'partials/footer';
 
-.divider {
-  border-bottom: 2px solid $taupe-gray;
-}
+@import 'partials/med';
+
+@import 'partials/large';
+
+@import 'partials/nowPlaying';
+
+@import 'partials/comingSoon';
