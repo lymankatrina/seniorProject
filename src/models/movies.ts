@@ -8,7 +8,7 @@ export default class Movie {
     public year: number,
     public certification: string,
     public releaseDate: string,
-    public genres: Array<string>,
+    public genres: Array<ObjectId>,
     public runtime: string,
     public imdbScore: number,
     public rottenTomatoes: number,
