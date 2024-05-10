@@ -1,8 +1,18 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
 
 const checkAuth = (req: Request, res: Response): void => {
   if (req.oidc.isAuthenticated()) {
-    res.sendFile('loggedIn.html', { root: './public' });
+    fs.readFile('./public/loggedIn.html', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error reading file');
+        return;
+      }
+
+      const modifiedData = data.replace('{{userName}}', req.oidc.user.given_name);
+      res.send(modifiedData);
+    });
   } else {
     res.sendFile('home.html', { root: './public' });
   }

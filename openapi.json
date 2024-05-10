@@ -163,6 +163,53 @@
         }
       }
     },
+    "/users/email/{email}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get a user by Email",
+        "description": "This will return a single user by Email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "firstName": "Horatio",
+                  "lastName": "Crunch",
+                  "userName": "Horatio Crunch",
+                  "phone": "888-555-1234",
+                  "email": "capncrunch@example.com",
+                  "isAdmin": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
     "/users/update/{id}": {
       "put": {
         "tags": ["Users"],
@@ -255,6 +302,428 @@
           }
         }
       }
+    },
+    "/movies/new": {
+      "post": {
+        "tags": ["Movies"],
+        "summary": "Create a new movie",
+        "description": "Enter the required information to add a new movie to the movies collection",
+        "responses": {
+          "201": {
+            "description": "New Movie created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error message"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "500": {
+            "description": "Failed to create a new user"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "The Fall Guy",
+                "tagLine": "Fall Hard",
+                "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                "year": "2024",
+                "certification": "PG-13",
+                "releaseDate": "2024-05-03",
+                "genres": ["Action", "Comedy"],
+                "runtime": "2h 6m",
+                "imdbScore": "7.3",
+                "rottenTomatoes": "82%",
+                "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                "isPremier": false,
+                "startDate": "2024-05-10",
+                "endDate": "2024-05-16",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/all": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get all movies",
+        "description": "Get an array of all movies in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of movies.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/movies/nowplaying": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get current movies",
+        "description": "Get movies currently playing",
+        "responses": {
+          "200": {
+            "description": "A list of current movies.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/movies/comingSoon": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get movies coming soon",
+        "description": "Get movies coming soon",
+        "responses": {
+          "200": {
+            "description": "A list of movies coming soon.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get a movie by ID",
+        "description": "This will return a single movie by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/movies/title/{title}": {
+      "get": {
+        "tags": ["Movies"],
+        "summary": "Get a movie by title",
+        "description": "This will return a single movie by title",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/movies/update/{id}": {
+      "put": {
+        "tags": ["Movies"],
+        "summary": "Update a movie by ID",
+        "description": "This will update a single movie by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "The Fall Guy",
+                  "tagLine": "Fall Hard",
+                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-03",
+                  "genres": ["Action", "Comedy"],
+                  "runtime": "2h 6m",
+                  "imdbScore": "7.3",
+                  "rottenTomatoes": "82%",
+                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                  "isPremier": false,
+                  "startDate": "2024-05-10",
+                  "endDate": "2024-05-16",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not updated"
+          },
+          "400": {
+            "description": "Error message"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "The Fall Guy",
+                "tagLine": "Fall Hard",
+                "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
+                "year": "2024",
+                "certification": "PG-13",
+                "releaseDate": "2024-05-03",
+                "genres": ["Action", "Comedy"],
+                "runtime": "2h 6m",
+                "imdbScore": "7.3",
+                "rottenTomatoes": "82%",
+                "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
+                "trailer": "https://youtu.be/j7jPnwVGdZ8",
+                "isPremier": false,
+                "startDate": "2024-05-10",
+                "endDate": "2024-05-16",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/delete/{id}": {
+      "delete": {
+        "tags": ["Movies"],
+        "summary": "Delete a movie by ID",
+        "description": "This will delete a single movie by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Movie Successfully deleted"
+          },
+          "400": {
+            "description": "Movie Not Deleted"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Movie Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -288,6 +757,91 @@
             "type": "boolean"
           }
         }
+      },
+      "Movies": {
+        "type": "object",
+        "required": [
+          "_id",
+          "title",
+          "tagLine",
+          "overview",
+          "year",
+          "certification",
+          "releaseDate",
+          "genres",
+          "runtime",
+          "imdbScore",
+          "rottenTomatoes",
+          "image",
+          "trailer",
+          "isPremier",
+          "startDate",
+          "endDate",
+          "isActive"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "title": {
+            "type": "string"
+          },
+          "tagLine": {
+            "type": "string"
+          },
+          "overview": {
+            "type": "string"
+          },
+          "year": {
+            "type": "int",
+            "format": "YYYY"
+          },
+          "certification": {
+            "type": "string"
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "genres": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string",
+            "format": "2h 30m"
+          },
+          "imdbScore": {
+            "type": "int",
+            "format": "7.5"
+          },
+          "rottenTomatoes": {
+            "type": "string",
+            "format": "75%"
+          },
+          "image": {
+            "type": "string",
+            "format": "url"
+          },
+          "trailer": {
+            "type": "string",
+            "format": "url"
+          },
+          "isPremier": {
+            "type": "boolean"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
       }
     }
   },
@@ -299,6 +853,9 @@
   "tags": [
     {
       "name": "Users"
+    },
+    {
+      "name": "Movies"
     }
   ],
   "externalDocs": {

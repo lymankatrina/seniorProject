@@ -57,3 +57,30 @@
   font-weight: 700;
   font-style: italic;
 }
+
+h1 {
+  @include urbaneBold;
+  text-transform: uppercase;
+}
+h2 {
+  @include urbaneBold;
+  text-transform: capitalize;
+}
+h3 {
+  @include urbaneRoundedMedium;
+}
+h4 {
+  @include urbaneBoldItalic;
+}
+h5 {
+  @include obliquaBoldItalic;
+}
+h6 {
+  @include obliquaItalic;
+}
+p {
+  @include obliqua;
+}
+button {
+  @include urbaneRoundedLight;
+}
