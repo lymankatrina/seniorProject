@@ -5,7 +5,38 @@ import { collections } from '../services/database.services';
 export class MoviesController {
   async getMovies(req: Request, res: Response) {
     try {
-      const movies = await collections.movies.find().toArray();
+      const movies = await collections.movies
+        .aggregate([
+          {
+            $lookup: {
+              from: 'genres',
+              let: { genreIds: '$genres' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $in: ['$_id', '$$genreIds'] }
+                  }
+                },
+                {
+                  $project: { _id: 0, genre: 1 }
+                }
+              ],
+              as: 'genresData'
+            }
+          },
+          {
+            $addFields: {
+              genres: '$genresData.genre'
+            }
+          },
+          {
+            $project: {
+              genresData: 0
+            }
+          }
+        ])
+        .toArray();
+
       res.status(200).send(movies);
     } catch (error) {
       res.status(500).send(error.message);
@@ -17,9 +48,40 @@ export class MoviesController {
     const currentDate = date.toISOString().slice(0, 10);
     try {
       const movies = await collections.movies
-        .find({
-          $or: [{ startDate: { $lte: currentDate }, endDate: { $gte: currentDate } }, { startDate: currentDate }, { endDate: currentDate }]
-        })
+        .aggregate([
+          {
+            $match: {
+              $or: [{ startDate: { $lte: currentDate }, endDate: { $gte: currentDate } }, { startDate: currentDate }, { endDate: currentDate }]
+            }
+          },
+          {
+            $lookup: {
+              from: 'genres',
+              let: { genreIds: '$genres' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $in: ['$_id', '$$genreIds'] }
+                  }
+                },
+                {
+                  $project: { _id: 0, genre: 1 }
+                }
+              ],
+              as: 'genresData'
+            }
+          },
+          {
+            $addFields: {
+              genres: '$genresData.genre'
+            }
+          },
+          {
+            $project: {
+              genresData: 0
+            }
+          }
+        ])
         .toArray();
       if (movies.length > 0) {
         res.status(200).send(movies);
@@ -36,11 +98,42 @@ export class MoviesController {
     const currentDate = date.toISOString().slice(0, 10);
     try {
       const movies = await collections.movies
-        .find({
-          startDate: { $gt: currentDate },
-          endDate: { $gt: currentDate },
-          isActive: true
-        })
+        .aggregate([
+          {
+            $match: {
+              startDate: { $gt: currentDate },
+              endDate: { $gt: currentDate },
+              isActive: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'genres',
+              let: { genreIds: '$genres' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $in: ['$_id', '$$genreIds'] }
+                  }
+                },
+                {
+                  $project: { _id: 0, genre: 1 }
+                }
+              ],
+              as: 'genresData'
+            }
+          },
+          {
+            $addFields: {
+              genres: '$genresData.genre'
+            }
+          },
+          {
+            $project: {
+              genresData: 0
+            }
+          }
+        ])
         .toArray();
       if (movies.length > 0) {
         res.status(200).send(movies);
