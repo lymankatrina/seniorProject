@@ -15,11 +15,12 @@
       <div class="header">
         <img src="/images/Theater_logo_new_2.svg" class="header-logo" alt="San Juan Theater Logo" />
         <nav class="nav">
-          <a href="https://sanjuantheater.onrender.com/" target="home" id="userGreeting"></a>
-          <a href="/movies.html" target="Movies" class="active">Add Movies</a>
+          <a href="https://sanjuantheater.onrender.com/" target="_self" id="userGreeting">Hello, {{userName}}!</a>
+          <a href="/movies.html" target="_blank" class="active">Add Movies</a>
+          <a href="/updateMovies.html" target="_blank">Update Movies</a>
           <a href="/news.html" target="News">Add News</a>
-          <a href="/events.html" target="Events">Add Events</a>
-          <a href="/users.html" target="Users">Manage Users</a>
+          <a href="/events.html" target="_blank">Add Events</a>
+          <a href="/users.html" target="_blank">Manage Users</a>
         </nav>
       </div>
     </header>
@@ -50,7 +51,7 @@
         <label for="NC-17">NC-17</label><br /><br />
         <label for="releaseDate">Release Date</label>
         <input class="input-newMovie" type="date" id="releaseDate" name="releaseDate" pattern="YYYY-MM-DD" /><br /><br />
-        <fieldset class="genres-section">
+        <!-- <fieldset class="genres-section">
           <legend>Genres: Select all that apply</legend>
           <input type="checkbox" id="genreAction" name="genres" value="Action" />
           <label for="genreAction">Action</label>
@@ -110,7 +111,7 @@
           <label for="genreWar">War</label>
           <input type="checkbox" id="genreWestern" name="genres" value="Western" />
           <label for="genreWestern">War</label>
-        </fieldset>
+        </fieldset> -->
         <br />
         <label for="runtime">Runtime</label>
         <input class="input-newMovie" type="text" id="runtime" name="runtime" placeholder="2h 13m" /><br /><br />
