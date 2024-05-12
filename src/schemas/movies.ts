@@ -54,39 +54,9 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'array',
         items: {
           bsonType: 'string',
-          enum: [
-            'Action',
-            'Adult',
-            'Adventure',
-            'Animation',
-            'Biography',
-            'Comedy',
-            'Crime',
-            'Documentary',
-            'Drama',
-            'Faith and Spirituality',
-            'Family',
-            'Fantasy',
-            'Film Noir',
-            'Game Show',
-            'History',
-            'Horror',
-            'Musical',
-            'Music',
-            'Mystery',
-            'News',
-            'Reality-TV',
-            'Romance',
-            'Sci-Fi',
-            'Short',
-            'Sport',
-            'Talk-Show',
-            'Thriller',
-            'War',
-            'Western'
-          ]
+          format: 'ObjectId'
         },
-        description: 'Must include at least one valid Genre'
+        description: 'Genre is required and is an objectId'
       },
       runtime: {
         bsonType: 'string',
@@ -102,6 +72,11 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'string',
         pattern: '^(100|\\d{1,2})%$',
         description: 'Rotten tomatoes should be a percentage from 1% to 100%'
+      },
+      fandangoAudienceScore: {
+        bsonType: 'string',
+        pattern: '^(100|\\d{1,2})%$',
+        description: 'Fandango audience score should be a percentage from 1% to 100%'
       },
       image: {
         bsonType: 'string',

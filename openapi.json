@@ -303,6 +303,241 @@
         }
       }
     },
+    "/genres/new": {
+      "post": {
+        "tags": ["Genres"],
+        "summary": "Create a new genre",
+        "description": "Enter the required information to add a new genre to the genres collection",
+        "responses": {
+          "201": {
+            "description": "New Genre created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "genre": "Action"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error message"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "500": {
+            "description": "Failed to create a new genre"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "genre": "Action"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/genres/all": {
+      "get": {
+        "tags": ["Genres"],
+        "summary": "Get all genres",
+        "description": "Get an array of all movie genres in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of genres.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "genre": "Action"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/genres/{id}": {
+      "get": {
+        "tags": ["Genres"],
+        "summary": "Get a genre by ID",
+        "description": "This will return a single genre by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "genre": "Action"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/genres/genre/{genre}": {
+      "get": {
+        "tags": ["Genres"],
+        "summary": "Get a genre by genre name",
+        "description": "This will return a single movie genre by name",
+        "parameters": [
+          {
+            "name": "genre",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "genre": "Action"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/genres/update/{id}": {
+      "put": {
+        "tags": ["Genres"],
+        "summary": "Update a genre by ID",
+        "description": "This will update a single genre by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "genre": "Action"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not updated"
+          },
+          "400": {
+            "description": "Error message"
+          },
+          "403": {
+            "description": "Access denied"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "genre": "Action"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/genres/delete/{id}": {
+      "delete": {
+        "tags": ["Genres"],
+        "summary": "Delete a genre by ID",
+        "description": "This will delete a single genre by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Genre Successfully deleted"
+          },
+          "400": {
+            "description": "Genre Not Deleted"
+          },
+          "403": {
+            "description": "Access denied"
+          },
+          "404": {
+            "description": "Genre Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
     "/movies/new": {
       "post": {
         "tags": ["Movies"],
@@ -321,10 +556,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -359,10 +595,11 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["Action", "Comedy"],
+                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
+                "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                 "trailer": "https://youtu.be/j7jPnwVGdZ8",
                 "isPremier": false,
@@ -393,10 +630,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -434,10 +672,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -475,10 +714,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -526,10 +766,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -583,10 +824,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -629,30 +871,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully updated",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "title": "The Fall Guy",
-                  "tagLine": "Fall Hard",
-                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
-                  "year": "2024",
-                  "certification": "PG-13",
-                  "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
-                  "runtime": "2h 6m",
-                  "imdbScore": "7.3",
-                  "rottenTomatoes": "82%",
-                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
-                }
-              }
-            }
+            "description": "Successfully updated"
           },
           "304": {
             "description": "Not updated"
@@ -675,10 +894,11 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["Action", "Comedy"],
+                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
+                "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                 "trailer": "https://youtu.be/j7jPnwVGdZ8",
                 "isPremier": false,
@@ -770,8 +990,6 @@
           "releaseDate",
           "genres",
           "runtime",
-          "imdbScore",
-          "rottenTomatoes",
           "image",
           "trailer",
           "isPremier",
@@ -805,7 +1023,11 @@
             "format": "YYYY-MM-DD"
           },
           "genres": {
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "objectId"
+            }
           },
           "runtime": {
             "type": "string",
@@ -813,11 +1035,15 @@
           },
           "imdbScore": {
             "type": "int",
-            "format": "7.5"
+            "format": "7.3"
           },
           "rottenTomatoes": {
             "type": "string",
-            "format": "75%"
+            "format": "82%"
+          },
+          "fandangoAudienceScore": {
+            "type": "string",
+            "format": "86%"
           },
           "image": {
             "type": "string",
@@ -842,6 +1068,19 @@
             "type": "boolean"
           }
         }
+      },
+      "Genres": {
+        "type": "object",
+        "required": ["id", "genre"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "genre": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -856,6 +1095,9 @@
     },
     {
       "name": "Movies"
+    },
+    {
+      "name": "Genres"
     }
   ],
   "externalDocs": {
