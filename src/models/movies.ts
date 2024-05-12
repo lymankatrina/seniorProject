@@ -12,6 +12,7 @@ export default class Movie {
     public runtime: string,
     public imdbScore: number,
     public rottenTomatoes: number,
+    public fandangoAudienceScore: number,
     public poster: string,
     public trailer: string,
     public isPremier: boolean,

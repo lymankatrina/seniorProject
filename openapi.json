@@ -556,10 +556,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -594,10 +595,11 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["Action", "Comedy"],
+                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
+                "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                 "trailer": "https://youtu.be/j7jPnwVGdZ8",
                 "isPremier": false,
@@ -628,10 +630,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -669,10 +672,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -710,10 +714,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -761,10 +766,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -818,10 +824,11 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
+                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
+                  "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                   "trailer": "https://youtu.be/j7jPnwVGdZ8",
                   "isPremier": false,
@@ -864,30 +871,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully updated",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "title": "The Fall Guy",
-                  "tagLine": "Fall Hard",
-                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
-                  "year": "2024",
-                  "certification": "PG-13",
-                  "releaseDate": "2024-05-03",
-                  "genres": ["Action", "Comedy"],
-                  "runtime": "2h 6m",
-                  "imdbScore": "7.3",
-                  "rottenTomatoes": "82%",
-                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
-                }
-              }
-            }
+            "description": "Successfully updated"
           },
           "304": {
             "description": "Not updated"
@@ -910,10 +894,11 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["Action", "Comedy"],
+                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
+                "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
                 "trailer": "https://youtu.be/j7jPnwVGdZ8",
                 "isPremier": false,
@@ -1005,8 +990,6 @@
           "releaseDate",
           "genres",
           "runtime",
-          "imdbScore",
-          "rottenTomatoes",
           "image",
           "trailer",
           "isPremier",
@@ -1040,7 +1023,11 @@
             "format": "YYYY-MM-DD"
           },
           "genres": {
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "objectId"
+            }
           },
           "runtime": {
             "type": "string",
@@ -1048,11 +1035,15 @@
           },
           "imdbScore": {
             "type": "int",
-            "format": "7.5"
+            "format": "7.3"
           },
           "rottenTomatoes": {
             "type": "string",
-            "format": "75%"
+            "format": "82%"
+          },
+          "fandangoAudienceScore": {
+            "type": "string",
+            "format": "86%"
           },
           "image": {
             "type": "string",
@@ -1077,6 +1068,19 @@
             "type": "boolean"
           }
         }
+      },
+      "Genres": {
+        "type": "object",
+        "required": ["id", "genre"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "genre": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -1091,6 +1095,9 @@
     },
     {
       "name": "Movies"
+    },
+    {
+      "name": "Genres"
     }
   ],
   "externalDocs": {

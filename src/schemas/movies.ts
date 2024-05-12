@@ -53,7 +53,8 @@ export async function applySchemaValidation(db: Db) {
       genres: {
         bsonType: 'array',
         items: {
-          bsonType: 'string'
+          bsonType: 'string',
+          format: 'ObjectId'
         },
         description: 'Genre is required and is an objectId'
       },
@@ -71,6 +72,11 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'string',
         pattern: '^(100|\\d{1,2})%$',
         description: 'Rotten tomatoes should be a percentage from 1% to 100%'
+      },
+      fandangoAudienceScore: {
+        bsonType: 'string',
+        pattern: '^(100|\\d{1,2})%$',
+        description: 'Fandango audience score should be a percentage from 1% to 100%'
       },
       image: {
         bsonType: 'string',
