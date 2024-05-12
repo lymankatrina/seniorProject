@@ -28,7 +28,7 @@
       <h1>San Juan Theater Admin</h1>
       <h2>Manage Movies Collection</h2>
       <h3>Add a Movie</h3>
-      <form id="newMovieForm" action="http://localhost:8080/movies/new" method="POST">
+      <form id="newMovieForm" action="https://sanjuantheater.onrender.com/movies/new" method="POST">
         <label for="title">Movie Title</label>
         <input class="input-newMovie" type="text" id="title" name="title" required /><br /><br />
         <label for="tagLine">Tag Line</label>
@@ -164,7 +164,7 @@
           }
         });
 
-        fetch('http://localhost:8080/movies/new', {
+        fetch('https://sanjuantheater.onrender.com/movies/new', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

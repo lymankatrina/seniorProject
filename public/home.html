@@ -41,7 +41,7 @@
     </footer>
     <script src="/script/footerFunction.js"></script>
     <script>
-      fetch('http://localhost:8080/movies/nowplaying')
+      fetch('https://sanjuantheater.onrender.com/movies/nowplaying')
         .then((response) => response.json())
         .then((data) => {
           const cardsContainer = document.getElementById('nowPlayingContainer');
