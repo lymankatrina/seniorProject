@@ -1,22 +1,33 @@
 import { Request, Response } from 'express';
-import fs from 'fs';
+import { collections } from '../services/database.services';
+import User from '../models/users';
 
-const checkAuth = (req: Request, res: Response): void => {
-  if (req.oidc.isAuthenticated()) {
-    fs.readFile('./public/loggedIn.html', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error reading file');
-        return;
-      }
-
-      const modifiedData = data.replace('{{userName}}', req.oidc.user.given_name);
-      res.send(modifiedData);
-    });
-  } else {
+const checkAuth = async (req: Request, res: Response): Promise<void> => {
+  if (!req.oidc.isAuthenticated()) {
     res.sendFile('home.html', { root: './public' });
+    return;
+  }
+
+  try {
+    const userEmail = req.oidc.user.email;
+    const user = await collections.users?.findOne({ email: userEmail });
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    if (user.isAdmin) {
+      res.sendFile('admin.html', { root: './public' });
+    } else {
+      res.sendFile('loggedIn.html', { root: './public' });
+    }
+  } catch (error) {
+    console.error('Error checking user authentication:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
+
 
 const callback = (req: Request, res: Response) => {
   res.send(`Authentication successful. Welcome to the San Juan Theater Directory! Add '/api-docs' to the url to view API documentation!`);

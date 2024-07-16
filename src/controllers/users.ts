@@ -3,104 +3,110 @@ import { ObjectId } from 'mongodb';
 import { collections } from '../services/database.services';
 
 export class UsersController {
-  async getUsers(req: Request, res: Response) {
+  getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-      const users = await collections.users.find().toArray();
-      res.status(200).send(users);
+      const users = await collections.users.find().sort({ lastName: 1, firstName: 1 }).toArray();
+      if (users.length > 0) {
+        res.status(200).json(users);
+      } else {
+        res.status(404).send(`No users found`);
+      }
     } catch (error) {
       res.status(500).send(error.message);
     }
-  }
+  };
 
-  async getUsersById(req: Request, res: Response) {
-    const id = req.params.id;
+  getUsersById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
     try {
-      const query = { _id: new ObjectId(id) };
-      const user = await collections.users.findOne(query);
+      const userId = new ObjectId(id);
+      const user = await collections.users.findOne({ _id: userId });
       if (user) {
-        res.status(200).send(user);
+        res.status(200).json(user);
       } else {
         res.status(404).send(`Unable to find a user with id: ${id}`);
       }
     } catch (error) {
       res.status(500).send(error.message);
     }
-  }
+  };
 
-  async getAllEmails() {
+  getAllEmails = async () => {
     try {
       const emails = await collections.users.find({}, { projection: { email: 1 } }).toArray();
       return emails;
     } catch (error) {
       return error.message;
     }
-  }
+  };
 
-  async getUserByEmail(userEmail: string) {
+  getUserByEmail = async (userEmail: string) => {
     try {
       const result = await collections.users.findOne({ email: userEmail });
       return result;
     } catch (error) {
       console.log('error getting user email');
     }
-  }
+  };
 
-  async getByEmail(req: Request, res: Response) {
-    const email = req.params.email;
+  getByEmail = async (req: Request, res: Response): Promise<void> => {
+    const { email } = req.params;
     try {
       const user = await collections.users.findOne({ email: email });
       if (user) {
-        res.status(200).send(user);
+        res.status(200).json(user);
       } else {
         res.status(404).send(`Unable to find a user with email: ${email}`);
       }
     } catch (error) {
       res.status(500).send(error.message);
     }
-  }
+  };
 
-  async postUsers(req: Request, res: Response) {
+  postUsers = async (req: Request, res: Response): Promise<void> => {
     try {
       const newUser = req.body;
       const result = await collections.users.insertOne(newUser);
-      result
-        ? res.status(201).send(`Successfully created a new user with id ${result.insertedId}`)
-        : res.status(500).send({ error: 'Failed to create a new user' });
+      if (result.acknowledged) {
+        res.status(201).send(`Successfully created a new user with id ${result.insertedId}`);
+      } else {
+        res.status(500).send({ error: 'Failed to create a new user' });
+      }
     } catch (error) {
-      console.error(error);
       res.status(400).send({ error: error.message });
     }
-  }
+  };
 
-  async updateById(req: Request, res: Response) {
-    const id = req?.params?.id;
+  updateUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
     try {
       const updatedUser = req.body;
-      const query = { _id: new ObjectId(id) };
-      const result = await collections.users.updateOne(query, { $set: updatedUser });
-
-      result ? res.status(200).send(`Successfully updated user with id ${id}`) : res.status(304).send(`User with id: ${id} not updated`);
+      const userId = new ObjectId(id);
+      const result = await collections.users.updateOne({ _id: userId }, { $set: updatedUser });
+      if (result.matchedCount === 0) {
+        res.status(404).send(`User with id: ${id} not found`);
+      } else if (result.modifiedCount > 0) {
+        res.status(200).send(`Successfully updated user with id ${id}`);
+      } else {
+        res.status(304).send(`User with id: ${id} not updated`);
+      }
     } catch (error) {
-      console.error(error.message);
       res.status(400).send(error.message);
     }
-  }
+  };
 
-  async deleteById(req: Request, res: Response) {
-    const id = req?.params?.id;
+  deleteUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
     try {
-      const query = { _id: new ObjectId(id) };
-      const result = await collections.users.deleteOne(query);
-      if (result && result.deletedCount) {
+      const userId = new ObjectId(id);
+      const result = await collections.users.deleteOne({ _id: userId });
+      if (result.deletedCount === 1) {
         res.status(202).send(`Successfully removed user with id ${id}`);
-      } else if (!result) {
-        res.status(400).send(`Failed to remove user with id ${id}`);
-      } else if (!result.deletedCount) {
+      } else {
         res.status(404).send(`User with id ${id} does not exist`);
       }
     } catch (error) {
-      console.error(error.message);
       res.status(500).send(error.message);
     }
-  }
+  };
 }

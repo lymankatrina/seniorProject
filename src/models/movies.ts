@@ -7,18 +7,14 @@ export default class Movie {
     public overview: string,
     public year: number,
     public certification: string,
-    public releaseDate: string,
-    public genres: Array<ObjectId>,
+    public releaseDate: Date,
+    public genres: string,
     public runtime: string,
     public imdbScore: number,
-    public rottenTomatoes: number,
-    public fandangoAudienceScore: number,
+    public rottenTomatoes: string,
+    public fandangoAudienceScore: string,
     public poster: string,
     public trailer: string,
-    public isPremier: boolean,
-    public startDate: Date,
-    public endDate: Date,
-    public isActive: Boolean,
     public _id?: ObjectId
   ) {}
 }

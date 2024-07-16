@@ -5,41 +5,35 @@ import Movie from '../models/movies';
 export async function applySchemaValidation(db: Db) {
   const jsonSchema = {
     bsonType: 'object',
-    required: [
-      '_id',
-      'title',
-      'tagLine',
-      'overview',
-      'year',
-      'certification',
-      'releaseDate',
-      'genres',
-      'runtime',
-      'poster',
-      'trailer',
-      'isPremier',
-      'startDate',
-      'endDate',
-      'isActive'
-    ],
+    required: ['_id', 'title', 'tagLine', 'overview', 'year', 'certification', 'releaseDate', 'genres', 'runtime', 'poster', 'trailer'],
     additionalProperties: false,
     properties: {
       _id: {},
       title: {
         bsonType: 'string',
+        minLength: 1,
+        maxLength: 85,
         description: "'title' is required and is a string"
       },
       tagLine: {
         bsonType: 'string',
+        minLength: 1,
+        maxLength: 85,
         description: "'tagline' is required and is a string"
       },
       overview: {
-        bsontType: 'string',
+        bsonType: 'string',
+        minLength: 1,
+        maxLength: 850,
         description: "'overview' is required and is a string"
       },
       year: {
         bsonType: 'int',
-        description: "'year' is required and must be in the format YYYY"
+        maximum: 3000,
+        exclusiveMaximum: true,
+        minimum: 1888,
+        exclusiveMinimum: true,
+        description: "'year' the movie was produced must be in the format YYYY"
       },
       certification: {
         bsonType: 'string',
@@ -51,12 +45,8 @@ export async function applySchemaValidation(db: Db) {
         description: "'Release Date' is required and must be YYYY-MM-DD"
       },
       genres: {
-        bsonType: 'array',
-        items: {
-          bsonType: 'string',
-          format: 'ObjectId'
-        },
-        description: 'Genre is required and is an objectId'
+        bsonType: 'string',
+        description: 'Genre is required and is a string'
       },
       runtime: {
         bsonType: 'string',
@@ -64,9 +54,10 @@ export async function applySchemaValidation(db: Db) {
         description: 'Enter run time in hours and minutes (example: 2h 16m)'
       },
       imdbScore: {
-        bsonType: 'int',
-        pattern: '^(10(\\.0)?|[0-9](\\.[0-9])?)$',
-        description: 'IMDB score should be a between 0.0 and 10'
+        bsonType: 'double',
+        minimum: 0.0,
+        maximum: 10.0,
+        description: 'IMDB score should be a number between 0.0 and 10'
       },
       rottenTomatoes: {
         bsonType: 'string',
@@ -78,29 +69,13 @@ export async function applySchemaValidation(db: Db) {
         pattern: '^(100|\\d{1,2})%$',
         description: 'Fandango audience score should be a percentage from 1% to 100%'
       },
-      image: {
+      poster: {
         bsonType: 'string',
         description: 'Image must be a url link to a publicly shared image'
       },
       trailer: {
         bsonType: 'string',
         description: 'Trailer must be a url link to an official trailer'
-      },
-      isPremier: {
-        bsonType: 'bool',
-        description: 'Must be true or false'
-      },
-      startDate: {
-        bsonType: 'date',
-        description: 'Start Date must be valid'
-      },
-      endDate: {
-        bsonType: 'date',
-        description: 'End Date must be valid'
-      },
-      isActive: {
-        bsonType: 'bool',
-        description: 'Enter true or false'
       }
     }
   };
