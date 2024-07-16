@@ -1,106 +1,118 @@
-.nowPlayingCard {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto auto auto auto auto auto auto;
-  box-shadow: 0 4px 8px 0 rgba($color4, 1);
-  border-radius: 1em;
-  margin: 1em;
-  padding: 1em;
-  @include colorCombo1;
+#nowPlayingContainer {
+  margin: 20px 0;
 }
-.nowPlayingDates {
-  grid-row: 1;
-  grid-column: 1 / 5;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
+
+.now-playing-movie-banner {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  position: relative;
+  transition: all 0.3s ease;
 }
-.nowPlayingTitle {
-  grid-row: 3;
-  grid-column: 1 / 5;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
+
+.poster-container {
+  position: relative;
 }
-.nowPlayingTagline {
-  grid-row: 4;
-  grid-column: 1 / 5;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
+
+.movie-poster {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  margin-right: 20px;
 }
-.genres {
-  grid-row: 6;
-  grid-column: 1 / 5;
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: 1fr;
-}
-.nowPlayingGenres {
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
-}
-.ratings {
-  grid-row: 5;
-  grid-column: 1 / 5;
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-}
-.nowPlayingRating {
-  grid-row: 1;
-  grid-column: 1;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
-}
-.nowPlayingRuntime {
-  grid-row: 1;
-  grid-column: 2;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
-}
-.nowPlayingIMDB {
-  grid-row: 1;
-  grid-column: 3;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
-}
-.nowPlayingTomatoes {
-  grid-row: 1;
-  grid-column: 4;
-  text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
-}
-.nowPlayingCardImage {
-  grid-row: 2;
-  grid-column: 1 / 5;
-  align-self: center;
-  justify-self: center;
-  object-fit: contain;
-}
-.nowPlayingPoster {
+
+.movie-info {
+  display: flex;
+  flex-direction: column;
   max-width: 100%;
+  overflow: hidden;
 }
-.overviewContainer {
-  grid-row: 7;
-  grid-column: 1 / 5;
+
+.movie-title {
+  margin: 0 0 10px;
+}
+
+.movie-tagline {
+  font-weight: bold;
   margin-bottom: 0.5em;
 }
-.nowPlayingOverview {
-  line-height: 1.5;
-  height: 1.5 em;
-  font-size: calc(1vw + 1vh + 1vmin);
-  width: 99%;
-  text-wrap: nowrap;
+
+.movie-rating,
+.movie-genres,
+.movie-scores {
+  margin: 5px 0;
+}
+
+.movie-overview {
+  margin-right: 20px;
   text-overflow: ellipsis;
   overflow: hidden;
-  transition: height 0.3s;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-.nowPlayingOverview:hover {
-  height: auto;
-  text-wrap: wrap;
-  text-overflow: unset;
+
+.movie-overview:hover {
+  white-space: normal;
   overflow: visible;
 }
-.nowPlayingTrailer {
-  grid-row: 8;
-  grid-column: 1 / 5;
-  place-self: center;
-  max-width: 100%;
+
+.movie-trailer-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibiltiy 0.3s;
+}
+
+.poster-container:hover .movie-trailer-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+.movie-trailer {
+  width: 100%;
+  height: auto;
+  border: none;
+}
+
+.showtimes {
+  margin-top: 10px;
+}
+
+.showtimes p {
+  margin: 2px 0;
+}
+
+#ticketFormContainer {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+#ticketFormContainer form {
+  display: flex;
+  flex-direction: column;
+}
+
+#ticketFormContainer form label,
+#ticketFormContainer form input,
+#ticketFormContainer form button {
+  margin-bottom: 10px;
 }

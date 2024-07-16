@@ -3,7 +3,7 @@
   "info": {
     "title": "Senior Project",
     "summary": "This is an API for a small hometown movie theater",
-    "description": "This is created for a senior project for an applied technology degree from BYU-Idaho. It is built by Katrina Lyman with the needs of San Juan Theater in mind and under the supervision of Professor Blaine Robertson.",
+    "description": "This is created for a senior project for an applied technology degree from BYU-Idaho. It is built by Katrina Lyman with the needs of San Juan Theater in mind, and under the supervision of Professor Blaine Robertson and Nathan Birch.",
     "contact": {
       "name": "Katrina Lyman",
       "email": "lymankatrina@gmail.com"
@@ -50,22 +50,28 @@
                   "userName": "Horatio Crunch",
                   "phone": "888-555-1234",
                   "email": "capncrunch@example.com",
-                  "isAdmin": true
+                  "isAdmin": false
                 }
               }
             }
           },
           "400": {
-            "description": "Error message"
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
           },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "412": {
             "description": "Precondition Failed"
           },
+          "422": {
+            "description": "Validation Failed"
+          },
           "500": {
-            "description": "Failed to create a new user"
+            "description": "Error message"
           }
         },
         "requestBody": {
@@ -78,7 +84,7 @@
                 "userName": "Horatio Crunch",
                 "phone": "888-555-1234",
                 "email": "capncrunch@example.com",
-                "isAdmin": true
+                "isAdmin": false
               }
             }
           }
@@ -102,13 +108,22 @@
                   "userName": "Horatio Crunch",
                   "phone": "888-555-1234",
                   "email": "capncrunch@example.com",
-                  "isAdmin": true
+                  "isAdmin": false
                 }
               }
             }
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Error message"
@@ -143,7 +158,7 @@
                   "userName": "Horatio Crunch",
                   "phone": "888-555-1234",
                   "email": "capncrunch@example.com",
-                  "isAdmin": true
+                  "isAdmin": false
                 }
               }
             }
@@ -151,8 +166,11 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Requires Authentication"
+          },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "404": {
             "description": "Not Found"
@@ -190,7 +208,7 @@
                   "userName": "Horatio Crunch",
                   "phone": "888-555-1234",
                   "email": "capncrunch@example.com",
-                  "isAdmin": true
+                  "isAdmin": false
                 }
               }
             }
@@ -198,8 +216,11 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Requires Authentication"
+          },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "404": {
             "description": "Not Found"
@@ -226,7 +247,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "Successfully updated",
             "content": {
               "application/json": {
@@ -243,13 +264,28 @@
             }
           },
           "304": {
-            "description": "Not updated"
+            "description": "Not modified"
           },
           "400": {
-            "description": "Error message"
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
           },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
           }
         },
         "requestBody": {
@@ -262,7 +298,7 @@
                 "userName": "Horatio Crunch",
                 "phone": "888-555-1234",
                 "email": "capncrunch@example.com",
-                "isAdmin": true
+                "isAdmin": false
               }
             }
           }
@@ -289,248 +325,16 @@
             "description": "User Successfully deleted"
           },
           "400": {
-            "description": "User Not Deleted"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "User Not Found"
-          },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/genres/new": {
-      "post": {
-        "tags": ["Genres"],
-        "summary": "Create a new genre",
-        "description": "Enter the required information to add a new genre to the genres collection",
-        "responses": {
-          "201": {
-            "description": "New Genre created",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "genre": "Action"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Error message"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "412": {
-            "description": "Precondition Failed"
-          },
-          "500": {
-            "description": "Failed to create a new genre"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "example": {
-                "genre": "Action"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/genres/all": {
-      "get": {
-        "tags": ["Genres"],
-        "summary": "Get all genres",
-        "description": "Get an array of all movie genres in the collection",
-        "responses": {
-          "200": {
-            "description": "A list of genres.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "genre": "Action"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/genres/{id}": {
-      "get": {
-        "tags": ["Genres"],
-        "summary": "Get a genre by ID",
-        "description": "This will return a single genre by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "genre": "Action"
-                }
-              }
-            }
-          },
-          "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Requires Authentication"
+          },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "404": {
             "description": "Not Found"
-          },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/genres/genre/{genre}": {
-      "get": {
-        "tags": ["Genres"],
-        "summary": "Get a genre by genre name",
-        "description": "This will return a single movie genre by name",
-        "parameters": [
-          {
-            "name": "genre",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "genre": "Action"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/genres/update/{id}": {
-      "put": {
-        "tags": ["Genres"],
-        "summary": "Update a genre by ID",
-        "description": "This will update a single genre by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully updated",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "genre": "Action"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "Not updated"
-          },
-          "400": {
-            "description": "Error message"
-          },
-          "403": {
-            "description": "Access denied"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "example": {
-                "genre": "Action"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/genres/delete/{id}": {
-      "delete": {
-        "tags": ["Genres"],
-        "summary": "Delete a genre by ID",
-        "description": "This will delete a single genre by ID. This action cannot be reversed.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Genre Successfully deleted"
-          },
-          "400": {
-            "description": "Genre Not Deleted"
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "404": {
-            "description": "Genre Not Found"
           },
           "500": {
             "description": "Error message"
@@ -556,32 +360,34 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                  "genres": "Action, Adventure, Comedy, Drama",
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
                   "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8"
                 }
               }
             }
           },
           "400": {
-            "description": "Error message"
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
           },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "412": {
             "description": "Precondition Failed"
           },
+          "422": {
+            "description": "Validation Failed"
+          },
           "500": {
-            "description": "Failed to create a new user"
+            "description": "Error message"
           }
         },
         "requestBody": {
@@ -595,17 +401,13 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                "genres": "Action, Adventure, Comedy, Drama",
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
                 "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                "isPremier": false,
-                "startDate": "2024-05-10",
-                "endDate": "2024-05-16",
-                "isActive": true
+                "trailer": "https://youtu.be/j7jPnwVGdZ8"
               }
             }
           }
@@ -630,107 +432,22 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                  "genres": "Action, Adventure, Comedy, Drama",
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
                   "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8"
                 }
               }
             }
           },
-          "403": {
-            "description": "Access denied"
+          "400": {
+            "description": "Bad Request"
           },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/movies/nowplaying": {
-      "get": {
-        "tags": ["Movies"],
-        "summary": "Get current movies",
-        "description": "Get movies currently playing",
-        "responses": {
-          "200": {
-            "description": "A list of current movies.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "title": "The Fall Guy",
-                  "tagLine": "Fall Hard",
-                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
-                  "year": "2024",
-                  "certification": "PG-13",
-                  "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
-                  "runtime": "2h 6m",
-                  "imdbScore": "7.3",
-                  "rottenTomatoes": "82%",
-                  "fandangoAudienceScore": "86%",
-                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Access denied"
-          },
-          "500": {
-            "description": "Error message"
-          }
-        }
-      }
-    },
-    "/movies/comingSoon": {
-      "get": {
-        "tags": ["Movies"],
-        "summary": "Get movies coming soon",
-        "description": "Get movies coming soon",
-        "responses": {
-          "200": {
-            "description": "A list of movies coming soon.",
-            "content": {
-              "application/json": {
-                "example": {
-                  "_id": "uniqueId",
-                  "title": "The Fall Guy",
-                  "tagLine": "Fall Hard",
-                  "overview": "He's a stuntman, and like everyone in the stunt community, he gets blown up, shot, crashed, thrown through windows and dropped from the highest of heights, all for our entertainment. And now, fresh off an almost career-ending accident, this working-class hero has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job. What could possibly go right?",
-                  "year": "2024",
-                  "certification": "PG-13",
-                  "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
-                  "runtime": "2h 6m",
-                  "imdbScore": "7.3",
-                  "rottenTomatoes": "82%",
-                  "fandangoAudienceScore": "86%",
-                  "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Access denied"
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Error message"
@@ -766,26 +483,19 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                  "genres": "Action, Adventure, Comedy, Drama",
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
                   "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8"
                 }
               }
             }
           },
           "400": {
             "description": "Bad Request"
-          },
-          "403": {
-            "description": "Access denied"
           },
           "404": {
             "description": "Not Found"
@@ -796,11 +506,11 @@
         }
       }
     },
-    "/movies/title/{title}": {
+    "/movies/search/{title}": {
       "get": {
         "tags": ["Movies"],
-        "summary": "Get a movie by title",
-        "description": "This will return a single movie by title",
+        "summary": "Search for a movie by title",
+        "description": "This will return all movies that contain matching words in the title",
         "parameters": [
           {
             "name": "title",
@@ -824,26 +534,19 @@
                   "year": "2024",
                   "certification": "PG-13",
                   "releaseDate": "2024-05-03",
-                  "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                  "genres": "Action, Adventure, Comedy, Drama",
                   "runtime": "2h 6m",
                   "imdbScore": "7.3",
                   "rottenTomatoes": "82%",
                   "fandangoAudienceScore": "86%",
                   "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                  "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                  "isPremier": false,
-                  "startDate": "2024-05-10",
-                  "endDate": "2024-05-16",
-                  "isActive": true
+                  "trailer": "https://youtu.be/j7jPnwVGdZ8"
                 }
               }
             }
           },
           "400": {
             "description": "Bad Request"
-          },
-          "403": {
-            "description": "Access denied"
           },
           "404": {
             "description": "Not Found"
@@ -874,13 +577,28 @@
             "description": "Successfully updated"
           },
           "304": {
-            "description": "Not updated"
+            "description": "Not modified"
           },
           "400": {
-            "description": "Error message"
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
           },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
           }
         },
         "requestBody": {
@@ -894,17 +612,13 @@
                 "year": "2024",
                 "certification": "PG-13",
                 "releaseDate": "2024-05-03",
-                "genres": ["663e79ad68454688b10dbead", "663e7a1368454688b10dbeb2", "663e7a2f68454688b10dbeb5"],
+                "genres": "Action, Adventure, Comedy, Drama",
                 "runtime": "2h 6m",
                 "imdbScore": "7.3",
                 "rottenTomatoes": "82%",
                 "fandangoAudienceScore": "86%",
                 "poster": "https://dx35vtwkllhj9.cloudfront.net/universalstudios/the-fall-guy/images/regions/us/onesheet.jpg",
-                "trailer": "https://youtu.be/j7jPnwVGdZ8",
-                "isPremier": false,
-                "startDate": "2024-05-10",
-                "endDate": "2024-05-16",
-                "isActive": true
+                "trailer": "https://youtu.be/j7jPnwVGdZ8"
               }
             }
           }
@@ -928,16 +642,2157 @@
         ],
         "responses": {
           "202": {
-            "description": "Movie Successfully deleted"
+            "description": "Successfully deleted"
           },
           "400": {
-            "description": "Movie Not Deleted"
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
           },
           "403": {
-            "description": "Access denied"
+            "description": "Requires Administrative Access"
           },
           "404": {
-            "description": "Movie Not Found"
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/new": {
+      "post": {
+        "tags": ["Showtimes"],
+        "summary": "Create a new showtime",
+        "description": "Enter the required information to add a new showtimes to the showtimes collection",
+        "responses": {
+          "201": {
+            "description": "New Showtimes created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "startDate": "2024-06-14",
+                  "endDate": "2024-06-27",
+                  "time": "7:00 PM",
+                  "type": "Standard",
+                  "ticketsAvailable": 215
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "movieId": "66580a6334820d8a65dfb198",
+                "startDate": "2024-06-14",
+                "endDate": "2024-06-27",
+                "time": "7:00 PM",
+                "type": "Standard",
+                "ticketsAvailable": 215
+              }
+            }
+          }
+        }
+      }
+    },
+    "/showtimes/all": {
+      "get": {
+        "tags": ["Showtimes"],
+        "summary": "Get all showtimes",
+        "description": "Get an array of all showtimes in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of showtimes.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "startDate": "2024-06-14",
+                  "endDate": "2024-06-27",
+                  "time": "7:00 PM",
+                  "type": "Standard",
+                  "ticketsAvailable": 215
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/showtime/{id}": {
+      "get": {
+        "tags": ["Showtimes"],
+        "summary": "Get showtime by ID",
+        "description": "Get a single showtime by showtime ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single showtime.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "startDate": "2024-06-14",
+                  "endDate": "2024-06-27",
+                  "time": "7:00 PM",
+                  "type": "Standard",
+                  "ticketsAvailable": 215
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/now-playing": {
+      "get": {
+        "tags": ["Showtimes"],
+        "summary": "Get movies now playing",
+        "description": "This will return the movies now playing based on the current date and available showtimes",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "66580a6334820d8a65dfb198",
+                  "title": "Kingdom of the Planet of the Apes",
+                  "tagLine": "#1 Movie On The Planet",
+                  "overview": "Director Wes Ball breathes new life into the global, epic franchise set several generations in the future following Caesar's reign, in which apes are the dominant species living harmoniously and humans have been reduced to living in the shadows. As a new tyrannical ape leader builds his empire, one young ape undertakes a harrowing journey that will cause him to question all that he has known about the past and to make choices that will define a future for apes and humans alike.",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-10",
+                  "genres": "Adventure, Science Fiction, Action",
+                  "runtime": "2h 25m",
+                  "imdbScore": "7.2",
+                  "rottenTomatoes": "80%",
+                  "fandangoAudienceScore": "78%",
+                  "poster": "https://lumiere-a.akamaihd.net/v1/images/p_20cs_kingdomoftheplanetoftheapes_2758_v2_ceee94a4.jpeg?region=0%2C0%2C540%2C810",
+                  "trailer": "https://www.youtube.com/embed/yfQ1fTKkYgs?si=DnLYLU7B2bolSuGt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/coming-soon": {
+      "get": {
+        "tags": ["Showtimes"],
+        "summary": "Get movies coming soon",
+        "description": "This will return the movies coming soon based on the current date and available showtimes",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "66580a6334820d8a65dfb198",
+                  "title": "Kingdom of the Planet of the Apes",
+                  "tagLine": "#1 Movie On The Planet",
+                  "overview": "Director Wes Ball breathes new life into the global, epic franchise set several generations in the future following Caesar's reign, in which apes are the dominant species living harmoniously and humans have been reduced to living in the shadows. As a new tyrannical ape leader builds his empire, one young ape undertakes a harrowing journey that will cause him to question all that he has known about the past and to make choices that will define a future for apes and humans alike.",
+                  "year": "2024",
+                  "certification": "PG-13",
+                  "releaseDate": "2024-05-10",
+                  "genres": "Adventure, Science Fiction, Action",
+                  "runtime": "2h 25m",
+                  "imdbScore": "7.2",
+                  "rottenTomatoes": "80%",
+                  "fandangoAudienceScore": "78%",
+                  "poster": "https://lumiere-a.akamaihd.net/v1/images/p_20cs_kingdomoftheplanetoftheapes_2758_v2_ceee94a4.jpeg?region=0%2C0%2C540%2C810",
+                  "trailer": "https://www.youtube.com/embed/yfQ1fTKkYgs?si=DnLYLU7B2bolSuGt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/search/{movieId}": {
+      "get": {
+        "tags": ["Showtimes"],
+        "summary": "Get showtimes by movie ID",
+        "description": "This will return showtimes for a single movie by movie ID",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "startDate": "2024-06-14",
+                  "endDate": "2024-06-27",
+                  "time": "7:00 PM",
+                  "type": "Standard",
+                  "ticketsAvailable": 215
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/showtimes/update/{id}": {
+      "put": {
+        "tags": ["Showtimes"],
+        "summary": "Update showtimes by ID",
+        "description": "This will update showtimes by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated"
+          },
+          "304": {
+            "description": "Not modified"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "movieId": "66580a6334820d8a65dfb198",
+                "startDate": "2024-06-14",
+                "endDate": "2024-06-27",
+                "time": "7:00 PM",
+                "type": "Standard",
+                "ticketsAvailable": 215
+              }
+            }
+          }
+        }
+      }
+    },
+    "/showtimes/delete/{id}": {
+      "delete": {
+        "tags": ["Showtimes"],
+        "summary": "Delete showtimes by ID",
+        "description": "This will delete a showtimes by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/tickets/generate/{showtimeId}": {
+      "get": {
+        "tags": ["Tickets"],
+        "summary": "Create tickets",
+        "description": "Generates tickets for movies by showtime ID.",
+        "parameters": [
+          {
+            "name": "showtimeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New Tickets created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "movieId": "uniqueId",
+                  "showtimeId": "uniqueId",
+                  "date": "YYYY-MM-DD",
+                  "time": "hh:mm AM/PM",
+                  "ticketNumber": "number",
+                  "status": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/tickets/all": {
+      "get": {
+        "tags": ["Tickets"],
+        "summary": "Get all tickets",
+        "description": "Get an array of all tickets in the ticket collection",
+        "responses": {
+          "200": {
+            "description": "A list of tickets.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "date": "2024-05-24",
+                  "movieTitle": "The Shawshank Redemption",
+                  "seat": "2",
+                  "row": "A",
+                  "section": "Left"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/tickets/seating/{showtimeId}/{date}": {
+      "get": {
+        "tags": ["Tickets"],
+        "summary": "Get tickets by showtime and date",
+        "description": "Get an array of tickets by showtime and date in the ticket collection",
+        "parameters": [
+          {
+            "name": "showtimeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of available tickets.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "date": "2024-05-24",
+                  "movieTitle": "The Shawshank Redemption",
+                  "seat": "2",
+                  "row": "A",
+                  "section": "Left"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/tickets/available/{showtimeId}/{date}": {
+      "get": {
+        "tags": ["Tickets"],
+        "summary": "Get available tickets by showtime and date",
+        "description": "Get an array of available tickets by showtime and date in the ticket collection",
+        "parameters": [
+          {
+            "name": "showtimeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of available tickets.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "date": "2024-05-24",
+                  "movieTitle": "The Shawshank Redemption",
+                  "seat": "2",
+                  "row": "A",
+                  "section": "Left"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/tickets/purchase/single": {
+      "post": {
+        "tags": ["Tickets"],
+        "summary": "Purchase a single ticket",
+        "description": "This will record a single ticket purchase",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "6668e63b2d27896db8b5d1c8",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "showtimeId": "6660a286a27d90de3ff6f70d",
+                  "date": "2024-06-14",
+                  "time": "7:00 PM",
+                  "seatNumber": "Seat1",
+                  "status": "sold",
+                  "buyerId": "uniqueId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "ticketId": "uniqueId"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tickets/purchase/multiple": {
+      "post": {
+        "tags": ["Tickets"],
+        "summary": "Purchase multiple tickets",
+        "description": "This will record purchase of up to 20 tickets",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "6668e63b2d27896db8b5d1c8",
+                  "movieId": "66580a6334820d8a65dfb198",
+                  "showtimeId": "6660a286a27d90de3ff6f70d",
+                  "date": "2024-06-14",
+                  "time": "7:00 PM",
+                  "seatNumber": "Seat1",
+                  "status": "sold",
+                  "buyerId": "uniqueId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "ticketIds": ["uniqueId", "uniqueId"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tickets/delete/{id}": {
+      "delete": {
+        "tags": ["Tickets"],
+        "summary": "Delete a ticket by ID",
+        "description": "This will delete a single ticket by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/carts/user": {
+      "get": {
+        "tags": ["Carts"],
+        "summary": "Get Current Users Cart",
+        "description": "Gets the shopping cart for a single user currently authenticated",
+        "responses": {
+          "201": {
+            "description": "Cart fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "userId": "uniqueId",
+                  "tickets": [
+                    {
+                      "ticketId": "uniqueId",
+                      "addedAt": "2024-07-08T22:39:32.213Z",
+                      "ticketNumber": 29,
+                      "showtimeDate": "2024-07-08",
+                      "showtimeTime": "7:00 PM",
+                      "movieTitle": "Despicable Me 4"
+                    },
+                    {
+                      "ticketId": "uniqueId",
+                      "addedAt": "2024-07-08T22:39:32.213Z",
+                      "ticketNumber": 65,
+                      "showtimeDate": "2024-07-08",
+                      "showtimeTime": "7:00 PM",
+                      "movieTitle": "Despicable Me 4"
+                    }
+                  ],
+                  "updatedAt": "2024-07-09T01:52:14.357Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/carts/user/{userId}": {
+      "get": {
+        "tags": ["Carts"],
+        "summary": "Get Cart by userId",
+        "description": "Gets the shopping cart for a single user by user ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cart fetched successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "userId": "uniqueId",
+                  "tickets": [
+                    {
+                      "ticketId": "uniqueId",
+                      "addedAt": "2024-06-14T19:00:00Z"
+                    }
+                  ],
+                  "updatedAt": "2024-06-14T19:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/carts/items": {
+      "post": {
+        "tags": ["Carts"],
+        "summary": "Add items to cart",
+        "description": "This will add items to a users shopping cart",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ticketIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["ticketIds"]
+              },
+              "example": {
+                "ticketIds": ["uniqueId1", "uniqueId2" ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "userId": "uniqueId",
+                  "tickets": [
+                    {
+                      "ticketId": "uniqueId",
+                      "addedAt": "2024-06-14T19:00:00Z"
+                    }
+                  ],
+                  "updatedAt": "2024-06-14T19:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/carts/updatePriceType": {
+      "put": {
+        "tags": ["Carts"],
+        "summary": "Update price type of a ticket in the cart",
+        "description": "This will update the price type of a specific ticket in the current users shopping cart",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ticketId": {
+                    "type": "string",
+                    "priceType": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["ticketId", "priceType"]
+              },
+              "example": {
+                "ticketId": "uniqueId1",
+                "priceType": "Child"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "userId": "uniqueId",
+                  "tickets": [
+                    {
+                      "ticketId": "uniqueId",
+                      "addedAt": "2024-06-14T19:00:00Z",
+                      "priceType": "Child"
+                    }
+                  ],
+                  "updatedAt": "2024-06-14T19:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/carts/remove-expired": {
+      "post": {
+        "tags": ["Carts"],
+        "summary": "Remove Expired Items from Cart",
+        "description": "This will remove expired items from shopping carts",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "ticketIds": ["uniqueId", "uniqueId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Expired items removed from cart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/carts/empty/{id}": {
+      "delete": {
+        "tags": ["Carts"],
+        "summary": "Empty a shopping cart by ID",
+        "description": "This will remove all items from a shopping cart.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/events/new": {
+      "post": {
+        "tags": ["Events"],
+        "summary": "Create a new event",
+        "description": "Enter the required information to add a new event to the events collection",
+        "responses": {
+          "201": {
+            "description": "New Event created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "Summer Movie Club",
+                "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                "startDate": "2024-06-10",
+                "endDate": "2024-08-15",
+                "startTime": "1:00 PM",
+                "endTime": "3:00 PM",
+                "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                "link": "https://placekitten.com/200/300",
+                "type": "Club",
+                "postStartDate": "2024-05-10",
+                "postEndDate": "2024-06-30",
+                "status": "Public"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/all": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get all events",
+        "description": "Get an array of all events in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of events.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/events/current": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get current public events",
+        "description": "Get an array of all current public events in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of current public events.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get events by ID",
+        "description": "This will return a single event by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/events/type/{type}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get events by event type",
+        "description": "This will return events filtered by event type",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/events/update/{id}": {
+      "put": {
+        "tags": ["Events"],
+        "summary": "Update an event by ID",
+        "description": "This will update a single event by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Summer Movie Club",
+                  "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                  "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                  "startDate": "2024-06-10",
+                  "endDate": "2024-08-15",
+                  "startTime": "1:00 PM",
+                  "endTime": "3:00 PM",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "type": "Club",
+                  "postStartDate": "2024-05-10",
+                  "postEndDate": "2024-06-30",
+                  "status": "Public"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "Summer Movie Club",
+                "tagline": "Passes Available Now! 10 Weeks of Summer Fun Mattinee Movies for Kids.",
+                "description": "The summer movie club pass allows kids to enjoy exciting movies at the theater for an amazing price. Plus save even more on with the kids summer snack packs. Passes are sold for Tuesdays or Thursdays. Attend up to 10 movies throughout the summer!",
+                "startDate": "2024-06-10",
+                "endDate": "2024-08-15",
+                "startTime": "1:00 PM",
+                "endTime": "3:00 PM",
+                "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                "link": "https://placekitten.com/200/300",
+                "type": "Club",
+                "postStartDate": "2024-05-10",
+                "postEndDate": "2024-06-30",
+                "status": "Public"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/delete/{id}": {
+      "delete": {
+        "tags": ["Events"],
+        "summary": "Delete an event by ID",
+        "description": "This will delete a single event by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/new": {
+      "post": {
+        "tags": ["News"],
+        "summary": "Create a news item",
+        "description": "Enter the required information to add a news item to the news collection",
+        "responses": {
+          "201": {
+            "description": "New News created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "Big News Title",
+                "tagline": "Catchy Headline For Big News Title",
+                "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                "date": "2024-05-16",
+                "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                "link": "https://placekitten.com/200/300",
+                "status": "Public",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/news/public": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get all active public news",
+        "description": "Get an array of all active public news items in the news collection",
+        "responses": {
+          "200": {
+            "description": "A list of active public news items.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/all": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get all news",
+        "description": "Get an array of all news in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of news items.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/current": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get active news",
+        "description": "This will return all active news items",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/{id}": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get news by ID",
+        "description": "This will return a single news item by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/status/{status}": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get news items by status",
+        "description": "This will return news items filtered by status",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/news/update/{id}": {
+      "put": {
+        "tags": ["News"],
+        "summary": "Update news items by ID",
+        "description": "This will update a single news item by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "title": "Big News Title",
+                  "tagline": "Catchy Headline For Big News Title",
+                  "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                  "date": "2024-05-16",
+                  "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                  "link": "https://placekitten.com/200/300",
+                  "status": "Public",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "title": "Big News Title",
+                "tagline": "Catchy Headline For Big News Title",
+                "description": "A few short paragraphs explaining the big news that is happening. Details about the big news are included here. This announcement will explain what you need to know about the big news.",
+                "date": "2024-05-16",
+                "image": "https://storage.cloud.google.com/familylife-images/movie_projector_icon.svg",
+                "link": "https://placekitten.com/200/300",
+                "status": "Public",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/news/delete/{id}": {
+      "delete": {
+        "tags": ["News"],
+        "summary": "Delete a news item by ID",
+        "description": "This will delete a single news item by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/prices/add": {
+      "post": {
+        "tags": ["Prices"],
+        "summary": "Add a new price",
+        "description": "Add a new price to the collection",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "priceType": "Adult",
+                "price": "10.00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Price added successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "priceType": "Adult",
+                  "price": "10.00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/prices": {
+      "get": {
+        "tags": ["Prices"],
+        "summary": "Get all prices",
+        "description": "Get an array of all prices in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of prices.",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "_id": "uniqueId",
+                    "priceType": "Adult",
+                    "price": "10.00"
+                  },
+                  {
+                    "_id": "uniqueId",
+                    "priceType": "Child",
+                    "price": "7.00"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/prices/update/{id}": {
+      "put": {
+        "tags": ["Prices"],
+        "summary": "Update a price",
+        "description": "Update an existing price in the collection",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "priceType": "Senior",
+                "price": "8.00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Price updated successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Price updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Price not found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/prices/delete/{id}": {
+      "delete": {
+        "tags": ["Prices"],
+        "summary": "Delete a price",
+        "description": "Delete an existing price from the collection",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Price deleted successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Price deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Price not found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/surveys/new": {
+      "post": {
+        "tags": ["Surveys"],
+        "summary": "Create a survey",
+        "description": "Enter the required information to create a survey",
+        "responses": {
+          "201": {
+            "description": "New survey created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/surveys/all": {
+      "get": {
+        "tags": ["Surveys"],
+        "summary": "Get all surveys",
+        "description": "Get an array of all surveys in the surveys collection",
+        "responses": {
+          "200": {
+            "description": "An array of surveys",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/surveys/active": {
+      "get": {
+        "tags": ["Surveys"],
+        "summary": "Get all active surveys",
+        "description": "Get an array of all active surveys in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of active surveys.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/surveys/{id}": {
+      "get": {
+        "tags": ["Surveys"],
+        "summary": "Get surveys by ID",
+        "description": "This will return a single survey by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        }
+      }
+    },
+    "/surveys/update/{id}": {
+      "put": {
+        "tags": ["Surveys"],
+        "summary": "Update survey by ID",
+        "description": "This will update a single survey by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                  "isActive": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "412": {
+            "description": "Precondition Failed"
+          },
+          "422": {
+            "description": "Validation Failed"
+          },
+          "500": {
+            "description": "Error message"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "surveyLink": "https://www.youtube.com/embed/Ky7cgwfKSww?si=IHkXwxs5IFpfGTQ1",
+                "isActive": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/surveys/delete/{id}": {
+      "delete": {
+        "tags": ["Surveys"],
+        "summary": "Delete a survey by ID",
+        "description": "This will delete a single survey by ID. This action cannot be reversed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Error message"
@@ -980,23 +2835,7 @@
       },
       "Movies": {
         "type": "object",
-        "required": [
-          "_id",
-          "title",
-          "tagLine",
-          "overview",
-          "year",
-          "certification",
-          "releaseDate",
-          "genres",
-          "runtime",
-          "image",
-          "trailer",
-          "isPremier",
-          "startDate",
-          "endDate",
-          "isActive"
-        ],
+        "required": ["_id", "title", "tagLine", "overview", "year", "certification", "releaseDate", "genres", "runtime", "poster", "trailer"],
         "properties": {
           "_id": {
             "type": "string",
@@ -1023,11 +2862,7 @@
             "format": "YYYY-MM-DD"
           },
           "genres": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "objectId"
-            }
+            "type": "string"
           },
           "runtime": {
             "type": "string",
@@ -1045,16 +2880,28 @@
             "type": "string",
             "format": "86%"
           },
-          "image": {
+          "poster": {
             "type": "string",
             "format": "url"
           },
           "trailer": {
             "type": "string",
             "format": "url"
+          }
+        }
+      },
+      "Showtimes": {
+        "type": "object",
+        "required": ["movieId", "startDate", "endDate", "time", "type", "ticketsAvailable"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
           },
-          "isPremier": {
-            "type": "boolean"
+          "movieId": {
+            "type": "string",
+            "format": "objectId",
+            "description": "References the Movie Collection"
           },
           "startDate": {
             "type": "string",
@@ -1064,20 +2911,124 @@
             "type": "string",
             "format": "YYYY-MM-DD"
           },
-          "isActive": {
-            "type": "boolean"
+          "time": {
+            "type": "string",
+            "format": "hh:mm AM/PM"
+          },
+          "type": {
+            "type": "string",
+            "description": "Standard, Matinee, Premier, etc."
+          },
+          "ticketsAvailable": {
+            "type": "string",
+            "description": "number of tickets available"
           }
         }
       },
-      "Genres": {
+      "Tickets": {
         "type": "object",
-        "required": ["id", "genre"],
+        "required": ["movieId", "showtimeId", "date", "time", "seatNumber", "status"],
         "properties": {
           "_id": {
             "type": "string",
             "format": "objectId"
           },
-          "genre": {
+          "movieId": {
+            "type": "string",
+            "format": "objectId",
+            "description": "References the Movie Collection"
+          },
+          "showtimeId": {
+            "type": "string",
+            "format": "objectId",
+            "description": "References the Seat Collection"
+          },
+          "date": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "time": {
+            "type": "string",
+            "format": "hh:mm AM/PM"
+          },
+          "seatNumber": {
+            "type": "string",
+            "format": "Seat1"
+          },
+          "status": {
+            "type": "string",
+            "description": "Should be available or sold"
+          },
+          "buyerId": {
+            "type": "string",
+            "format": "oauth2"
+          }
+        }
+      },
+      "Events": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "description",
+          "startDate",
+          "endDate",
+          "startTime",
+          "endTime",
+          "image",
+          "link",
+          "type",
+          "postStartDate",
+          "postEndDate",
+          "status"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "hh:mm AM/PM"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "hh:mm AM/PM"
+          },
+          "image": {
+            "type": "string",
+            "format": "url"
+          },
+          "link": {
+            "type": "string",
+            "format": "url"
+          },
+          "type": {
+            "type": "string"
+          },
+          "postStartDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "postEndDate": {
+            "type": "string",
+            "format": "YYYY-MM-DD"
+          },
+          "status": {
             "type": "string"
           }
         }
@@ -1090,15 +3041,14 @@
     }
   ],
   "tags": [
-    {
-      "name": "Users"
-    },
-    {
-      "name": "Movies"
-    },
-    {
-      "name": "Genres"
-    }
+    { "name": "Authentication" },
+    { "name": "Users" },
+    { "name": "Movies" },
+    { "name": "Showtimes" },
+    { "name": "Tickets" },
+    { "name": "Events" },
+    { "name": "News" },
+    { "name": "Surveys" }
   ],
   "externalDocs": {
     "description": "Find more info here",
