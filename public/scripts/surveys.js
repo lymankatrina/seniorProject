@@ -26,7 +26,7 @@ function displayActiveSurveys(activeSurveys) {
     activeSurveyElement.classList.add('active-survey-banner');
 
     activeSurveyElement.innerHTML = `
-    <iframe src="${activeSurvey.surveyLink}" width="100%" height="400px" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+    <iframe src="${activeSurvey.surveyLink}" class="survey-iframe" sandbox="allow-scripts allow-same-origin allow-forms">Loading...</iframe>
     `;
 
     activeSurveysContainer.appendChild(activeSurveyElement);

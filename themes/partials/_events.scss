@@ -14,66 +14,80 @@
 .event-image-container {
   flex: 0 0 30%;
   max-width: 30%;
-  align-content: center;
+  place-content: center;
+  rotate: -30deg;
 }
 
 .event-image {
   max-width: 90%;
   height: auto;
   border-radius: 4px;
-  align-self: center;
+  place-self: center;
 }
 
+
 .event-details {
-  flex: 1 1 70%;
-  padding: 1em;
+  background-color: $white;
+  border: $licorice;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: $licorice;
 }
 
 .event-header {
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
+  border-bottom: 2px solid $color1d;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .event-title {
   font-size: 1.5em;
+  color: $color1d;
   margin: 0;
 }
 
 .event-tagline {
   font-size: 1.2em;
-  color: $licorice;
-  margin: 0;
+  color: $color3d;
+  margin: 5px 0 0 0;
 }
 
 .event-body {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .event-description {
-  margin: 16px 0;
+  font-size: 1em;
+  margin: 0 0 10px 0;
 }
 
-.event-dates {
+.event-dates, .event-time {
   font-size: 0.9em;
-  color: $color4d;
+  margin: 0 0 5px 0;
 }
 
-.event-time {
-  font-size: 0.9em;
-  color: $color4d;
+.event-dates strong, .event-time strong {
+  color: $color2d;
 }
 
 .event-footer {
+  border-top: 2px solid $color4d;
+  padding-top: 10px;
   text-align: right;
 }
 
 .event-read-more a {
+text-decoration: none;
   color: $color1d;
-  text-decoration: none;
-  font-weight: bold;
-}
+  font-weight: bold;}
 
 .event-read-more a:hover {
-  text-decoration: underline;
+  color: $color2d;
+}
+
+.event-details:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }

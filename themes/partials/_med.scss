@@ -9,4 +9,10 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   }
+  .nowPlayingContainer {
+    padding: 20px;
+  }
+  .movie-poster {
+    width: 200px;
+  }
 }

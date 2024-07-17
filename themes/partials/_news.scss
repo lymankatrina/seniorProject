@@ -1,82 +1,112 @@
-.public-news-item {
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.news {
+  @include colorCombo2;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.publicNewsContainer {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.public-news-item-banner {
+  background-color: $color4l;
+  border: 1px solid $color4d;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.public-news-item-banner:hover {
+  transform: translateY(-5px);
 }
 
 .news-content {
   display: flex;
-  background-color: $licorice;
   margin: 1em;
 }
 
 .news-image-container {
   flex: 0 0 30%;
   max-width: 30%;
-  background-color: white;
-  align-content: center;
+  overflow: hidden;
+  place-content: center;
 }
 
 .news-image {
   max-width: 90%;
   height: auto;
   border-radius: 4px;
-  align-self: center;
+  place-self: center;
 }
 
-
 .news-details {
-  flex: 1 1 auto;
-  max-width: 90%;
-  background-color: white;
-  margin: 1em;
-  padding: 1em;
+  flex: 1;
+  background-color: $white;
+  border: $licorice;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px auto;
+  padding: 15px;
+  color: $licorice;
 }
 
 .news-header {
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
+  border-bottom: 2px solid $color1d;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .news-title {
-  font-size: 1.5em;
-  margin: 0;
-  color: $color2d;
-  text-shadow: 2px 2px $licorice;
-}
-
-.news-tagline {
-  font-size: 1.2em;
   color: $color1d;
   margin: 0;
 }
 
+.news-tagline {
+  color: $color3d;
+  margin: 5px 0 0 0;
+}
+
 .news-body {
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
 
 .news-description {
-  margin: 16px 0;
+  margin: 0 0 10px 0;
 }
 
 .news-date {
-  font-size: 0.9em;
-  color: $color4d;
+  margin: 0 0 5px 0;
+}
+
+.news-date strong {
+  color: $color2d;
 }
 
 .news-footer {
+  border-top: 2px solid $color4d;
+  padding-top: 10px;
   text-align: right;
 }
 
 .news-read-more a {
+text-decoration: none;
   color: $color1d;
-  text-decoration: none;
-  font-weight: bold;
-}
+  font-weight: bold;}
 
 .news-read-more a:hover {
-  text-decoration: underline;
+  color: $color2d;
+}
+
+.news-details:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#publicNewsMessage, #adminNewsMessage {
+  margin-top: 20px;
+  color: $color4;
+  text-align: center;
 }
