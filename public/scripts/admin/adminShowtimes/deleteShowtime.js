@@ -3,7 +3,7 @@ export function deleteShowtime() {
     event.preventDefault();
     const showtimeId = document.getElementById('deleteShowtimeId').value;
 
-    fetch(`http://localhost:8080/showtimes/delete/${showtimeId}`, {
+    fetch(`/showtimes/delete/${showtimeId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

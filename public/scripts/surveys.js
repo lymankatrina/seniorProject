@@ -1,6 +1,6 @@
 async function fetchActiveSurveys() {
   try {
-    const response = await fetch('http://localhost:8080/surveys/active');
+    const response = await fetch('/surveys/active');
     if (!response.ok) {
       throw new Error('Failed to fetch active surveys');
     }

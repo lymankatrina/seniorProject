@@ -8,6 +8,7 @@ export const userRouter = express.Router();
 const controller = new UsersController();
 
 userRouter.get('/all', requiresAuth(), validUserEmail, controller.getUsers);
+userRouter.get('/check-admin', controller.getCurrentUserAdminStatus);
 userRouter.get('/:id', requiresAuth(), validUserEmail, controller.getUsersById);
 userRouter.post('/new', requiresAuth(), validUserEmail, validAdmin, userValidationRules(), validate, controller.postUsers);
 userRouter.get('/email/:email', requiresAuth(), validUserEmail, validateEmailRule(), validate, controller.getByEmail);

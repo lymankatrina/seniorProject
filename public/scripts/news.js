@@ -1,6 +1,6 @@
 async function fetchPublicNews() {
   try {
-    const response = await fetch('http://localhost:8080/news/public');
+    const response = await fetch('/news/public');
     if (!response.ok) {
       throw new Error('Failed to fetch public news');
     }
@@ -46,7 +46,7 @@ function displayPublicNews(publicNews) {
 
 async function fetchAdminNews() {
   try {
-    const response = await fetch('http://localhost:8080/news/current');
+    const response = await fetch('/news/current');
     if (!response.ok) {
       throw new Error('Failed to fetch current news');
     }

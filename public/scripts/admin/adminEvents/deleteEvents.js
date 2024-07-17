@@ -5,7 +5,7 @@ export function deleteEvents() {
     event.preventDefault();
     const eventsId = document.getElementById('deleteEventsId').value;
 
-    fetch(`http://localhost:8080/events/delete/${eventsId}`, {
+    fetch(`/events/delete/${eventsId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

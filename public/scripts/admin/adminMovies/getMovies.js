@@ -2,7 +2,7 @@ import { movieSchema } from './moviesSchema.js';
 
 export async function getShowtimes(movieId) {
   try {
-    const response = await fetch(`http://localhost:8080/showtimes/search/${movieId}`);
+    const response = await fetch(`/showtimes/search/${movieId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch showtimes');
     }
@@ -16,7 +16,7 @@ export async function getShowtimes(movieId) {
 
 export function loadMovies() {
   console.log('loadMovies called');
-  fetch('http://localhost:8080/movies/all')
+  fetch('/movies/all')
     .then((response) => response.json())
     .then(async (movies) => {
       const movieCardsContainer = document.getElementById('movieCardsContainer');

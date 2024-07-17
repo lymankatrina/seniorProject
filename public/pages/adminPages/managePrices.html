@@ -7,7 +7,7 @@
     <title>San Juan Theater | Admin Manage Prices</title>
     <meta name="description" content="Admin Manage Prices for San Juan Theater" />
     <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
     <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
   </head>
   <body>
@@ -31,7 +31,7 @@
 
         <section class="form-container" id="newPriceContainer" style="display: none" aria-labelledby="newPriceHeading">
           <h2 id="newPriceHeading">Add a New Price</h2>
-          <form class="newPriceForm" id="newPriceForm" action="http://localhost:8080/prices/new" method="POST"></form>
+          <form class="newPriceForm" id="newPriceForm" action="/prices/new" method="POST"></form>
           <div id="newPriceMessage" aria-live="polite"></div>
         </section>
 
@@ -62,11 +62,11 @@
 
       <div class="priceCardsContainer" id="priceCardsContainer"></div>
 
-      <a href="http://localhost:8080/"><p>Return Home</p></a>
+      <a href="/"><p>Return Home</p></a>
     </main>
     <div id="footer-placeholder"></div>
-    <script src="../scripts/adminHeaderFunction.js"></script>
-    <script src="../scripts/footerFunction.js"></script>
-    <script type="module" src="../scripts/managePrices.js"></script>
+    <script src="../../scripts/headers/adminHeaderFunction.js"></script>
+    <script src="../../scripts/footerFunction.js"></script>
+    <script type="module" src="../../scripts/admin/managePrices.js"></script>
   </body>
 </html>

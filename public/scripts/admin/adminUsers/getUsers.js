@@ -1,7 +1,7 @@
 import { userSchema } from './userSchema.js';
 
 export function loadUsers() {
-  fetch('http://localhost:8080/users/all')
+  fetch('/users/all')
     .then((response) => response.json())
     .then((users) => {
       const userCardsContainer = document.getElementById('userCardsContainer');

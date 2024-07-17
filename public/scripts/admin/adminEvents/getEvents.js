@@ -2,7 +2,7 @@ import { eventsSchema } from './eventsSchema.js';
 
 export function loadEvents() {
   console.log('loadEvents called');
-  fetch('http://localhost:8080/events/all')
+  fetch('/events/all')
     .then((response) => response.json())
     .then(async (events) => {
       const eventsItemsContainer = document.getElementById('eventsItemsContainer');

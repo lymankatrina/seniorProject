@@ -16,6 +16,29 @@ export class UsersController {
     }
   };
 
+  getCurrentUserAdminStatus = async (req: Request, res: Response): Promise<void> => {
+    if (!req.oidc.isAuthenticated()) {
+      res.status(401).json({ error: 'User not authenticated' });
+      return;
+    }
+
+    const userEmail = req.oidc.user.email;
+
+    try {
+      const user = await collections.users?.findOne({ email: userEmail });
+
+      if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+
+      res.status(200).json({ isAdmin: user.isAdmin });
+  } catch (error) {
+    console.error('Error fetching user admin status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+  };
+  
   getUsersById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {

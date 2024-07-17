@@ -49,7 +49,7 @@ async function fetchAvailableTickets(event, showtimeId) {
   const date = document.getElementById('date').value;
 
   try {
-    const response = await fetch(`http://localhost:8080/tickets/seating/${showtimeId}/${date}`);
+    const response = await fetch(`/tickets/seating/${showtimeId}/${date}`);
     if (!response.ok) {
       throw new Error('Failed to fetch available tickets');
     }
@@ -163,8 +163,35 @@ function displayAvailableTickets(tickets, date, showtimeId) {
           seatElement.classList.add('unavailable');
       }
     }
+    
+async function isUserAuthenticated() {
+  try {
+    const response = await fetch('/profile');
+    return response.ok;
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    return false;
+  }
+}
 
-    seatElement.addEventListener('click', () => {
+function displayAuthenticationMessage() {
+  const messageContainer = document.createElement('div');
+  messageContainer.classList.add('auth-message');
+  messageContainer.innerHTML = `
+    <p>You must be signed in to select seats or add items to your cart.</p>
+    <button onclick="window.location.href='/login'">Sign In</button>
+  `;
+  const ticketFormContainer = document.getElementById('getTicketFormContainer');
+  ticketFormContainer.innerHTML = '';
+  ticketFormContainer.appendChild(messageContainer);
+}
+
+    seatElement.addEventListener('click', async () => {
+      if (!await isUserAuthenticated()) {
+        displayAuthenticationMessage();
+        return;
+      }
+
       if (selectedTickets.size < 10 || seatElement.classList.contains('selected')) {
         seatElement.classList.toggle('selected');
         if (seatElement.classList.contains('selected')) {
@@ -202,7 +229,7 @@ async function addToCart(showtimeId, date) {
   console.log('Selected Tickets:', selectedTickets);
 
   try {
-    const response = await fetch('http://localhost:8080/carts/items', {
+    const response = await fetch('/carts/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -5,7 +5,7 @@ export function deleteUser() {
     event.preventDefault();
     const userId = document.getElementById('deleteUserId').value;
 
-    fetch(`http://localhost:8080/users/delete/${userId}`, {
+    fetch(`/users/delete/${userId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

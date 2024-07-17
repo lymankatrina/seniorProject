@@ -5,7 +5,7 @@ export function updateEvents() {
   document.getElementById('searchEventsForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const eventsId = document.getElementById('eventsId').value;
-    const response = await fetch(`http://localhost:8080/events/${eventsId}`);
+    const response = await fetch(`/events/${eventsId}`);
     if (!response.ok) {
       alert('Events not found');
       return;
@@ -102,7 +102,7 @@ export function updateEvents() {
         }
       });
       const _id = formData.get('_id');
-      const response = await fetch(`http://localhost:8080/events/update/${_id}`, {
+      const response = await fetch(`/events/update/${_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

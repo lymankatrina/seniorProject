@@ -5,7 +5,7 @@ export function updateMovie() {
   document.getElementById('searchMovieForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const title = document.getElementById('title').value;
-    const response = await fetch(`http://localhost:8080/movies/search/${title}`);
+    const response = await fetch(`/movies/search/${title}`);
     if (!response.ok) {
       alert('Movie not found');
       return;
@@ -106,7 +106,7 @@ export function updateMovie() {
         }
       });
       const _id = formData.get('_id');
-      const response = await fetch(`http://localhost:8080/movies/update/${_id}`, {
+      const response = await fetch(`/movies/update/${_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

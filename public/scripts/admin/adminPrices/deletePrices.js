@@ -5,7 +5,7 @@ export function deletePrice() {
     event.preventDefault();
     const priceId = document.getElementById('deletePriceId').value;
 
-    fetch(`http://localhost:8080/prices/delete/${priceId}`, {
+    fetch(`/prices/delete/${priceId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

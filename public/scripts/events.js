@@ -1,6 +1,6 @@
 async function fetchCurrentPublicEvents() {
   try {
-    const response = await fetch('http://localhost:8080/events/current');
+    const response = await fetch('/events/current');
     if (!response.ok) {
       throw new Error('Failed to fetch current public events');
     }

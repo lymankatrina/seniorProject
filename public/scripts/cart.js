@@ -1,6 +1,22 @@
-async function fetchShoppingCart() {
+async function isUserAuthenticated() {
   try {
-    const response = await fetch('http://localhost:8080/carts/user');
+    const response = await fetch('/profile');
+    return response.ok;
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    return false;
+  }
+}
+
+async function fetchShoppingCart() {
+  const isAuthenticated = await isUserAuthenticated();
+  if (!isAuthenticated) {
+    window.location.href = '/login';
+    return;
+  }
+  
+  try {
+    const response = await fetch('/carts/user');
     if (!response.ok) {
       throw new Error('Failed to fetch shopping cart');
     }
@@ -15,7 +31,7 @@ async function fetchShoppingCart() {
 
 async function fetchPrices() {
   try {
-    const response = await fetch ('http://localhost:8080/prices');
+    const response = await fetch ('/prices');
     if (!response.ok) {
       throw new Error('Failed to fetch prices');
     }
@@ -90,7 +106,7 @@ async function updateCartSubtotal(prices) {
 
 async function updatePriceType(ticketId, priceType) {
   try {
-    const response = await fetch('http://localhost:8080/carts/updatePriceType', {
+    const response = await fetch('/carts/updatePriceType', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -121,7 +137,7 @@ async function removeSelectedItems() {
   }
 
   try {
-    const response = await fetch('http://localhost:8080/carts/update', {
+    const response = await fetch('/carts/update', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

@@ -61,7 +61,7 @@ export function addSurvey() {
       newSurveyData.isAdmin = false;
     }
 
-    fetch('http://localhost:8080/surveys/new', {
+    fetch('/surveys/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

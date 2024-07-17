@@ -5,7 +5,7 @@ export function updateSurvey() {
   document.getElementById('getSurveyForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const _id = document.getElementById('_id').value;
-    const response = await fetch(`http://localhost:8080/surveys/${_id}`);
+    const response = await fetch(`/surveys/${_id}`);
     if (!response.ok) {
       alert('Survey not found');
       return;
@@ -92,7 +92,7 @@ export function updateSurvey() {
 
     const _id = updateSurveyData._id;
     delete updateSurveyData['_id'];
-    const response = await fetch(`http://localhost:8080/surveys/update/${_id}`, {
+    const response = await fetch(`/surveys/update/${_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

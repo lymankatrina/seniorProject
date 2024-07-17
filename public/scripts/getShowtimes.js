@@ -9,7 +9,7 @@ function getQueryParams() {
 
 async function fetchShowtimes(movieId) {
   try {
-    const response = await fetch(`http://localhost:8080/showtimes/search/${movieId}`);
+    const response = await fetch(`/showtimes/search/${movieId}`);
     if (!response.ok) {
       alert('Failed to fetch showtimes');
       return;

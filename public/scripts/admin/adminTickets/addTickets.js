@@ -4,7 +4,7 @@ export function generateTickets() {
     const showtimeId = document.getElementById('showtimeId').value;
     console.log(`Generating tickets for showtime ID: ${showtimeId}`);
     try {
-      const response = await fetch(`http://localhost:8080/tickets/generate/${showtimeId}`, {
+      const response = await fetch(`/tickets/generate/${showtimeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

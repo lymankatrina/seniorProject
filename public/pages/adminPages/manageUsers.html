@@ -7,7 +7,7 @@
     <title>San Juan Theater | Admin Manage Users</title>
     <meta name="description" content="Admin Manage Users for San Juan Theater" />
     <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
     <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
   </head>
   <body>
@@ -31,7 +31,7 @@
 
         <section class="form-container" id="newUserContainer" style="display: none" aria-labelledby="newUserHeading">
           <h2 id="newUserHeading">Add a New User</h2>
-          <form class="newUserForm" id="newUserForm" action="http://localhost:8080/users/new" method="POST"></form>
+          <form class="newUserForm" id="newUserForm" action="/users/new" method="POST"></form>
           <div id="newUserMessage" aria-live="polite"></div>
         </section>
 
@@ -62,11 +62,11 @@
 
       <div class="userCardsContainer" id="userCardsContainer"></div>
 
-      <a href="http://localhost:8080/"><p>Return Home</p></a>
+      <a href="/"><p>Return Home</p></a>
     </main>
     <div id="footer-placeholder"></div>
-    <script src="../scripts/adminHeaderFunction.js"></script>
-    <script src="../scripts/footerFunction.js"></script>
-    <script type="module" src="../scripts/manageUsers.js"></script>
+    <script src="../../scripts/headers/adminHeaderFunction.js"></script>
+    <script src="../../scripts/footerFunction.js"></script>
+    <script type="module" src="../../scripts/admin/manageUsers.js"></script>
   </body>
 </html>

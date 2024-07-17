@@ -69,7 +69,7 @@ document.getElementById('newMovieForm').addEventListener('submit', function (eve
     }
   });
 
-  fetch('http://localhost:8080/movies/new', {
+  fetch('/movies/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

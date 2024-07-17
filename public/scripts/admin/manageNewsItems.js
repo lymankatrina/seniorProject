@@ -1,7 +1,7 @@
-import { addNews } from './adminNews/addNews.js';
-import { deleteNews } from './adminNews/deleteNews.js';
-import { getNews } from './adminNews/getNews.js';
-import { updateNews } from './adminNews/updateNews.js';
+import { addNewsItems } from './adminNewsItems/addNewsItems.js';
+import { deleteNewsItems } from './adminNewsItems/deleteNewsItems.js';
+import { getNewsItems } from './adminNewsItems/getNewsItems.js';
+import { updateNewsItems } from './adminNewsItems/updateNewsItems.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   const getNewsItemsContainer = document.getElementById('getNewsItemsContainer');
@@ -9,39 +9,39 @@ document.addEventListener('DOMContentLoaded', function () {
   const updateNewsItemsContainer = document.getElementById('updateNewsItemsContainer');
   const deleteNewsItemsContainer = document.getElementById('deleteNewsItemsContainer');
 
-  document.getElementById('showGetNews').addEventListener('click', function () {
+  document.getElementById('showGetNewsItems').addEventListener('click', function () {
     getNewsItemsContainer.style.display = 'block';
     newNewsItemsContainer.style.display = 'none';
     updateNewsItemsContainer.style.display = 'none';
     deleteNewsItemsContainer.style.display = 'none';
 
-    getNews();
+    getNewsItems();
   });
 
-  document.getElementById('showNewNews').addEventListener('click', function () {
+  document.getElementById('showNewNewsItems').addEventListener('click', function () {
     getNewsItemsContainer.style.display = 'none';
     newNewsItemsContainer.style.display = 'block';
     updateNewsItemsContainer.style.display = 'none';
     deleteNewsItemsContainer.style.display = 'none';
 
-    addNews();
+    addNewsItems();
   });
 
-  document.getElementById('showUpdateNews').addEventListener('click', function () {
+  document.getElementById('showUpdateNewsItems').addEventListener('click', function () {
     getNewsItemsContainer.style.display = 'none';
     newNewsItemsContainer.style.display = 'none';
     updateNewsItemsContainer.style.display = 'block';
     deleteNewsItemsContainer.style.display = 'none';
 
-    updateNews();
+    updateNewsItems();
   });
 
-  document.getElementById('showDeleteNews').addEventListener('click', function () {
+  document.getElementById('showDeleteNewsItems').addEventListener('click', function () {
     getNewsItemsContainer.style.display = 'none';
     newNewsItemsContainer.style.display = 'none';
     updateNewsItemsContainer.style.display = 'none';
     deleteNewsItemsContainer.style.display = 'block';
 
-    deleteNews();
+    deleteNewsItems();
   });
 });

@@ -5,7 +5,7 @@ export function deleteMovie() {
     event.preventDefault();
     const movieId = document.getElementById('deleteMovieId').value;
 
-    fetch(`http://localhost:8080/movies/delete/${movieId}`, {
+    fetch(`/movies/delete/${movieId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

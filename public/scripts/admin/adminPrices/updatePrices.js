@@ -5,7 +5,7 @@ export function updatePrice() {
   document.getElementById('getPriceForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const _id = document.getElementById('_id').value;
-    const response = await fetch(`http://localhost:8080/prices/${_id}`);
+    const response = await fetch(`/prices/${_id}`);
     if (!response.ok) {
       alert('Price not found');
       return;
@@ -92,7 +92,7 @@ export function updatePrice() {
 
     const _id = updatePriceData._id;
     delete updatePriceData['_id'];
-    const response = await fetch(`http://localhost:8080/prices/update/${_id}`, {
+    const response = await fetch(`/prices/update/${_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

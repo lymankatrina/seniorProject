@@ -1,7 +1,7 @@
 import { priceSchema } from './priceSchema.js';
 
 export function loadPrices() {
-  fetch('http://localhost:8080/prices/')
+  fetch('/prices/')
     .then((response) => response.json())
     .then((prices) => {
       const priceCardsContainer = document.getElementById('priceCardsContainer');

@@ -1,7 +1,7 @@
 import { surveySchema } from './surveySchema.js';
 
 export function loadSurveys() {
-  fetch('http://localhost:8080/surveys/all')
+  fetch('/surveys/all')
     .then((response) => response.json())
     .then((surveys) => {
       const surveyCardsContainer = document.getElementById('surveyCardsContainer');

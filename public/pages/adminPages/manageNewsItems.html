@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage News</title>
+    <meta name="description" content="Admin Manage News Items for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage News Items</h1>
+
+      <div class="options">
+        <button id="showGetNewsItems">Get News Items</button>
+        <button id="showNewNewsItems">Add a News Item</button>
+        <button id="showUpdateNewsItems">Update an Existing News Item</button>
+        <button id="showDeleteNewsItems">Delete an Existing News Item</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getNewsItemsContainer" style="display: none" aria-labelledby="getNewsItemsHeading">
+          <h2 id="getNewsItemsHeading">Get News Items</h2>
+          <div id="getNewsItemsMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newNewsItemsContainer" style="display: none" aria-labelledby="newNewsItemsHeading">
+          <h2 id="newNewsItemsHeading">Add a News Item</h2>
+          <form class="newNewsItemsForm" id="newNewsItemsForm" action="/news/new" method="POST"></form>
+          <div id="newNewsItemsMessage"></div>
+        </section>
+
+        <section class="form-container" id="updateNewsItemsContainer" style="display: none" aria-labelledby="updateNewsItemsHeading">
+          <h2 id="updateNewsItemsHeading">Update an Existing News Item</h2>
+          <form id="searchNewsItemsForm">
+            <label for="newsItemId">Enter News Item ID:</label><br />
+            <input type="text" id="newsItemId" name="newsItemId" required /><br /><br />
+            <input type="submit" value="Get News Item" /><br />
+          </form>
+          <div id="updateFormContainer" style="display: none">
+            <form id="updateNewsItemsForm"></form>
+          </div>
+          <div id="updateNewsItemsMessage"></div>
+        </section>
+
+        <section class="form-container" id="deleteNewsItemsContainer" style="display: none" aria-labelledby="deleteNewsItemsHeading">
+          <h2 id="deleteNewsItemsHeading">Delete an Existing News Item</h2>
+          <p>This will delete a news item from the database. This action cannot be reversed!</p>
+          <form class="deleteNewsItemsForm" id="deleteNewsItemsForm">
+            <label for="deleteNewsItemsId">News Item ID:</label><br />
+            <input type="text" id="deleteNewsItemsId" name="deleteNewsItemsId" required /><br /><br />
+            <input type="submit" value="Delete News Item" /><br />
+          </form>
+          <div id="deleteNewsItemsMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="NewsItemsContainer" id="NewsItemsContainer"></div>
+
+      <a href="/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../../scripts/headers/adminHeaderFunction.js"></script>
+    <script src="../../scripts/footerFunction.js"></script>
+    <script type="module" src="../../scripts/admin/manageNewsItems.js"></script>
+  </body>
+</html>

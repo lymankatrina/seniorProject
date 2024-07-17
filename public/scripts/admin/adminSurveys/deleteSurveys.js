@@ -5,7 +5,7 @@ export function deleteSurvey() {
     event.preventDefault();
     const surveyId = document.getElementById('deleteSurveyId').value;
 
-    fetch(`http://localhost:8080/surveys/delete/${surveyId}`, {
+    fetch(`/surveys/delete/${surveyId}`, {
       method: 'DELETE'
     })
       .then((response) => response.text())

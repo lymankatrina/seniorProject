@@ -1,23 +1,23 @@
-import { newsSchema } from './newsSchema.js';
+import { newsItemsSchema } from './newsItemsSchema.js';
 
-export function loadNews() {
-  console.log('loadNews called');
-  fetch('http://localhost:8080/news/all')
+export function loadNewsItems() {
+  console.log('loadNewsItems called');
+  fetch('/news/all')
     .then((response) => response.json())
-    .then(async (news) => {
-      const newsItemsContainer = document.getElementById('newsItemsContainer');
+    .then(async (newsItems) => {
+      const newsItemsContainer = document.getElementById('NewsItemsContainer');
       newsItemsContainer.innerHTML = '';
 
-      for (const newsItem of news) {
-        const newsCard = document.createElement('div');
-        newsCard.classList.add('news-card');
+      for (const newsItem of newsItems) {
+        const newsItemCard = document.createElement('div');
+        newsItemCard.classList.add('news-item-card');
 
         const idFieldElement = document.createElement('p');
         idFieldElement.classList.add('_id');
         idFieldElement.innerHTML = `<strong>ID:</strong> ${newsItem._id}`;
-        newsCard.appendChild(idFieldElement);
+        newsItemCard.appendChild(idFieldElement);
 
-        newsSchema.forEach((field) => {
+        newsItemsSchema.forEach((field) => {
           let fieldElement;
 
           if (field.type === 'url') {
@@ -31,7 +31,7 @@ export function loadNews() {
               fieldElement.href = newsItem[field.id];
               fieldElement.title = `${newsItem.title} Link`;
               fieldElement.classList.add(field.id);
-              fieldElement.textContent = `${newsItem[field.id]}`;
+              fieldElement.text = `${newsItem[field.id]}`;
             }
           } else {
             fieldElement = document.createElement('p');
@@ -47,19 +47,19 @@ export function loadNews() {
             fieldElement.innerHTML = `<strong>${field.label}:</strong> ${fieldValue || ''}`;
           }
 
-          newsCard.appendChild(fieldElement);
+          newsItemCard.appendChild(fieldElement);
         });
 
-        newsItemsContainer.appendChild(newsCard);
+        newsItemsContainer.appendChild(newsItemCard);
       }
     })
     .catch((error) => {
-      console.error('Error fetching news:', error);
-      const newsItemsContainer = document.getElementById('newsItemsContainer');
+      console.error('Error fetching news items:', error);
+      const newsItemsContainer = document.getElementById('NewsItemsContainer');
       newsItemsContainer.innerHTML = `<p>Error fetching news items: ${error}</p>`;
     });
 }
 
-export function getNews() {
-  loadNews();
+export function getNewsItems() {
+  loadNewsItems();
 }

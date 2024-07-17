@@ -1,6 +1,6 @@
 async function fetchComingSoonMovies() {
   try {
-    const response = await fetch('http://localhost:8080/showtimes/coming-soon');
+    const response = await fetch('/showtimes/coming-soon');
     if (!response.ok) {
       throw new Error('Failed to fetch movies coming soon');
     }

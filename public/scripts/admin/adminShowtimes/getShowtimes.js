@@ -2,7 +2,7 @@ import { showtimeSchema } from './showtimesSchema.js';
 
 export function loadMovies() {
   console.log('loadMovies called');
-  fetch('http://localhost:8080/movies/all')
+  fetch('/movies/all')
     .then((response) => response.json())
     .then((movies) => {
       const movieCardsContainer = document.getElementById('movieCardsContainer');

@@ -61,7 +61,7 @@ export function addUser() {
       newUserData.isAdmin = false;
     }
 
-    fetch('http://localhost:8080/users/new', {
+    fetch('/users/new', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -5,7 +5,7 @@ export function updateUser() {
   document.getElementById('getUserForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const _id = document.getElementById('_id').value;
-    const response = await fetch(`http://localhost:8080/users/${_id}`);
+    const response = await fetch(`/users/${_id}`);
     if (!response.ok) {
       alert('User not found');
       return;
@@ -92,7 +92,7 @@ export function updateUser() {
 
     const _id = updateUserData._id;
     delete updateUserData['_id'];
-    const response = await fetch(`http://localhost:8080/users/update/${_id}`, {
+    const response = await fetch(`/users/update/${_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

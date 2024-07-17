@@ -1,13 +1,13 @@
-import { newsSchema } from './newsSchema.js';
-import { loadNews } from './getNews.js';
+import { newsItemsSchema } from './newsItemsSchema.js';
+import { loadNewsItems } from './getNewsItems.js';
 
-export function updateNews() {
-  document.getElementById('searchNewsForm').addEventListener('submit', async function (event) {
+export function updateNewsItems() {
+  document.getElementById('searchNewsItemsForm').addEventListener('submit', async function (event) {
     event.preventDefault();
-    const newsId = document.getElementById('newsId').value;
-    const response = await fetch(`http://localhost:8080/news/${newsId}`);
+    const newsItemId = document.getElementById('newsItemId').value;
+    const response = await fetch(`/news/${newsItemId}`);
     if (!response.ok) {
-      alert('News not found');
+      alert('News Item not found');
       return;
     }
     const data = await response.json();
@@ -16,8 +16,9 @@ export function updateNews() {
   });
 
   function generateUpdateForm(data) {
-    const form = document.getElementById('updateNewsForm');
+    const form = document.getElementById('updateNewsItemsForm');
     form.innerHTML = '';
+
     const idWrapper = document.createElement('div');
     idWrapper.classList.add('field-_id');
 
@@ -37,7 +38,7 @@ export function updateNews() {
     form.appendChild(idWrapper);
     form.appendChild(document.createElement('br'));
 
-    newsSchema.forEach((field) => {
+    newsItemsSchema.forEach((field) => {
       const wrapper = document.createElement('div');
       wrapper.classList.add(`field-${field.id}`);
 
@@ -46,10 +47,15 @@ export function updateNews() {
       label.textContent = field.label;
       wrapper.appendChild(label);
 
+      let input;
+
       if (field.type === 'radio') {
         field.options.forEach((option) => {
-          const input = document.createElement('input');
-          input.classList.add('input-radio');
+          const radioWrapper = document.createElement('div');
+          radioWrapper.classList.add('radio-wrapper');
+
+          input = document.createElement('input');
+          input.classList.add('input-${field.type}');
           input.type = field.type;
           input.id = `${field.id}-${option}`;
           input.name = field.id;
@@ -61,13 +67,29 @@ export function updateNews() {
           optionLabel.setAttribute('for', `${field.id}-${option}`);
           optionLabel.textContent = option;
 
-          wrapper.appendChild(input);
-          wrapper.appendChild(optionLabel);
-          wrapper.appendChild(document.createElement('br'));
+          radioWrapper.appendChild(input);
+          radioWrapper.appendChild(optionLabel);
+          wrapper.appendChild(radioWrapper);
         });
+      } else if (field.type === 'checkbox') {
+        input = document.createElement('input');
+        input.classList.add(`input-${field.type}`);
+        input.type = field.type;
+        input.id = field.id;
+        input.name = field.id;
+        input.checked = data[field.id];
+        if (field.required) input.required = true;
+      } else if (field.type === 'textarea') {
+        input = document.createElement('textarea');
+        input.classList.add('input-newNewsItems');
+        input.id = field.id;
+        input.name = field.id;
+        if (field.required) input.required = true;
+        if (field.placeholder) input.placeholder = field.placeholder;
+        input.value = data[field.id] || '';
       } else {
-        const input = document.createElement('input');
-        input.classList.add('input-newNews');
+        input = document.createElement('input');
+        input.classList.add('input-newNewsItems');
         input.type = field.type;
         input.id = field.id;
         input.name = field.id;
@@ -76,11 +98,10 @@ export function updateNews() {
         if (field.min !== undefined) input.min = field.min;
         if (field.max !== undefined) input.max = field.max;
         if (field.step !== undefined) input.step = field.step;
-        if (data[field.id]) input.value = data[field.id];
-
-        wrapper.appendChild(input);
+        input.value = data[field.id] || '';
       }
-
+      
+      wrapper.appendChild(input);
       form.appendChild(wrapper);
       form.appendChild(document.createElement('br'));
     });
@@ -95,23 +116,30 @@ export function updateNews() {
     form.addEventListener('submit', async function (event) {
       event.preventDefault();
       const formData = new FormData(this);
-      const newsData = {};
+      const newsItemData = {};
       formData.forEach((value, key) => {
-        if (key !== '_id') {
-          newsData[key] = value;
-        }
-      });
+      if (key === 'isActive') {
+        newsItemData[key] = value === 'on';
+      } else {
+        newsItemData[key] = value;
+      }
+    });
+
+    if (!formData.has('isActive')) {
+      newsItemData.isActive = false;
+    }
       const _id = formData.get('_id');
-      const response = await fetch(`http://localhost:8080/news/update/${_id}`, {
+      delete newsItemData['_id'];
+      const response = await fetch(`/news/update/${_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newsData)
+        body: JSON.stringify(newsItemData)
       });
-      loadNews();
+      loadNewsItems();
 
-      const messageDiv = document.getElementById('updateNewsMessage');
+      const messageDiv = document.getElementById('updateNewsItemsMessage');
       if (response.ok) {
         const message = await response.text();
         messageDiv.textContent = message;

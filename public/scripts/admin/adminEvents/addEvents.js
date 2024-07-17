@@ -69,7 +69,7 @@ document.getElementById('newEventsForm').addEventListener('submit', function (ev
     }
   });
 
-  fetch('http://localhost:8080/events/new', {
+  fetch('/events/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

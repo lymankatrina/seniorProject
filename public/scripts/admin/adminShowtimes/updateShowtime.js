@@ -4,7 +4,7 @@ export function updateShowtime() {
   document.getElementById('getShowtimeForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const movieId = document.getElementById('movieId').value;
-    const response = await fetch(`http://localhost:8080/showtimes/search/${movieId}`);
+    const response = await fetch(`/showtimes/search/${movieId}`);
     if (!response.ok) {
       alert('Showtime not found');
       return;
@@ -88,7 +88,7 @@ export function updateShowtime() {
         });
         const _id = formData.get('_id');
 
-        fetch(`http://localhost:8080/showtimes/update/${_id}`, {
+        fetch(`/showtimes/update/${_id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

@@ -1,6 +1,6 @@
 let headerHtml;
 
-fetch('/partials/adminHeader.html')
+fetch('/pages/partials/adminHeader.html')
   .then((response) => {
     if (!response.ok) {
       throw new Error('Failed to fetch header HTML');
@@ -9,7 +9,7 @@ fetch('/partials/adminHeader.html')
   })
   .then((fetchedHeaderHtml) => {
     headerHtml = fetchedHeaderHtml;
-    return fetch('http://localhost:8080/profile', {
+    return fetch('/profile', {
       credentials: 'include'
     });
   })

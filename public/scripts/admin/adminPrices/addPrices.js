@@ -61,7 +61,7 @@ export function addPrice() {
       newPriceData.isAdmin = false;
     }
 
-    fetch('http://localhost:8080/prices/add', {
+    fetch('/prices/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

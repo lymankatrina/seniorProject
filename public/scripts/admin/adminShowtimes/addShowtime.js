@@ -46,7 +46,7 @@ document.getElementById('newShowtimesForm').addEventListener('submit', function 
     showtimeData[key] = value;
   });
 
-  fetch('http://localhost:8080/showtimes/new', {
+  fetch('/showtimes/new', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
