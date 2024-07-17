@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage Prices</title>
+    <meta name="description" content="Admin Manage Prices for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage Prices</h1>
+
+      <div class="options">
+        <button id="showGetPrices">Get Prices</button>
+        <button id="showNewPrice">Add a New Price</button>
+        <button id="showUpdatePrice">Update an Existing Price</button>
+        <button id="showDeletePrice">Delete an Existing Price</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getPricesContainer" style="display: none" aria-labelledby="getPricesHeading">
+          <h2 id="getPricesHeading">Get Prices</h2>
+          <form class="getPrices" id="getPrices"><input type="submit" value="Get Prices" /> <br /></form>
+          <div id="getPricesMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newPriceContainer" style="display: none" aria-labelledby="newPriceHeading">
+          <h2 id="newPriceHeading">Add a New Price</h2>
+          <form class="newPriceForm" id="newPriceForm" action="http://localhost:8080/prices/new" method="POST"></form>
+          <div id="newPriceMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="updatePriceContainer" style="display: none" aria-labelledby="updatePriceHeading">
+          <h2 id="updatePriceHeading">Update an Existing Price</h2>
+          <form id="getPriceForm">
+            <label for="_id">Existing Price ID:</label><br />
+            <input type="text" id="_id" name="_id" required /><br /><br />
+            <input type="submit" value="Get Existing Price Data" /><br />
+          </form>
+          <div id="updatePriceFormContainer" style="display: none">
+            <form id="updatePriceForm"></form>
+          </div>
+          <div id="updatePriceMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="deletePriceContainer" style="display: none" aria-labelledby="deletePriceHeading">
+          <h2 id="deletePriceHeading">Delete an Existing Price</h2>
+          <p>This will delete a price from the database. This action cannot be reversed!</p>
+          <form class="deletePriceForm" id="deletePriceForm">
+            <label for="deletePriceId">Price ID:</label><br />
+            <input type="text" id="deletePriceId" name="deletePriceId" required /><br /><br />
+            <input type="submit" value="Delete Price" /><br />
+          </form>
+          <div id="deletePriceMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="priceCardsContainer" id="priceCardsContainer"></div>
+
+      <a href="http://localhost:8080/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../scripts/adminHeaderFunction.js"></script>
+    <script src="../scripts/footerFunction.js"></script>
+    <script type="module" src="../scripts/managePrices.js"></script>
+  </body>
+</html>

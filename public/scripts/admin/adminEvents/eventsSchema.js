@@ -1,0 +1,15 @@
+export const eventsSchema = [
+  { id: 'title', label: 'Title', type: 'text', required: true },
+  { id: 'tagline', label: 'Tagline', type: 'text', required: true },
+  { id: 'description', label: 'Description', type: 'text', required: true },
+  { id: 'startDate', label: 'Start Date', type: 'date', required: true },
+  { id: 'endDate', label: 'End Date', type: 'date', required: true },
+  { id: 'startTime', label: 'Start Time', type: 'text', placeholder: 'hh:mm AM/PM', required: true },
+  { id: 'endTime', label: 'End Time', type: 'text', placeholder: 'hh:mm AM/PM',  required: true },
+  { id: 'image', label: 'Image URL', type: 'url', required: true },
+  { id: 'link', label: 'link URL', type: 'url', required: true },
+  { id: 'type', label: 'Event Type', type: 'text', required: true },
+  { id: 'postStartDate', label: 'Post Start Date', type: 'date', required: true },
+  { id: 'postEndDate', label: 'Post End Date', type: 'date', required: true },
+  { id: 'status', label: 'Status', type: 'radio', options: ['public', 'private'], required: true },
+];

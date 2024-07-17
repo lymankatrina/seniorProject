@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage Events</title>
+    <meta name="description" content="Admin Manage Events Items for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage Events</h1>
+
+      <div class="options">
+        <button id="showGetEvents">Get Events</button>
+        <button id="showNewEvents">Add an Event</button>
+        <button id="showUpdateEvents">Update an Existing Event</button>
+        <button id="showDeleteEvents">Delete an Existing Event</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getEventsItemsContainer" style="display: none" aria-labelledby="getEventsHeading">
+          <h2 id="getEventsHeading">Get Events</h2>
+          <div id="getEventsMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newEventsItemsContainer" style="display: none" aria-labelledby="newEventsHeading">
+          <h2 id="newEventsHeading">Add a Events Item</h2>
+          <form class="eventsForm" id="newEventsForm" action="/events/new" method="POST"></form>
+          <div id="message"></div>
+        </section>
+
+        <section class="form-container" id="updateEventsItemsContainer" style="display: none" aria-labelledby="updateEventsHeading">
+          <h2 id="updateEventsHeading">Update an Existing Events Item</h2>
+          <form id="searchEventsForm">
+            <label for="eventsId">Enter Events ID:</label><br />
+            <input type="text" id="eventsId" name="eventsId" required /><br /><br />
+            <input type="submit" value="Get Events Item" /><br />
+          </form>
+          <div id="updateFormContainer" style="display: none">
+            <form id="updateEventsForm"></form>
+          </div>
+          <div id="updateEventsMessage"></div>
+        </section>
+
+        <section class="form-container" id="deleteEventsItemsContainer" style="display: none" aria-labelledby="deleteEventsHeading">
+          <h2 id="deleteEventsHeading">Delete an Existing Events Item</h2>
+          <p>This will delete a events item from the database. This action cannot be reversed!</p>
+          <form class="deleteEventsForm" id="deleteEventsForm">
+            <label for="deleteEventsId">Events ID:</label><br />
+            <input type="text" id="deleteEventsId" name="deleteEventsId" required /><br /><br />
+            <input type="submit" value="Delete Events Item" /><br />
+          </form>
+          <div id="deleteEventsMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="eventsItemsContainer" id="eventsItemsContainer"></div>
+
+      <a href="/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../scripts/adminHeaderFunction.js"></script>
+    <script src="../scripts/footerFunction.js"></script>
+    <script type="module" src="../scripts/manageEvents.js"></script>
+  </body>
+</html>

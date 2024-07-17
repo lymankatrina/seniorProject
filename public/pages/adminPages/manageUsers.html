@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage Users</title>
+    <meta name="description" content="Admin Manage Users for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage Users</h1>
+
+      <div class="options">
+        <button id="showGetUsers">Get Users</button>
+        <button id="showNewUser">Add a New User</button>
+        <button id="showUpdateUser">Update an Existing User</button>
+        <button id="showDeleteUser">Delete an Existing User</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getUsersContainer" style="display: none" aria-labelledby="getUsersHeading">
+          <h2 id="getUsersHeading">Get Users</h2>
+          <form class="getUsers" id="getUsers"><input type="submit" value="Get Users" /> <br /></form>
+          <div id="getUsersMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newUserContainer" style="display: none" aria-labelledby="newUserHeading">
+          <h2 id="newUserHeading">Add a New User</h2>
+          <form class="newUserForm" id="newUserForm" action="http://localhost:8080/users/new" method="POST"></form>
+          <div id="newUserMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="updateUserContainer" style="display: none" aria-labelledby="updateUserHeading">
+          <h2 id="updateUserHeading">Update an Existing User</h2>
+          <form id="getUserForm">
+            <label for="_id">Existing User ID:</label><br />
+            <input type="text" id="_id" name="_id" required /><br /><br />
+            <input type="submit" value="Get Existing User Data" /><br />
+          </form>
+          <div id="updateUserFormContainer" style="display: none">
+            <form id="updateUserForm"></form>
+          </div>
+          <div id="updateUserMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="deleteUserContainer" style="display: none" aria-labelledby="deleteUserHeading">
+          <h2 id="deleteUserHeading">Delete an Existing User</h2>
+          <p>This will delete a user from the database. This action cannot be reversed!</p>
+          <form class="deleteUserForm" id="deleteUserForm">
+            <label for="deleteUserId">User ID:</label><br />
+            <input type="text" id="deleteUserId" name="deleteUserId" required /><br /><br />
+            <input type="submit" value="Delete User" /><br />
+          </form>
+          <div id="deleteUserMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="userCardsContainer" id="userCardsContainer"></div>
+
+      <a href="http://localhost:8080/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../scripts/adminHeaderFunction.js"></script>
+    <script src="../scripts/footerFunction.js"></script>
+    <script type="module" src="../scripts/manageUsers.js"></script>
+  </body>
+</html>

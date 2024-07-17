@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage Surveys</title>
+    <meta name="description" content="Admin Manage Surveys for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage Surveys</h1>
+
+      <div class="options">
+        <button id="showGetSurveys">Get Surveys</button>
+        <button id="showNewSurvey">Add a New Survey</button>
+        <button id="showUpdateSurvey">Update an Existing Survey</button>
+        <button id="showDeleteSurvey">Delete an Existing Survey</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getSurveysContainer" style="display: none" aria-labelledby="getSurveysHeading">
+          <h2 id="getSurveysHeading">Get Surveys</h2>
+          <form class="getSurveys" id="getSurveys"><input type="submit" value="Get Surveys" /> <br /></form>
+          <div id="getSurveysMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newSurveyContainer" style="display: none" aria-labelledby="newSurveyHeading">
+          <h2 id="newSurveyHeading">Add a New Survey</h2>
+          <form class="newSurveyForm" id="newSurveyForm" action="http://localhost:8080/surveys/new" method="POST"></form>
+          <div id="newSurveyMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="updateSurveyContainer" style="display: none" aria-labelledby="updateSurveyHeading">
+          <h2 id="updateSurveyHeading">Update an Existing Survey</h2>
+          <form id="getSurveyForm">
+            <label for="_id">Existing Survey ID:</label><br />
+            <input type="text" id="_id" name="_id" required /><br /><br />
+            <input type="submit" value="Get Existing Survey Data" /><br />
+          </form>
+          <div id="updateSurveyFormContainer" style="display: none">
+            <form id="updateSurveyForm"></form>
+          </div>
+          <div id="updateSurveyMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="deleteSurveyContainer" style="display: none" aria-labelledby="deleteSurveyHeading">
+          <h2 id="deleteSurveyHeading">Delete an Existing Survey</h2>
+          <p>This will delete a survey from the database. This action cannot be reversed!</p>
+          <form class="deleteSurveyForm" id="deleteSurveyForm">
+            <label for="deleteSurveyId">Survey ID:</label><br />
+            <input type="text" id="deleteSurveyId" name="deleteSurveyId" required /><br /><br />
+            <input type="submit" value="Delete Survey" /><br />
+          </form>
+          <div id="deleteSurveyMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="surveyCardsContainer" id="surveyCardsContainer"></div>
+
+      <a href="http://localhost:8080/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../scripts/adminHeaderFunction.js"></script>
+    <script src="../scripts/footerFunction.js"></script>
+    <script type="module" src="../scripts/manageSurveys.js"></script>
+  </body>
+</html>

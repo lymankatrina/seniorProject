@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>San Juan Theater | Admin Manage Movies</title>
+    <meta name="description" content="Admin Manage Movies for San Juan Theater" />
+    <link rel="stylesheet" href="https://use.typekit.net/vem8cxz.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://kit.fontawesome.com/db6c0dda2a.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main>
+      <h1>Manage Movies</h1>
+
+      <div class="options">
+        <button id="showGetMovies">Get Movies</button>
+        <button id="showNewMovie">Add a New Movie</button>
+        <button id="showUpdateMovie">Update an Existing Movie</button>
+        <button id="showDeleteMovie">Delete an Existing Movie</button>
+      </div>
+
+      <div class="forms">
+        <section class="form-container" id="getMoviesContainer" style="display: none" aria-labelledby="getMoviesHeading">
+          <h2 id="getMoviesHeading">Get Movies</h2>
+          <div id="getMoviesMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="newMovieContainer" style="display: none" aria-labelledby="newMovieHeading">
+          <h2 id="newMovieHeading">Add a New Movie</h2>
+          <form class="movieForm" id="newMovieForm" action="http://localhost:8080/movies/new" method="POST"></form>
+          <div id="message"></div>
+          <h3>Add Showtimes</h3>
+          <form class="showtimesForm" id="newShowtimesForm" action="http://localhost:8080/showtimes/new" method="POST"></form>
+          <div id="showtimesMessage"></div>
+          <h3>Generate Tickets</h3>
+          <form class="ticketsForm" id="generateTicketsForm">
+            <label for="showtimeId">Showtime ID:</label><br />
+            <input type="text" id="showtimeId" name="showtimeId" required /><br /><br />
+            <input type="submit" value="Generate Tickets" /><br />
+          </form>
+          <div id="ticketsMessage"></div>
+        </section>
+
+        <section class="form-container" id="updateMovieContainer" style="display: none" aria-labelledby="updateMovieHeading">
+          <h2 id="updateMovieHeading">Update an Existing Movie</h2>
+          <form id="searchMovieForm">
+            <label for="title">Search Movie Title:</label><br />
+            <input type="text" id="title" name="title" required /><br /><br />
+            <input type="submit" value="Get Movie" /><br />
+          </form>
+          <div id="updateFormContainer" style="display: none">
+            <form id="updateMovieForm"></form>
+          </div>
+          <div id="updateMovieMessage"></div>
+          <h3>Update Showtimes</h3>
+          <form id="getShowtimeForm">
+            <label for="movieId">Enter Movie ID:</label><br />
+            <input type="text" id="movieId" name="movieId" required /><br /><br />
+            <input type="submit" value="Get Showtimes" /><br />
+          </form>
+          <div id="updateShowtimeFormContainer" style="display: none">
+            <form id="updateShowtimeForm"></form>
+          </div>
+          <div id="updateShowtimeMessage" aria-live="polite"></div>
+        </section>
+
+        <section class="form-container" id="deleteMovieContainer" style="display: none" aria-labelledby="deleteMovieHeading">
+          <h2 id="deleteMovieHeading">Delete an Existing Movie</h2>
+          <p>This will delete a movie from the database. This action cannot be reversed!</p>
+          <form class="deleteMovieForm" id="deleteMovieForm">
+            <label for="deleteMovieId">Movie ID:</label><br />
+            <input type="text" id="deleteMovieId" name="deleteMovieId" required /><br /><br />
+            <input type="submit" value="Delete Movie" /><br />
+          </form>
+          <div id="deleteMovieMessage" aria-live="polite"></div>
+          <h3 id="deleteShowtimeHeading">Delete Existing Showtimes</h3>
+          <p>This action cannot be reversed!</p>
+          <form class="deleteShowtimeForm" id="deleteShowtimeForm">
+            <label for="deleteShowtimeId">Showtime ID:</label><br />
+            <input type="text" id="deleteShowtimeId" name="deleteShowtimeId" required /><br /><br />
+            <input type="submit" value="Delete Showtimes" /><br />
+          </form>
+          <div id="deleteShowtimeMessage" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="movieCardsContainer" id="movieCardsContainer"></div>
+
+      <a href="http://localhost:8080/"><p>Return Home</p></a>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="../scripts/adminHeaderFunction.js"></script>
+    <script src="../scripts/footerFunction.js"></script>
+    <script type="module" src="../scripts/manageMovies.js"></script>
+  </body>
+</html>
