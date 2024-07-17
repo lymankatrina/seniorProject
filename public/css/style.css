@@ -709,7 +709,7 @@ section.movies {
 
 .news-content {
   display: flex;
-  background-color: black;
+  background-color: #0b0205;
   margin: 1em;
 }
 
@@ -744,13 +744,13 @@ section.movies {
 .news-title {
   font-size: 1.5em;
   margin: 0;
-  color: #00f100;
+  color: #00cc00;
   text-shadow: 2px 2px #0b0205;
 }
 
 .news-tagline {
   font-size: 1.2em;
-  color: #f40b22;
+  color: #d60a1f;
   margin: 0;
 }
 
@@ -764,7 +764,7 @@ section.movies {
 
 .news-date {
   font-size: 0.9em;
-  color: #908b8d;
+  color: #7d787a;
 }
 
 .news-footer {
@@ -772,7 +772,7 @@ section.movies {
 }
 
 .news-read-more a {
-  color: #f40b22;
+  color: #d60a1f;
   text-decoration: none;
   font-weight: bold;
 }
@@ -825,7 +825,7 @@ section.movies {
 
 .event-tagline {
   font-size: 1.2em;
-  color: #555;
+  color: #0b0205;
   margin: 0;
 }
 
@@ -839,12 +839,12 @@ section.movies {
 
 .event-dates {
   font-size: 0.9em;
-  color: #908b8d;
+  color: #7d787a;
 }
 
 .event-time {
   font-size: 0.9em;
-  color: #908b8d;
+  color: #7d787a;
 }
 
 .event-footer {
@@ -852,7 +852,7 @@ section.movies {
 }
 
 .event-read-more a {
-  color: #f40b22;
+  color: #d60a1f;
   text-decoration: none;
   font-weight: bold;
 }
