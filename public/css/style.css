@@ -363,6 +363,14 @@ button {
   text-align: center;
   font-size: 1em;
   border: none;
+  border-radius: 0.5em;
+  margin: 0.5em;
+}
+
+button a {
+  background-color: #2ab7ca;
+  color: #0b0205;
+  text-decoration: none;
 }
 
 .movieCardsContainer {
