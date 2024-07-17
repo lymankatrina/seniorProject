@@ -32,11 +32,15 @@ export class UsersController {
         return;
       }
 
-      res.status(200).json({ isAdmin: user.isAdmin });
-  } catch (error) {
-    console.error('Error fetching user admin status:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+      const userName = user.firstName || null;
+
+      const isAdmin = user.isAdmin || false;
+      res.status(200).json({ isAdmin, userName });
+
+    } catch (error) {
+      console.error('Error fetching user admin status:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   };
   
   getUsersById = async (req: Request, res: Response): Promise<void> => {

@@ -2,12 +2,16 @@ async function fetchUserAdminStatus() {
   try {
     const response = await fetch('/users/check-admin');
     if (!response.ok) {
+      if (response.status === 401) {
+        console.warn('User not authenticated');
+        return { isAdmin: false, userName: 'Guest' };
+      }
       throw new Error('Failed to fetch user admin status');
     }
     return await response.json();
   } catch (error) {
     console.error('Error fetching user admin status:', error);
-    return null;
+    return { isAdmin: false, userName: 'Guest' };
   }
 }
 
@@ -25,39 +29,20 @@ async function fetchHeader(headerUrl) {
   }
 }
 
-async function fetchUserProfile() {
-  try {
-    const response = await fetch('/profile', { credentials: 'include' });
-    if (!response.ok) {
-      if (response.status === 401 || response.status === 403) {
-        return null;
-      }
-      throw new Error('Failed to fetch profile');
-    }
-    const user = await response.json();
-    return user;
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
-    return null;
-  }
-}
-
 async function renderHeader() {
   try {
-    const adminStatusResponse = await fetchUserAdminStatus();
+    const { isAdmin, userName } = await fetchUserAdminStatus();
     let headerUrl;
 
-  if (!adminStatusResponse) {
-    headerUrl = '/pages/partials/header.html';
-  } else if (adminStatusResponse.isAdmin) {
+  if (isAdmin) {
     headerUrl = '/pages/partials/adminHeader.html';
-  } else {
+  } else if (userName !== 'Guest') {
     headerUrl = '/pages/partials/loggedInHeader.html';
+  } else {
+    headerUrl = '/pages/partials/header.html';
   }
 
   const headerHtml = await fetchHeader(headerUrl);
-  const user = await fetchUserProfile();
-  const userName = user ? (user.userProfile.given_name || 'User') : 'Guest';
   const modifiedHeaderHtml = headerHtml.replace('{{userName}}', userName);
   
   document.getElementById('header-placeholder').innerHTML = modifiedHeaderHtml;

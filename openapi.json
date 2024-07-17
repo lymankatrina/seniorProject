@@ -131,21 +131,51 @@
         }
       }
     },
-    "/users/{id}": {
+    "/users/all": {
       "get": {
         "tags": ["Users"],
-        "summary": "Get a user by ID",
-        "description": "This will return a single user by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "summary": "Get all users",
+        "description": "Get an array of all users in the collection",
+        "responses": {
+          "200": {
+            "description": "A list of users.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "_id": "uniqueId",
+                  "firstName": "Horatio",
+                  "lastName": "Crunch",
+                  "userName": "Horatio Crunch",
+                  "phone": "888-555-1234",
+                  "email": "capncrunch@example.com",
+                  "isAdmin": false
+                }
+              }
             }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Requires Authentication"
+          },
+          "403": {
+            "description": "Requires Administrative Access"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Error message"
           }
-        ],
+        }
+      }
+    },
+    "/users/check-admin": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get current users status and name",
+        "description": "This will return the current users status and name if authenticated",
         "responses": {
           "200": {
             "description": "Successful Operation",
