@@ -9,3 +9,4 @@ authRouter.get('/', authController.checkAuth);
 authRouter.get('/landingpage', authController.callback);
 
 authRouter.get('/profile', requiresAuth(), authController.getProfile);
+

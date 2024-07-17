@@ -28,7 +28,6 @@ const checkAuth = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
 const callback = (req: Request, res: Response) => {
   res.send(`Authentication successful. Welcome to the San Juan Theater Directory! Add '/api-docs' to the url to view API documentation!`);
 };
