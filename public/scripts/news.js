@@ -1,3 +1,20 @@
+async function fetchUserAdminStatus() {
+  try {
+    const response = await fetch('/users/check-admin');
+    if (!response.ok) {
+      if (response.status === 401) {
+        console.warn('User not authenticated');
+        return { isAdmin: false, userName: 'Guest' };
+      }
+      throw new Error('Failed to fetch user admin status');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user admin status:', error);
+    return { isAdmin: false, userName: 'Guest' };
+  }
+}
+
 async function fetchPublicNews() {
   try {
     const response = await fetch('/news/public');
@@ -90,9 +107,14 @@ function displayAdminNews(adminNews) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  const { isAdmin } = await fetchUserAdminStatus();
   fetchPublicNews();
-  fetchAdminNews();
+  if (isAdmin) {
+    fetchAdminNews();
+  } else {
+    document.getElementById('adminNewsContainer').style.display = 'none';
+  }
 });
 
 export { fetchPublicNews, displayPublicNews, fetchAdminNews, displayAdminNews };
