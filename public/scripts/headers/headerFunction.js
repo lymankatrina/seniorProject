@@ -17,23 +17,49 @@ async function fecthHeader(headerUrl) {
     if (!response.ok) {
       throw new Error('Failed to fetch header');
     }
-    const data = await response.text();
-    document.getElementById('header-placeholder').innerHTML = data;
-    setActiveNavLink();
+    const headerHtml = await response.text();
+    return headerHtml;
   } catch (error) {
     console.error('Error loading header:', error);
+    throw error;
+  }
+}
+
+async function fetchUserProfile() {
+  try {
+    const response = await fetch('/profile', { credentials: 'include' });
+    if (!response.ok) {
+      throw new Error('Failed to fetch profile');
+    }
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
   }
 }
 
 async function renderHeader() {
-  const adminStatusResponse = await fetchUserAdminStatus();
+  try {
+    const adminStatusResponse = await fetchUserAdminStatus();
+    let headerUrl;
 
   if (!adminStatusResponse) {
-    fecthHeader('/pages/partials/header.html');
+    headerUrl = '/pages/partials/header.html';
   } else if (adminStatusResponse.isAdmin) {
-    fecthHeader('/pages/partials/adminHeader.html');
+    headerUrl = '/pages/partials/adminHeader.html';
   } else {
-    fecthHeader('/pages/partials/loggedInHeader.html');
+    headerUrl = '/pages/partials/loggedInHeader.html';
+  }
+
+  const [headerHtml, user] = await Promise.all([fetchHeader(headerUrl), fetchUserProfile()]);
+  const userName = user.userProfile.given_name || 'User';
+  const modifiedHeaderHtml = headerHtml.replace('{{userName}}', userName);
+  
+  document.getElementById('header-placeholder').innerHTML = modifiedHeaderHtml;
+    setActiveNavLink();
+  } catch (error) {
+    console.error('Error rendering header:', error);
   }
 }
 
