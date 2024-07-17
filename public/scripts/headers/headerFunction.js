@@ -11,7 +11,7 @@ async function fetchUserAdminStatus() {
   }
 }
 
-async function fecthHeader(headerUrl) {
+async function fetchHeader(headerUrl) {
   try {
     const response = await fetch(headerUrl);
     if (!response.ok) {
