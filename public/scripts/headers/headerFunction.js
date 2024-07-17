@@ -29,13 +29,16 @@ async function fetchUserProfile() {
   try {
     const response = await fetch('/profile', { credentials: 'include' });
     if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        return null;
+      }
       throw new Error('Failed to fetch profile');
     }
     const user = await response.json();
     return user;
   } catch (error) {
     console.error('Error fetching user profile:', error);
-    throw error;
+    return null;
   }
 }
 
@@ -52,8 +55,9 @@ async function renderHeader() {
     headerUrl = '/pages/partials/loggedInHeader.html';
   }
 
-  const [headerHtml, user] = await Promise.all([fetchHeader(headerUrl), fetchUserProfile()]);
-  const userName = user.userProfile.given_name || 'User';
+  const headerHtml = await fetchHeader(headerUrl);
+  const user = await fetchUserProfile();
+  const userName = user ? (user.userProfile.given_name || 'User') : 'Guest';
   const modifiedHeaderHtml = headerHtml.replace('{{userName}}', userName);
   
   document.getElementById('header-placeholder').innerHTML = modifiedHeaderHtml;
