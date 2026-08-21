@@ -10,11 +10,18 @@ export class TicketsController {
     const { showtimeId } = req.params;
 
     try {
-      const showtimeResponse = await fetch(`http://localhost:8080/showtimes/showtime/${showtimeId}`);
-      if (!showtimeResponse.ok) {
-        throw new Error('Failed to fetch showtime');
+      const showtime = await collections.showtimes?.findOne({
+        _id: new ObjectId(showtimeId)
+      });
+
+      if (!showtime) {
+        res.status(404).json({
+          message: `Unable to find showtime with id: ${showtimeId}`
+        });
+        return;
       }
-      const showtime: Showtime = await showtimeResponse.json();
+
+      //const showtime: Showtime = await showtimeResponse.json();
 
       const existingTickets = await collections.tickets.countDocuments({ showtimeId: new ObjectId(showtimeId) });
 
