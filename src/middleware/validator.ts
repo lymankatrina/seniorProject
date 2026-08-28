@@ -7,6 +7,7 @@ import { TICKET_STATUSES } from '../types/ticketStatuses';
 import { CONTENT_STATUSES } from '../types/contentStatuses';
 import { PRODUCT_TYPES } from '../types/productTypes';
 import { PRODUCT_STATUSES } from '../types/productStatuses';
+import { SHOWTIME_TYPES } from '../types/showtimeTypes';
 
 const validateEmailRule = () => {
   const rules = [param('email').notEmpty().isEmail().withMessage('Valid email is required')];
@@ -371,51 +372,66 @@ const ticketValidationRules = () => {
   return rules;
 };
 
-const showtimeValidationRules = () => {
-  const rules = [
-    body('movieId')
-      .exists()
-      .withMessage('Movie Id is required')
+const showtimeFieldValidationRules = (
+  isUpdate = false
+) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate
+      ? chain.optional()
+      : chain;
+  };
+  return [
+    field('movieId')
       .isMongoId()
       .withMessage('Movie Id must be a valid object Id'),
-    body('startDate')
-      .exists()
-      .withMessage('Start date is required')
+    field('startDate')
       .isString()
+      .withMessage('Start date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('Start date must be in the format YYYY-MM-DD'),
-    body('endDate')
-      .exists()
-      .withMessage('End date is required')
+    field('endDate')
       .isString()
+      .withMessage('End date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('End date must be in the format YYYY-MM-DD')
       .custom((endDate, {req}) => {
-        if (endDate < req.body.startDate) {
-        throw new Error('End date must be on or after start date');
-      }
-      return true;}),
-    body('time')
-      .exists()
-      .withMessage('Time is required')
+        if (
+          req.body.startDate && 
+          endDate < req.body.startDate
+      ) {
+        throw new Error(
+          'End date must be on or after start date'
+          );
+        }
+      return true;
+      }),
+    field('time')
       .isString()
+      .withMessage('Time must be a string')
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
       .withMessage('Time should be in the hh:mm AM/PM format'),
-    body('type')
-      .exists()
-      .withMessage('Type of show is required')
-      .isIn(['standard', 'premiere', 'special'])
-      .withMessage('Type must be standard, premiere, or special'),
-    body('seatCapacity')
-      .exists()
-      .withMessage('Seating capacity is required')
+    field('showtimeType')
+      .isString()
+      .withMessage('Showtime type must be a string')
+      .isIn([...SHOWTIME_TYPES])
+      .withMessage('Showtime type must be valid'),
+    field('seatCapacity')
       .isInt({ min: 1, max: 225 })
       .withMessage('Seating capacity must be a whole number between 1 and 225')
+      .toInt()
   ];
-  return rules;
+};
+
+const showtimeValidationRules = () => {
+  return showtimeFieldValidationRules(false);
+};
+
+const updateShowtimeValidationRules = () => {
+  return showtimeFieldValidationRules(true);
 };
 
 const productValidationRules = () => {
@@ -494,6 +510,7 @@ export {
   newsValidationRules,
   ticketValidationRules,
   showtimeValidationRules,
+  updateShowtimeValidationRules,
   productValidationRules,
   cartTicketValidationRules,
   validate
