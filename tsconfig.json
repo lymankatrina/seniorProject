@@ -1,18 +1,21 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "ES2020",
+    "module": "node16",
+    "moduleResolution": "node16",
+
     "esModuleInterop": true,
-    "target": "es6",
+
+    "strict": true,
     "noImplicitAny": true,
-    "moduleResolution": "Node",
+
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
+    "rootDir": ".",
+
     "allowJs": true,
-    "paths": {
-      "*": ["node_modules/*"]
-    },
+  
     "resolveJsonModule": true
-  },
+},
   "include": ["src/**/*", "public-src/**/*"]
 }

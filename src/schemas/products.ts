@@ -1,62 +1,65 @@
 import * as mongoDB from 'mongodb';
 import { Db } from 'mongodb';
+import { PRODUCT_TYPES } from '../types/productTypes';
+import { PRODUCT_STATUSES } from '../types/productStatuses';
+
 
 export async function applySchemaValidation(db: Db) {
   const jsonSchema = {
     bsonType: 'object',
     required: [
       '_id', 
-      'firstName', 
-      'lastName',
-      'userName', 
-      'email', 
-      'isAdmin'
+      'name', 
+      'description', 
+      'productType', 
+      'priceInCents',
+      'inventory',
+      'image',
+      'status'
     ],
     additionalProperties: false,
     properties: {
       _id: {
         bsonType: 'objectId'
       },
-      firstName: {
+      name: {
         bsonType: 'string',
         minLength: 1,
-        maxLength: 75,
-        description: "'firstName' must be between 1 and 75 characters"
+        maxLength: 100
       },
-      lastName: {
+      description: {
         bsonType: 'string',
         minLength: 1,
-        maxLength: 75,
-        description: "'lastName' must be between 1 and 75 characters"
+        maxLength: 500
       },
-      userName: {
+      productType: {
         bsonType: 'string',
-        minLength: 1,
-        description: 'User name is required'
+        enum: [...PRODUCT_TYPES]
       },
-      email: {
+      priceInCents: {
+        bsonType: 'int',
+        minimum: 0
+      },
+      inventory: {
+        bsonType: 'int',
+        minimum: 0
+      },
+      image: {
+        bsonType: 'string'
+      },
+      status: {
         bsonType: 'string',
-        format: 'email',
-        description: "'email' is required and must be valid"
-      },
-      isAdmin: {
-        bsonType: 'bool',
-        description: "Indicates whether the user is an administrator"
-      },
-      // Optional fields
-        phone: {
-        bsonType: 'string',
-        description: "'phone' must be a valid US phone number"
+        enum: [...PRODUCT_STATUSES]
       }
     }
   };
 
     const collectionName = 
-      process.env.USERS_COLLECTION_NAME;
+      process.env.PRODUCTS_COLLECTION_NAME;
   
       if (!collectionName) {
         throw new Error(
-          'USERS_COLLECTION_NAME environment variable is missing'
+          'PRODUCTS_COLLECTION_NAME environment variable is missing'
         );
       }
   
@@ -78,13 +81,11 @@ export async function applySchemaValidation(db: Db) {
             collectionName,
             { validator }
           );
-        } else {  
+  
+          return;
+        }
+  
         throw error;
       }
     }
-    // Enforce unique email addresses at the database level
-    await db.collection(collectionName).createIndex(
-      { email: 1 },
-      { unique: true }
-    );
-  }
+  

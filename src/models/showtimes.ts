@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { ShowtimeType } from '../types/showtimeTypes';
 
 export default class Showtime {
   constructor(
@@ -6,8 +7,8 @@ export default class Showtime {
     public startDate: string,
     public endDate: string,
     public time: string,
-    public type: string,
-    public ticketsAvailable: number,
+    public showtimeType: ShowtimeType,
+    public seatCapacity: number,
     public _id?: ObjectId
   ) {}
 }

@@ -1,56 +1,59 @@
 // External Dependencies
 import * as mongoDB from 'mongodb';
-import * as dotenv from 'dotenv';
-import Cart from '../models/carts';
+
+import User from '../models/users';
+import Event from '../models/events';
+import News from '../models/news';
+import Survey from '../models/surveys';
+import { Movie } from '../models/movies';
 import Ticket from '../models/tickets';
+import Showtime from '../models/showtimes';
+import Cart from '../models/carts';
+import Price from '../models/prices';
+import Order from '../models/orders';
+import Product from '../models/products';
 
+import { getEnv } from '../config/env';
+
+interface Collections {
+  users: mongoDB.Collection<User>;
+  events: mongoDB.Collection<Event>;
+  news: mongoDB.Collection<News>;
+  surveys: mongoDB.Collection<Survey>;
+  movies: mongoDB.Collection<Movie>;
+  tickets: mongoDB.Collection<Ticket>;
+  showtimes: mongoDB.Collection<Showtime>;
+  carts: mongoDB.Collection<Cart>;
+  prices: mongoDB.Collection<Price>;
+  orders: mongoDB.Collection<Order>;
+  products: mongoDB.Collection<Product>;
+}
 // Global Variables
-export const collections: {
-  users?: mongoDB.Collection;
-  events?: mongoDB.Collection;
-  news?: mongoDB.Collection;
-  surveys?: mongoDB.Collection;
-  movies?: mongoDB.Collection;
-  tickets?: mongoDB.Collection<Ticket>;
-  store?: mongoDB.Collection;
-  showtimes?: mongoDB.Collection;
-  carts?: mongoDB.Collection<Cart>;
-  prices?: mongoDB.Collection;
-} = {};
+export let collections: Collections;
 
-export const port = process.env.SERVER_PORT || 3000;
-export const host = process.env.DEV_HOSTNAME;
+export async function connectToDatabase(): Promise<void> {
+  const connectionString = getEnv('DB_CONN_STRING');
+  const databaseName = getEnv('DB_NAME');
 
-// Initialize Connection
-export async function connectToDatabase() {
-  dotenv.config();
-  const client: mongoDB.MongoClient = new mongoDB.MongoClient(process.env.DB_CONN_STRING);
+  const client = new mongoDB.MongoClient(connectionString);
 
   await client.connect();
 
-  const db: mongoDB.Db = client.db(process.env.DB_NAME);
+  const db = client.db(databaseName);
 
-  const usersCollection: mongoDB.Collection = db.collection(process.env.USERS_COLLECTION_NAME);
-  const eventsCollection: mongoDB.Collection = db.collection(process.env.EVENTS_COLLECTION_NAME);
-  const newsCollection: mongoDB.Collection = db.collection(process.env.NEWS_COLLECTION_NAME);
-  const surveysCollection: mongoDB.Collection = db.collection(process.env.SURVEYS_COLLECTION_NAME);
-  const moviesCollection: mongoDB.Collection = db.collection(process.env.MOVIES_COLLECTION_NAME);
-  const ticketsCollection: mongoDB.Collection<Ticket> = db.collection(process.env.TICKETS_COLLECTION_NAME);
-  const storeCollection: mongoDB.Collection = db.collection(process.env.STORE_COLLECTION_NAME);
-  const showtimesCollection: mongoDB.Collection = db.collection(process.env.SHOWTIMES_COLLECTION_NAME);
-  const cartsCollection: mongoDB.Collection<Cart> = db.collection(process.env.CARTS_COLLECTION_NAME);
-  const pricesCollection: mongoDB.Collection = db.collection(process.env.PRICES_COLLECTION_NAME);
-
-  collections.users = usersCollection;
-  collections.events = eventsCollection;
-  collections.news = newsCollection;
-  collections.surveys = surveysCollection;
-  collections.movies = moviesCollection;
-  collections.tickets = ticketsCollection;
-  collections.store = storeCollection;
-  collections.showtimes = showtimesCollection;
-  collections.carts = cartsCollection;
-  collections.prices = pricesCollection;
+  collections = {
+    users: db.collection<User>(getEnv('USERS_COLLECTION_NAME')),
+    events: db.collection<Event>(getEnv('EVENTS_COLLECTION_NAME')),
+    news: db.collection<News>(getEnv('NEWS_COLLECTION_NAME')),
+    surveys: db.collection<Survey>(getEnv('SURVEYS_COLLECTION_NAME')),
+    movies: db.collection<Movie>(getEnv('MOVIES_COLLECTION_NAME')),
+    tickets: db.collection<Ticket>(getEnv('TICKETS_COLLECTION_NAME')),
+    showtimes: db.collection<Showtime>(getEnv('SHOWTIMES_COLLECTION_NAME')),
+    carts: db.collection<Cart>(getEnv('CARTS_COLLECTION_NAME')),
+    prices: db.collection<Price>(getEnv('PRICES_COLLECTION_NAME')),
+    orders: db.collection<Order>(getEnv('ORDERS_COLLECTION_NAME')),
+    products: db.collection<Product>(getEnv('PRODUCTS_COLLECTION_NAME'))
+  };
 
   console.log(`Successfully connected to database: ${db.databaseName}`);
 }

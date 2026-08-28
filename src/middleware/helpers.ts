@@ -1,12 +1,26 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import { UsersController } from '../controllers/users';
 
 const controller = new UsersController();
 
-export const getUserIdFromEmail = async (req: Request) => {
-  const userEmail = req.oidc.user.email;
-  const user = await controller.getUserByEmail(userEmail);
-  return String(user._id);
+export const getUserIdFromEmail = async (req: Request
+
+): Promise<string> => {
+  const user = req.oidc.user;
+    if (!user) {
+      throw new Error('User information not available');
+    }
+    if (!user.email) {
+      throw new Error('User email not available');
+    }
+
+  const userRecord = await controller.getUserByEmail(
+    user.email
+  );
+  if (!userRecord) {
+    throw new Error('User not found');
+  }
+  return String(userRecord._id);
 };
 
 export const getDatesBetween = (startDate: string, endDate: string): string[] => {

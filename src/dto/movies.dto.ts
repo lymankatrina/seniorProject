@@ -1,14 +1,12 @@
-import { ObjectId } from 'mongodb';
-import { MovieCertification } from '../types/movieCertifications';
+import type { MovieCertification } from "../types/movieCertifications";
 
-export interface Movie {
-  _id?: ObjectId;
+export interface CreateMovieInput {
   title: string;
   tagLine: string;
   overview: string;
   year: number;
   certification: MovieCertification;
-  releaseDate: Date;
+  releaseDate: string;
   genres: string;
   runtime: string;
   imdbScore?: number;
@@ -17,3 +15,5 @@ export interface Movie {
   poster: string;
   trailer: string;
 }
+
+export type UpdateMovieInput = Partial<CreateMovieInput>;

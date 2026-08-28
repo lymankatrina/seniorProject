@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { TicketStatus } from '../types/ticketStatuses';
 
 export default class Ticket {
   constructor(
@@ -6,10 +7,8 @@ export default class Ticket {
     public showtimeId: ObjectId,
     public date: string,
     public time: string,
-    public status: 'available' | 'reserved' | 'sold',
+    public status: TicketStatus,
     public ticketNumber: number,
-    public buyerId?: string,
-    public addedAt?: Date,
     public _id?: ObjectId
   ) {}
 }

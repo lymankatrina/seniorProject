@@ -1,6 +1,6 @@
 import * as mongoDB from 'mongodb';
 import { Db } from 'mongodb';
-import Event from '../models/events';
+import { CONTENT_STATUSES } from '../types/contentStatuses';
 
 export async function applySchemaValidation(db: Db) {
   const jsonSchema = {
@@ -23,7 +23,9 @@ export async function applySchemaValidation(db: Db) {
     ],
     additionalProperties: false,
     properties: {
-      _id: {},
+      _id: {
+        bsonType: 'objectId'
+      },
       title: {
         bsonType: 'string',
         minLength: 1,
@@ -52,11 +54,13 @@ export async function applySchemaValidation(db: Db) {
       },
       startTime: {
         bsonType: 'string',
-        description: 'Start time is required and should be valid'
+        pattern: '^(0?[1-9]|1[02]):[0-5][0-9] (AM|PM)$',
+        description: 'Start time must be in hh:mm AM/PM format'
       },
       endTime: {
         bsonType: 'string',
-        description: 'End time is required and should be valid'
+        pattern: '^(0?[1-9]|1[02]):[0-5][0-9] (AM|PM)$',
+        description: 'End time must be in hh:mm AM/PM format'
       },
       image: {
         bsonType: 'string',
@@ -80,20 +84,43 @@ export async function applySchemaValidation(db: Db) {
       },
       status: {
         bsonType: 'string',
-        enum: ['Public', 'Private'],
+        enum: [...CONTENT_STATUSES],
         description: 'Status must be Public or Private'
       }
     }
   };
 
-  await db
-    .command({
-      collMod: process.env.EVENTS_COLLECTION_NAME,
-      validator: jsonSchema
-    })
-    .catch(async (error: mongoDB.MongoServerError) => {
-      if (error.codeName === 'NamespaceNotFound') {
-        await db.createCollection(process.env.EVENTS_COLLECTION_NAME, { validator: jsonSchema });
+    const collectionName = 
+      process.env.EVENTS_COLLECTION_NAME;
+  
+      if (!collectionName) {
+        throw new Error(
+          'EVENTS_COLLECTION_NAME environment variable is missing'
+        );
       }
-    });
-}
+  
+      const validator = {
+        $jsonSchema: jsonSchema
+      };
+  
+      try {
+        await db.command({
+          collMod: collectionName,
+          validator
+        });
+      } catch (error) {
+        if (
+          error instanceof mongoDB.MongoServerError &&
+          error.codeName === 'NamespaceNotFound'
+        ){
+          await db.createCollection(
+            collectionName,
+            { validator }
+          );
+  
+          return;
+        }
+  
+        throw error;
+      }
+    }

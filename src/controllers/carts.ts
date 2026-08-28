@@ -2,81 +2,240 @@ import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { collections } from '../services/database.services';
 import Cart from '../models/carts';
-import Ticket from '../models/tickets';
 
 export class CartController {
-  addItemsToCart = async (req: Request, res: Response): Promise<void> => {
+  addItemsToCart = async (
+    req: Request, 
+    res: Response
+  ): Promise<void> => {
     const { ticketIds } = req.body;
-    const userEmail = req.oidc.user.email;
+    const user = req.oidc.user;
+    
+    // validate authenticated user
+    if (!user) {
+      res.status(401).json({
+        message: 'User information not available'
+      });
+      return;
+    }
+
+    // validate user email
+    if (!user.email) {
+      res.status(400).json({
+        message: 'User email not available'
+      });
+      return;
+    }
+
+    // validate ticketIds array
+    if (!Array.isArray(ticketIds) || ticketIds.length === 0) {
+      res.status(400).json({
+        message: 'No ticket IDs provided'
+      });
+      return;
+    }
+
+    // reject duplicate ticket IDs
+    if (new Set(ticketIds).size !== ticketIds.length) {
+      res.status(400).json({
+        message: 'Duplicate ticket IDs are not allowed'
+      });
+      return;
+    }
+
+    // validate ObjectId strings
+    if (!ticketIds.every((id: string) => ObjectId.isValid(id))) {
+      res.status(400).json({
+        message: 'One or more ticket IDs are invalid'
+      });
+      return;
+    }
+
+    // convert ticket ID strings to ObjectIds
+    const ticketObjectIds = ticketIds.map(
+      (id: string) => new ObjectId(id)
+    );
+    
+    // find user
+    const userEmail = user.email;
+    const reservedTicketIds: ObjectId[] = [];
 
     try {
-      const user = await collections.users?.findOne({ email: userEmail });
+      const userRecord = await collections.users.findOne({ email: userEmail });
 
-      if (!user) {
+      if (!userRecord) {
         res.status(404).json({ message: 'User not found' });
         return;
       }
 
-      const userId = user._id;
+      const userId = userRecord._id;
 
-      const tickets = await collections.tickets?.find({ _id: { $in: ticketIds.map((id: string) => new ObjectId(id)) } }).toArray();
-      const unavailableTickets = tickets.filter(ticket => ticket.status !== 'available');
+    // find requested tickets
+      const tickets = await collections.tickets
+        .find({ 
+          _id: { $in: ticketObjectIds }
+        })
+        .toArray();
 
-      if (unavailableTickets.length > 0) {
-        res.status(400).json({ message: 'One or more tickets are no longer available. Please select available tickets only.'});
+      if (!tickets || tickets.length !== ticketObjectIds.length) {
+        res.status(404).json({
+          message: 'One or more tickets could not be found'
+        });
         return;
       }
+      
+      //Attempt to reserve each ticket
+      for (const ticketId of ticketObjectIds) {
+        const result = await collections.tickets.updateOne(
+          {
+            _id: ticketId,
+            status: 'available'
+          },
+          {
+            $set: {
+              status: 'reserved'
+            }
+          }
+        );
+        // ticket was no longer available
+        if (!result || result.modifiedCount !== 1) {
+          // roll back tickets reserved during this request
+          if (reservedTicketIds.length > 0) {
+            await collections.tickets.updateMany(
+              {
+                _id: { $in: reservedTicketIds },
+                status: 'reserved'
+              },
+              {
+                $set: {
+                  status: 'available'
+                }
+              }
+            );
+          }
 
-      await collections.tickets?.updateMany(
-        { _id: { $in: ticketIds.map((id: string) => new ObjectId(id)) } },
-        { $set: { status: 'reserved', priceType: 'Adult' } }
-      );
+          res.status(409).json({
+            message:
+              'One or more tickets are no longer available. Please select available tickets only.'
+          });
+          return;
+        }
 
-      const cart = await collections.carts?.findOne(
-        { userId: new ObjectId(userId) });
-        
+        reservedTicketIds.push(ticketId);
+      }
+
+      const now = new Date();
+
+      const cartTickets = ticketObjectIds.map(ticketId => ({
+        ticketId,
+        addedAt: now
+      }));
+
+      // find user's cart
+    const cart = await collections.carts.findOne(
+        { userId });
+
+        // create cart if one does not exist
         if (!cart) {
           const newCart = new Cart(
-            new ObjectId(userId),
-            ticketIds.map((id: string) => ({
-              ticketId: new ObjectId(id), 
-              addedAt: new Date(),
-              priceType: 'Adult' })),
-            new Date(),
-            new Date()
+            userId,
+            cartTickets,
+            now,
+            now
           );
-          await collections.carts?.insertOne(newCart);
-          res.status(200).json(newCart);
-        } else {
-          const updatedCart = await collections.carts?.findOneAndUpdate(
-            { userId: new ObjectId(userId) },
-            {
-              $push: { tickets: { $each: ticketIds.map((id: string) => ({ ticketId: new ObjectId(id), addedAt: new Date(), priceType: 'Adult' })) } },
-              $set: { updatedAt: new Date() }
-            },
-            { returnDocument: 'after' }
-          );
-        res.status(200).json(updatedCart);
+
+          await collections.carts.insertOne(newCart);
+          
+          res.status(201).json(newCart);
+          return;
         }
+
+        // Add tickets to existing cart
+        const updatedCart = await collections.carts.findOneAndUpdate(
+          { 
+            userId 
+          },
+          {
+            $push: { 
+              tickets: { 
+                $each: cartTickets
+              }
+            },
+            $set: { 
+              updatedAt: now
+            }
+          },
+          { 
+            returnDocument: 'after' 
+          }
+        );
+
+        if (!updatedCart) {
+          throw new Error ('Cart could not be updated');
+        }
+        
+        res.status(200).json(updatedCart);
       } catch (error) {
-      res.status(500).json({ message: 'Failed to add to cart', error });
+        console.error('Error adding tickets to cart:', error);
+
+        // Release any tickets that were reserved before the error occurred
+        if (reservedTicketIds.length > 0) {
+          try {
+            await collections.tickets.updateMany(
+              {
+                _id: { $in: reservedTicketIds },
+                status: 'reserved'
+              },
+              {
+                $set: {
+                  status: 'available'
+                }
+              }
+            );
+          } catch (rollbackError) {
+            console.error(
+              'Error rolling back reserved tickets:',
+              rollbackError
+            );
+          }
+        }
+        
+        res.status(500).json({ message: 'Failed to add tickets to cart'}), console.error('Failed to add tickets to cart', error) };
     }
   };
 
-  updatePriceType = async (req: Request, res: Response): Promise<void> => {
+  updatePriceType = async (
+    req: Request, 
+    res: Response
+  ): Promise<void> => {
     const { ticketId, priceType } = req.body;
-    const userEmail = req.oidc.user.email;
+    const user = req.oidc.user;
+
+    if (!user) {
+      res.status(401).send('User information not available');
+      return;
+    }
+
+    if (!user.email) {
+      res.status(400).json({
+        message: 'User email not available'
+      });
+      return;
+    }
+
+    const userEmail = user.email;
 
     try {
-      const user = await collections.users?.findOne({ email: userEmail });
+      const userRecord = await collections.users.findOne({ email: userEmail });
 
-      if (!user) {
+      if (!userRecord) {
         res.status(404).json({ message: 'User not found' });
         return;
       }
 
-      const userId = user._id;
-      const cart = await collections.carts?.findOne({ userId: new ObjectId(userId) });
+      const userId = userRecord._id;
+      const cart = await collections.carts.findOne(
+        { userId });
 
       if (!cart) {
         res.status(404).json({ message: 'Cart not found' });
@@ -247,4 +406,4 @@ export class CartController {
     }
   };
 
-}
+

@@ -1,14 +1,28 @@
 import * as mongoDB from 'mongodb';
-import { Db } from 'mongodb';
-import Movie from '../models/movies';
+import type { Db } from 'mongodb';
+import { MOVIE_CERTIFICATIONS } from '../types/movieCertifications';
+import { getEnv } from '../config/env'
 
 export async function applySchemaValidation(db: Db) {
   const jsonSchema = {
     bsonType: 'object',
-    required: ['_id', 'title', 'tagLine', 'overview', 'year', 'certification', 'releaseDate', 'genres', 'runtime', 'poster', 'trailer'],
+    required: [
+      '_id', 
+      'title', 
+      'tagLine', 
+      'overview', 
+      'year', 
+      'certification', 
+      'releaseDate', 
+      'genres', 
+      'runtime', 
+      'poster', 
+      'trailer'],
     additionalProperties: false,
     properties: {
-      _id: {},
+      _id: {
+        bsonType: 'objectId'
+      },
       title: {
         bsonType: 'string',
         minLength: 1,
@@ -29,20 +43,18 @@ export async function applySchemaValidation(db: Db) {
       },
       year: {
         bsonType: 'int',
-        maximum: 3000,
-        exclusiveMaximum: true,
         minimum: 1888,
-        exclusiveMinimum: true,
+        maximum: 3000,
         description: "'year' the movie was produced must be in the format YYYY"
       },
       certification: {
         bsonType: 'string',
-        enum: ['R', 'PG-13', 'PG', 'G', 'NC-17'],
-        description: 'Must be either G, PG, PG-13, R, or NC-17'
+        enum: [...MOVIE_CERTIFICATIONS],
+        description: 'Must be a valid movie certification'
       },
       releaseDate: {
         bsonType: 'date',
-        description: "'Release Date' is required and must be YYYY-MM-DD"
+        description: "'releaseDate' is required and must be a BSON date"
       },
       genres: {
         bsonType: 'string',
@@ -50,24 +62,8 @@ export async function applySchemaValidation(db: Db) {
       },
       runtime: {
         bsonType: 'string',
-        pattern: '^([0-9]+h\\s+[0-59]+m)$',
+        pattern: '^[0-9]+h\\s+[0-5]?[0-9]m$',
         description: 'Enter run time in hours and minutes (example: 2h 16m)'
-      },
-      imdbScore: {
-        bsonType: 'double',
-        minimum: 0.0,
-        maximum: 10.0,
-        description: 'IMDB score should be a number between 0.0 and 10'
-      },
-      rottenTomatoes: {
-        bsonType: 'string',
-        pattern: '^(100|\\d{1,2})%$',
-        description: 'Rotten tomatoes should be a percentage from 1% to 100%'
-      },
-      fandangoAudienceScore: {
-        bsonType: 'string',
-        pattern: '^(100|\\d{1,2})%$',
-        description: 'Fandango audience score should be a percentage from 1% to 100%'
       },
       poster: {
         bsonType: 'string',
@@ -76,18 +72,49 @@ export async function applySchemaValidation(db: Db) {
       trailer: {
         bsonType: 'string',
         description: 'Trailer must be a url link to an official trailer'
+      },
+      // Optional fields
+      imdbScore: {
+        bsonType: ['double', 'int' ],
+        minimum: 0,
+        maximum: 10,
+        description: 'IMDB score should be a number between 0 and 10'
+      },
+      rottenTomatoes: {
+        bsonType: 'string',
+        pattern: '^(100|\\d{1,2})%$',
+        description: 'Rotten tomatoes should be a percentage from 0% to 100%'
+      },
+      fandangoAudienceScore: {
+        bsonType: 'string',
+        pattern: '^(100|\\d{1,2})%$',
+        description: 'Fandango audience score should be a percentage from 0% to 100%'
       }
     }
   };
 
-  await db
-    .command({
-      collMod: process.env.MOVIES_COLLECTION_NAME,
-      validator: jsonSchema
-    })
-    .catch(async (error: mongoDB.MongoServerError) => {
-      if (error.codeName === 'NamespaceNotFound') {
-        await db.createCollection(process.env.MOVIES_COLLECTION_NAME, { validator: jsonSchema });
-      }
+  const collectionName = getEnv('MOVIES_COLLECTION_NAME');
+
+  const validator = { 
+    $jsonSchema: jsonSchema 
+  };
+
+  try {
+    await db.command({
+      collMod: collectionName,
+      validator
     });
+  } catch (error) {
+    if (
+      error instanceof mongoDB.MongoServerError &&
+      error.codeName === 'NamespaceNotFound'
+    ) {
+      await db.createCollection(
+        collectionName,
+        { validator }
+      );
+      return;
+    }
+    throw error;
+  }
 }

@@ -5,9 +5,9 @@ export default class User {
     public firstName: string,
     public lastName: string,
     public userName: string,
-    public phone: string,
     public email: string,
     public isAdmin: boolean,
+    public phone?: string,
     public _id?: ObjectId
   ) {}
 }

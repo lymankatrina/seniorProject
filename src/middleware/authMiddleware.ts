@@ -1,14 +1,24 @@
 import { auth } from 'express-openid-connect';
-import * as dotenv from 'dotenv';
-dotenv.config();
+
+const getEnv = (name: string): string => {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable ${name}`
+    );
+  }
+
+  return value;
+};
 
 const config = {
     authRequired: false,
     auth0Logout: true,
-    secret: process.env.SECRET,
-    baseURL: process.env.BASE_URL,
-    clientID: process.env.CLIENT_ID,
-    issuerBaseURL: process.env.ISSUER_BASE_URL
+    secret: getEnv('SECRET'),
+    baseURL: getEnv('BASE_URL'),
+    clientID: getEnv('CLIENT_ID'),
+    issuerBaseURL: getEnv('ISSUER_BASE_URL')
 };
 
 const authMiddleware = auth(config);

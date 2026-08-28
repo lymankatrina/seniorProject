@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { collections } from '../services/database.services';
-import User from '../models/users';
 
 const checkAuth = async (req: Request, res: Response): Promise<void> => {
   if (!req.oidc.isAuthenticated()) {
@@ -9,15 +8,23 @@ const checkAuth = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    const userEmail = req.oidc.user.email;
-    const user = await collections.users?.findOne({ email: userEmail });
+    const user = req.oidc.user;
 
     if (!user) {
+      res.status(401).send('User information not available');
+      return;
+    }
+
+    const userEmail = user.email;
+
+    const userRecord = await collections.users?.findOne({ email: userEmail });
+
+    if (!userRecord) {
       res.status(404).send('User not found');
       return;
     }
 
-    if (user.isAdmin) {
+    if (userRecord.isAdmin) {
       res.sendFile('admin.html', { root: './public' });
     } else {
       res.sendFile('loggedIn.html', { root: './public' });

@@ -1,12 +1,10 @@
 import express from 'express';
+import cors from 'cors';
+
 import { connectToDatabase } from './services/database.services';
 import routes from './routes/index';
 import { routeNotFound } from './middleware/routeNotFound';
-import cors from 'cors';
-import * as dotenv from 'dotenv';
 import { authMiddleware } from './middleware/authMiddleware';
-
-dotenv.config();
 
 const port = process.env.PORT || 3000;
 
@@ -27,5 +25,5 @@ connectToDatabase()
   })
   .catch((error: Error) => {
     console.error('Database connection failed', error);
-    process.exit();
+    process.exit(1);
   });

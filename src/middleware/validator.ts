@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { param, body, Result, validationResult, ValidationChain } from 'express-validator';
 import { collections } from '../services/database.services';
 import { ObjectId } from 'mongodb';
+import { MOVIE_CERTIFICATIONS } from '../types/movieCertifications';
+import { TICKET_STATUSES } from '../types/ticketStatuses';
+import { CONTENT_STATUSES } from '../types/contentStatuses';
+import { PRODUCT_TYPES } from '../types/productTypes';
+import { PRODUCT_STATUSES } from '../types/productStatuses';
 
 const validateEmailRule = () => {
   const rules = [param('email').notEmpty().isEmail().withMessage('Valid email is required')];
@@ -12,26 +17,45 @@ const capitalizeFirstWords = (value: string): string => {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
+const surveyValidationRules = () => {
+  const rules = [
+    body('surveyLink')
+      .exists()
+      .withMessage('Survey link is required')
+      .isURL()
+      .withMessage('Survey link must be a valid URL'),
+    body('isActive')
+      .exists()
+      .withMessage('isActive is required')
+      .isBoolean()
+      .toBoolean()
+      .withMessage('isActive must be true or false')
+  ]
+}
+
 const userValidationRules = () => {
   const rules = [
     body('firstName')
       .notEmpty()
       .withMessage('Valid first name is required')
-      .isLength({ max: 75 })
-      .withMessage('First name must be less than 75 characters')
-      .matches(/^[A-Za-z\-\'\s]+$/)
-      .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+      .trim()
+      .isLength({ min: 1, max: 75 })
+      .withMessage('First name must be between 1 and 75 characters')
+      .matches(/^[A-Za-z\s'-]+$/)
+      .withMessage('First name can only contain letters, spaces, hyphens, and apostrophes'),
     body('lastName')
       .notEmpty()
       .withMessage('Valid last name is required')
-      .isLength({ max: 75 })
-      .withMessage('Last name must be less than 75 characters')
-      .matches(/^[A-Za-z\-\'\s]+$/)
-      .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
-    body('userName').notEmpty().withMessage('Valid user name is required'),
+      .isLength({ min: 1, max: 75 })
+      .withMessage('Last name must be between 1 and 75 characters')
+      .matches(/^[A-Za-z\s'-]+$/)
+      .withMessage('Last name can only contain letters, spaces, hyphens, and apostrophes'),
+    body('userName')
+      .notEmpty()
+      .withMessage('Valid user name is required'),
     body('phone')
-      .optional({checkFalsy:true})
-      .matches(/^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/)
+      .optional({ checkFalsy: true })
+      .matches(/^(\([0-9]{3}\)\s|[0-9]{3}-)[0-9]{3}-[0-9]{4}$/)
       .withMessage('Enter a valid US Phone Number'),
     body('email')
       .notEmpty()
@@ -41,78 +65,138 @@ const userValidationRules = () => {
       .isEmail()
       .withMessage('Must be a valid email')
       .custom(async (value, { req }) => {
-        const userId = req.params.id;
+        const userId = req.params?.id;
         const existingUser = await collections.users.findOne({ email: value });
-        if (existingUser && existingUser._id.toString() !== userId) {
+        if (
+          existingUser && 
+          existingUser._id.toString() !== userId
+        ) {
           throw new Error('Email already in use');
         }
       }),
-    body('isAdmin').notEmpty().withMessage('Enter true if the user is an Admin').isBoolean().withMessage('isAdmin must be a boolean value')
+    body('isAdmin')
+      .exists()
+      .withMessage('isAdmin is required')
+      .isBoolean()
+      .withMessage('isAdmin must be a boolean value')
+      .toBoolean()
   ];
   return rules;
 };
 
-const movieValidationRules = () => {
-  const rules = [
-    body('title')
+const movieFieldValidationRules = (isUpdate = false) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate ? chain.optional() : chain;
+  };
+  return [
+    field('title')
       .isString()
-      .withMessage('Movie title is required and is a string')
+      .withMessage('Movie title is required and must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
-      .withMessage('Movie title max length is 85 characters'),
-    body('tagLine')
+      .withMessage('Movie title must be between 1 and 85 characters'),
+    field('tagLine')
       .isString()
-      .withMessage('tagLine is required and is a string')
+      .withMessage('TagLine is required and must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
-      .withMessage('tagline max length is 85 characters'),
-    body('overview')
+      .withMessage('Tagline must be between 1 and 85 characters'),
+    field('overview')
       .isString()
-      .withMessage('Overview is required and is a string')
+      .withMessage('Overview is required and must be a string')
       .trim()
       .isLength({ min: 1, max: 850 })
-      .withMessage('Overview max length is 850 characters'),
-    body('year').isInt({ min: 1888, max: 3000 }).withMessage('Movie year is required and should be YYYY'),
-    body('certification')
+      .withMessage('Overview must be between 1 and 850 characters'),
+    field('year')
+      .isInt({ min: 1888, max: 3000 })
+      .withMessage('Movie year must be between 1888 and 3000')
+      .toInt(),
+    field('certification')
       .isString()
+      .withMessage('Certification must be a string')
       .trim()
-      .isIn(['G', 'PG', 'PG-13', 'R', 'NC-17', 'Not Rated'])
-      .withMessage('Must be either G, PG, PG-13, R, NC-17, or Not Rated'),
-    body('releaseDate')
+      .isIn([...MOVIE_CERTIFICATIONS])
+      .withMessage('Certification must be a valid movie certification'),
+    field('releaseDate')
       .isString()
+      .withMessage('Release Date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Release Date is required and should be YYYY-MM-DD'),
-    body('genres').notEmpty().withMessage('Genres is required').isString().withMessage('Genres is a string'),
-    body('runtime')
+      .withMessage('Release Date must be YYYY-MM-DD'),
+    field('genres')
       .isString()
+      .withMessage('Genres must be a string')
       .trim()
-      .matches(/^([0-9]+h\s+[0-5]?[0-9]+m)$/)
-      .withMessage('runtime is required and should be in the format 1h 55m'),
-    body('imdbScore').optional().isFloat({ min: 0.0, max: 10.0 }).withMessage('IMDB Score should be an integer between 0.0 and 10.0'),
+      .notEmpty()
+      .withMessage('Genres cannot be empty'),
+    field('runtime')
+      .isString()
+      .withMessage('runtime must be a string')
+      .trim()
+      .matches(/^[0-9]+h\s+[0-5]?[0-9]m$/)
+      .withMessage('runtime must be in the format 1h 55m'),
+    body('imdbScore')
+      .optional({ values: 'falsy' })
+      .isFloat({ min: 0, max: 10 })
+      .withMessage('IMDB Score must be a number between 0 and 10')
+      .toFloat(),
     body('rottenTomatoes')
-      .optional()
+      .optional({ values: 'falsy' })
       .isString()
       .trim()
-      .matches(/^(100(\.0+)?|(\d{1,2})(\.\d+)?)%$/)
-      .withMessage('rottenTomatoes should be between 1% and 100%'),
+      .matches(/^(100|\d{1,2})%$/)
+      .withMessage('rottenTomatoes must be between 0% and 100%'),
     body('fandangoAudienceScore')
-      .optional()
+      .optional({ values: 'falsy' })
       .isString()
       .trim()
-      .matches(/^(100(\.0+)?|(\d{1,2})(\.\d+)?)%$/)
-      .withMessage('fandangoAudienceScore should be between 1% and 100%'),
-    body('poster').isURL().withMessage('Poster must be a URL link to a publicly shared image'),
-    body('trailer').isURL().withMessage('Trailer must be a URL link to a publicly shared official trailer')
-  ];
-  return rules;
+      .matches(/^(100|\d{1,2})%$/)
+      .withMessage('Fandango audience score must be between 0% and 100%'),
+    field('poster')
+      .isString()
+      .trim()
+      .isURL()
+      .withMessage('Poster must be a URL to a publicly shared image'),
+    field('trailer')
+      .isString()
+      .trim()
+      .isURL()
+      .withMessage('Trailer must be a URL to an official trailer')
+  ];  
+};
+
+const movieValidationRules = () => {
+  return movieFieldValidationRules(false);
+};
+
+const updateMovieValidationRules = () => {
+  return movieFieldValidationRules(true);
 };
 
 const eventValidationRules = () => {
   const rules = [
-    body('title').isString().trim().isLength({ min: 1, max: 85 }).withMessage('Event title is required and must be less than 85 characters'),
-    body('tagline').isString().trim().isLength({ min: 1, max: 85 }).withMessage('Event tagline is required and must be less than 85 characters'),
-    body('description').isString().trim().isLength({ min: 1, max: 850 }).withMessage('Description is required and must be less than 850 characters'),
+    body('title')
+      .exists()
+      .withMessage('Event title is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 85 })
+      .withMessage('Event title must be between 1 and 85 characters'),
+    body('tagline')
+      .exists()
+      .withMessage('Event tagline is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 85 })
+      .withMessage('Event tagline must be between 1 and 85 characters'),
+    body('description')
+      .exists()
+      .withMessage('Event description is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 850 })
+      .withMessage('Event description must be between 1 and 850 characters'),
     body('startDate')
       .isString()
       .trim()
@@ -122,7 +206,15 @@ const eventValidationRules = () => {
       .isString()
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('End date is required and must be in the format YYYY-MM-DD'),
+      .withMessage('End date is required and must be in the format YYYY-MM-DD')
+      .custom((endDate, { req }) => {
+        if (endDate < req.body.startDate) {
+          throw new Error(
+            'End date must be on or after start date'
+          );
+        }
+        return true;
+      }),
     body('startTime')
       .isString()
       .trim()
@@ -133,83 +225,255 @@ const eventValidationRules = () => {
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
       .withMessage('endTime is required and should be in the hh:mm AM/PM format'),
-    body('image').isURL().withMessage('Image must be a link to a publicly shared image'),
-    body('link').isURL().withMessage('Link must be a url link to a shareable source'),
-    body('type').trim().isString().withMessage('Type of event is required'),
+    body('image')
+      .exists()
+      .withMessage('Image link is required')
+      .isURL()
+      .withMessage('Image link must be a valid URL to a publicly shared image'),
+    body('link')
+      .exists()
+      .withMessage('link is required')
+      .isURL()
+      .withMessage('Link must be a valid URL link to a shareable source'),
+    body('type')
+      .exists()
+      .withMessage('Event type is required')
+      .trim()
+      .isString()
+      .withMessage('Type of event is required'),
     body('postStartDate')
+      .exists()
+      .withMessage('Start Date is required')
       .isString()
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Post start date must be valid'),
+      .withMessage('Post start date must be in the format YYYY-MM-DD'),
     body('postEndDate')
+      .exists()
+      .withMessage('End Date is required')
       .isString()
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Post end date must be valid'),
-    body('status').trim().toLowerCase().isIn(['public', 'private']).withMessage('Status is required and must be public or private')
+      .withMessage('Post end date must be in the format YYYY-MM-DD')
+      .custom((postEndDate, { req }) => {
+        if (postEndDate < req.body.postStartDate) {
+          throw new Error(
+            'Post end date must be on or after post start date'
+          );
+        }
+        return true;
+      }),
+    body('status')
+      .exists()
+      .withMessage('Status is required')
+      .trim()
+      .toLowerCase()
+      .isIn([...CONTENT_STATUSES])
+      .withMessage('Status must be public or private')
   ];
   return rules;
 };
 
 const newsValidationRules = () => {
   const rules = [
-    body('title').isString().trim().isLength({ min: 1, max: 85 }).withMessage('News title is required and must be less than 85 characters'),
-    body('tagline').isString().trim().isLength({ min: 1, max: 85 }).withMessage('News tagline is required and must be less than 85 characters'),
-    body('description').isString().trim().isLength({ min: 1, max: 850 }).withMessage('Description is required and must be less than 850 characters'),
+body('title')
+      .exists()
+      .withMessage('News title is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 85 })
+      .withMessage('News title must be between 1 and 85 characters'),
+    body('tagline')
+      .exists()
+      .withMessage('News tagline is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 85 })
+      .withMessage('News tagline must be between 1 and 85 characters'),
+    body('description')
+      .exists()
+      .withMessage('News description is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 850 })
+      .withMessage('News description must be between 1 and 850 characters'),
     body('date')
+      .exists()
+      .withMessage('Date is required')
       .isString()
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('Date is required and must be in the format YYYY-MM-DD'),
-    body('image').isURL().withMessage('Image must be a link to a publicly shared image'),
-    body('link').isURL().withMessage('Link must be a url link to a shareable source'),
-    body('status').trim().toLowerCase().isIn(['public', 'private']).withMessage('Status is required and must be public or private'),
-    body('isActive').isBoolean().withMessage('isActive must be true or false')
+    body('image')
+      .exists()
+      .withMessage('Image is required')
+      .isURL()
+      .withMessage('Image must be a link to a publicly shared image'),
+    body('link')
+      .exists()
+      .withMessage('Link is required')
+      .isURL()
+      .withMessage('Link must be a url link to a shareable source'),
+    body('status')
+      .exists()
+      .withMessage('Status is required')
+      .trim()
+      .toLowerCase()
+      .isIn([...CONTENT_STATUSES])
+      .withMessage('Status must be public or private'),
+    body('isActive')
+      .exists()
+      .withMessage('isActive is required')
+      .isBoolean()
+      .withMessage('isActive must be true or false')
   ];
   return rules;
 };
 
 const ticketValidationRules = () => {
   const rules = [
-    body('date').exists().withMessage('Date is required and must be in the format YYYY-MM-DD'),
-    body('movieId').exists().withMessage('MovieId should be a valid ObjectId string'),
-    body('showtimeId').exists().withMessage('ShowtimeId must be a valid ObjectId string'),
-    body('time').exists().withMessage('Time is required'),
-    body('seatNumber')
+    body('movieId')
+      .exists()
+      .withMessage('Movie ID is required')
+      .isMongoId()
+      .withMessage('Movie ID must be a valid ObjectId'),
+    body('showtimeId')
+      .exists()
+      .withMessage('Showtime ID must be a valid ObjectId')
+      .isMongoId()
+      .withMessage('Showtime ID must be a valid ObjectId'),
+    body('date')
+      .exists()
+      .withMessage('Date is required')
+      .isString()
+      .trim()
+      .matches(/^\d{4}-\d(2)-\d{2}$/)
+      .withMessage('Date must be in the format YYYY-MM-DD'),
+    body('time')
+      .exists()
+      .withMessage('Time is required')
+      .isString()
+      .trim()
+      .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
+      .withMessage('Time must be in the hh:mm AM/PM format'),
+    body('status')
+      .exists()
+      .withMessage('Ticket status is required')
+      .isIn([...TICKET_STATUSES])
+      .withMessage('Ticket status must be available, reserved, or sold'),
+    body('ticketNumber')
+      .exists()
+      .withMessage('Ticket number is required')
+      .isInt({ min: 1 })
+      .withMessage('Ticket number must be a positive whole number')
+      .toInt()
   ];
   return rules;
 };
 
 const showtimeValidationRules = () => {
   const rules = [
-    body('movieId').exists().withMessage('Movie Id is required').isMongoId().withMessage('Movie Id must be a valid object Id'),
+    body('movieId')
+      .exists()
+      .withMessage('Movie Id is required')
+      .isMongoId()
+      .withMessage('Movie Id must be a valid object Id'),
     body('startDate')
-      .trim()
-      .isString()
+      .exists()
       .withMessage('Start date is required')
+      .isString()
+      .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('Start date must be in the format YYYY-MM-DD'),
     body('endDate')
-      .trim()
-      .isString()
+      .exists()
       .withMessage('End date is required')
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('End date must be in the format YYYY-MM-DD'),
-    body('time')
-      .trim()
       .isString()
+      .trim()
+      .matches(/^\d{4}-\d{2}-\d{2}$/)
+      .withMessage('End date must be in the format YYYY-MM-DD')
+      .custom((endDate, {req}) => {
+        if (endDate < req.body.startDate) {
+        throw new Error('End date must be on or after start date');
+      }
+      return true;}),
+    body('time')
+      .exists()
       .withMessage('Time is required')
+      .isString()
+      .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
       .withMessage('Time should be in the hh:mm AM/PM format'),
-    body('type').trim().isString().withMessage('Type of show is required'),
-    body('ticketsAvailable')
-      .trim()
-      .notEmpty()
-      .withMessage('Number of tickets available is required')
+    body('type')
+      .exists()
+      .withMessage('Type of show is required')
+      .isIn(['standard', 'premiere', 'special'])
+      .withMessage('Type must be standard, premiere, or special'),
+    body('seatCapacity')
+      .exists()
+      .withMessage('Seating capacity is required')
       .isInt({ min: 1, max: 225 })
-      .withMessage('Tickets Available must be a number between 1 and 225')
+      .withMessage('Seating capacity must be a whole number between 1 and 225')
   ];
   return rules;
+};
+
+const productValidationRules = () => {
+  return [
+    body('name')
+      .exists()
+      .withMessage('Product name is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Product name must be between 1 and 100 characters'),
+    body('description')
+      .exists()
+      .withMessage('Product description is required')
+      .isString()
+      .trim()
+      .isLength({ min: 1, max: 500 })
+      .withMessage('Product description must be between 1 and 500 characters'),
+    body('productType')
+      .exists()
+      .withMessage('Product type is required')
+      .isIn([...PRODUCT_TYPES])
+      .withMessage('Product type must be snack, drink, or swag'),
+    body('priceInCents')
+      .exists()
+      .withMessage('Product price is required')
+      .isInt({ min: 0 })
+      .withMessage('Product price must be a non-negative whole number')
+      .toInt(),
+    body('inventory')
+      .exists()
+      .withMessage('Inventory is required')
+      .isInt({ min: 0 })
+      .withMessage('Inventory must be a non-negative whole number')
+      .toInt(),
+    body('image')
+      .exists()
+      .withMessage('Product image is required')
+      .isURL()
+      .withMessage('Product image must be a valid URL'),
+    body('status')
+      .exists()
+      .withMessage('Product status is required')
+      .isIn([...PRODUCT_STATUSES])
+      .withMessage('Product status must be active or inactive')
+  ];
+};
+
+const cartTicketValidationRules = () => {
+  return [
+    body('ticketIds')
+      .isArray({ min: 1 })
+      .withMessage('ticketIds must be a non-empty array'),
+
+    body('ticketIds.*')
+      .isMongoId()
+      .withMessage('Each ticketId must be a valid MongoDB ObjectId')
+  ];
 };
 
 const validate = (req: Request, res: Response, next: NextFunction) => {
@@ -218,7 +482,6 @@ const validate = (req: Request, res: Response, next: NextFunction) => {
   if (errors.length > 0) {
     return res.status(422).json({ errors: errors.map((error) => ({ [error.path]: error.msg })) });
   }
-
   next();
 };
 
@@ -226,9 +489,12 @@ export {
   validateEmailRule,
   userValidationRules,
   movieValidationRules,
+  updateMovieValidationRules,
   eventValidationRules,
   newsValidationRules,
   ticketValidationRules,
   showtimeValidationRules,
+  productValidationRules,
+  cartTicketValidationRules,
   validate
 };

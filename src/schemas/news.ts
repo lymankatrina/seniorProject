@@ -1,48 +1,60 @@
 import * as mongoDB from 'mongodb';
 import { Db } from 'mongodb';
-import News from '../models/news';
+import { CONTENT_STATUSES } from '../types/contentStatuses';
 
 export async function applySchemaValidation(db: Db) {
   const jsonSchema = {
     bsonType: 'object',
-    required: ['_id', 'title', 'tagline', 'description', 'date', 'image', 'link', 'status', 'isActive'],
+    required: [
+      '_id',
+      'title',
+      'tagline',
+      'description',
+      'date',
+      'image',
+      'link',
+      'status',
+      'isActive'
+    ],
     additionalProperties: false,
     properties: {
-      _id: {},
+      _id: {
+        bsonType: 'objectId'
+      },
       title: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 85,
-        description: "'title' is required and is a string"
+        description: "'title' must be between 1 and 85 characters"
       },
       tagline: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 85,
-        description: "'title' is required and is a string"
+        description: "'tagline' must be between 1 and 85 characters"
       },
       description: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 850,
-        description: "'description' is required and is a string"
+        description: "'description' must be between 1 and 850 characters"
       },
       date: {
         bsonType: 'date',
-        description: "'date' is required and must be in the format YYYY-MM-DD"
+        description: "'date' must be in the format YYYY-MM-DD"
       },
       image: {
         bsonType: 'string',
-        description: 'Image must be a url link to a publicly shared image'
+        description: 'Image must be a url to a publicly shared image'
       },
       link: {
         bsonType: 'string',
-        description: 'Link must be a url link to a shareable source'
+        description: 'Link must be a valid url'
       },
       status: {
         bsonType: 'string',
-        enum: ['Public', 'Private'],
-        description: 'Status must be Public or Private'
+        enum: [...CONTENT_STATUSES],
+        description: 'Status must be public or private'
       },
       isActive: {
         bsonType: 'bool',
@@ -51,14 +63,37 @@ export async function applySchemaValidation(db: Db) {
     }
   };
 
-  await db
-    .command({
-      collMod: process.env.NEWS_COLLECTION_NAME,
-      validator: jsonSchema
-    })
-    .catch(async (error: mongoDB.MongoServerError) => {
-      if (error.codeName === 'NamespaceNotFound') {
-        await db.createCollection(process.env.NEWS_COLLECTION_NAME, { validator: jsonSchema });
+    const collectionName = 
+      process.env.NEWS_COLLECTION_NAME;
+  
+      if (!collectionName) {
+        throw new Error(
+          'NEWS_COLLECTION_NAME environment variable is missing'
+        );
       }
-    });
-}
+  
+      const validator = {
+        $jsonSchema: jsonSchema
+      };
+  
+      try {
+        await db.command({
+          collMod: collectionName,
+          validator
+        });
+      } catch (error) {
+        if (
+          error instanceof mongoDB.MongoServerError &&
+          error.codeName === 'NamespaceNotFound'
+        ){
+          await db.createCollection(
+            collectionName,
+            { validator }
+          );
+  
+          return;
+        }
+  
+        throw error;
+      }
+    }
