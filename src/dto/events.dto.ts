@@ -1,21 +1,23 @@
-import type { ObjectId } from 'mongodb';
 import type { ContentStatus } from '../types/contentStatuses';
 import type { EventType } from '../types/eventTypes';
 
-export interface Event {
+export interface CreateEventInput {
   title: string;
   tagline: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   startTime: string;
   endTime: string;
   image: string;
   link: string;
   type: EventType;
-  postStartDate: Date;
-  postEndDate: Date;
+  postStartDate: string;
+  postEndDate: string;
   status: ContentStatus;
-  _id?: ObjectId;
 }
 
+export type UpdateEventInput =
+  Partial<CreateEventInput>;
+
+  

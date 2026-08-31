@@ -8,6 +8,7 @@ import { CONTENT_STATUSES } from '../types/contentStatuses';
 import { PRODUCT_TYPES } from '../types/productTypes';
 import { PRODUCT_STATUSES } from '../types/productStatuses';
 import { SHOWTIME_TYPES } from '../types/showtimeTypes';
+import { EVENT_TYPES } from '../types/eventTypes';
 
 const validateEmailRule = () => {
   const rules = [param('email').notEmpty().isEmail().withMessage('Valid email is required')];
@@ -175,104 +176,121 @@ const updateMovieValidationRules = () => {
   return movieFieldValidationRules(true);
 };
 
-const eventValidationRules = () => {
-  const rules = [
-    body('title')
-      .exists()
-      .withMessage('Event title is required')
+const eventFieldValidationRules = (isUpdate = false) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate ? chain.optional() : chain;
+  };
+  return [
+    field('title')
       .isString()
+      .withMessage('Event title must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
       .withMessage('Event title must be between 1 and 85 characters'),
-    body('tagline')
-      .exists()
-      .withMessage('Event tagline is required')
+    field('tagline')
       .isString()
+      .withMessage('Event tagline must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
       .withMessage('Event tagline must be between 1 and 85 characters'),
-    body('description')
-      .exists()
-      .withMessage('Event description is required')
+    field('description')
       .isString()
+      .withMessage('Event description must be a string')
       .trim()
       .isLength({ min: 1, max: 850 })
       .withMessage('Event description must be between 1 and 850 characters'),
-    body('startDate')
+    field('startDate')
       .isString()
+      .withMessage('Start date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Start date is required and must be in the format YYYY-MM-DD'),
-    body('endDate')
+      .withMessage('Start date must be in the format YYYY-MM-DD'),
+    field('endDate')
       .isString()
+      .withMessage('End date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('End date is required and must be in the format YYYY-MM-DD')
+      .withMessage('End date must be in the format YYYY-MM-DD')
       .custom((endDate, { req }) => {
-        if (endDate < req.body.startDate) {
+        if (
+          req.body.startDate && 
+          endDate < req.body.startDate
+        ) {
           throw new Error(
             'End date must be on or after start date'
           );
         }
         return true;
       }),
-    body('startTime')
+    field('startTime')
       .isString()
+      .withMessage('Start Time must be a string')
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
-      .withMessage('startTime is required and should be in the hh:mm AM/PM format'),
-    body('endTime')
+      .withMessage('Start Time must be in the hh:mm AM/PM format'),
+    field('endTime')
       .isString()
+      .withMessage('End Time must be a string')
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
-      .withMessage('endTime is required and should be in the hh:mm AM/PM format'),
-    body('image')
-      .exists()
-      .withMessage('Image link is required')
+      .withMessage('endTime must be in the hh:mm AM/PM format'),
+    field('image')
+      .isString()
+      .trim()
       .isURL()
       .withMessage('Image link must be a valid URL to a publicly shared image'),
-    body('link')
-      .exists()
-      .withMessage('link is required')
+    field('link')
+      .isString()
+      .trim()
       .isURL()
       .withMessage('Link must be a valid URL link to a shareable source'),
-    body('type')
-      .exists()
-      .withMessage('Event type is required')
+    field('type')
+      .isString()
+      .withMessage('Event type must be a string')
       .trim()
+      .toLowerCase()
+      .isIn([...EVENT_TYPES])
+      .withMessage('Event type must be a valid event type'),
+    field('postStartDate')
       .isString()
-      .withMessage('Type of event is required'),
-    body('postStartDate')
-      .exists()
-      .withMessage('Start Date is required')
-      .isString()
+      .withMessage('Post start date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('Post start date must be in the format YYYY-MM-DD'),
-    body('postEndDate')
-      .exists()
-      .withMessage('End Date is required')
+    field('postEndDate')
       .isString()
+      .withMessage('Post end date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
       .withMessage('Post end date must be in the format YYYY-MM-DD')
       .custom((postEndDate, { req }) => {
-        if (postEndDate < req.body.postStartDate) {
+        if (
+          req.body.postStartDate && 
+          postEndDate < req.body.postStartDate
+        ) {
           throw new Error(
             'Post end date must be on or after post start date'
           );
         }
         return true;
       }),
-    body('status')
-      .exists()
-      .withMessage('Status is required')
+    field('status')
+      .isString()
+      .withMessage('Status must be a string')
       .trim()
       .toLowerCase()
       .isIn([...CONTENT_STATUSES])
-      .withMessage('Status must be public or private')
+      .withMessage('Status must be a valid content status')
   ];
-  return rules;
+};
+
+const eventValidationRules = () => {
+  return eventFieldValidationRules(false);
+};
+
+const updateEventValidationRules = () => {
+  return eventFieldValidationRules(true);
 };
 
 const newsFieldValidationRules = (isUpdate = false) => {
@@ -513,6 +531,7 @@ export {
   movieValidationRules,
   updateMovieValidationRules,
   eventValidationRules,
+  updateEventValidationRules,
   newsValidationRules,
   updateNewsValidationRules,
   ticketValidationRules,

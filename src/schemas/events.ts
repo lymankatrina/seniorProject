@@ -1,8 +1,12 @@
 import * as mongoDB from 'mongodb';
-import { Db } from 'mongodb';
+import type { Db } from 'mongodb';
 import { CONTENT_STATUSES } from '../types/contentStatuses';
+import { getEnv } from '../config/env'
+import { EVENT_TYPES } from '../types/eventTypes';
 
-export async function applySchemaValidation(db: Db) {
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
     required: [
@@ -36,7 +40,7 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'string',
         minLength: 1,
         maxLength: 85,
-        description: "'title' is required and is a string"
+        description: "'tagline' is required and is a string"
       },
       description: {
         bsonType: 'string',
@@ -46,20 +50,20 @@ export async function applySchemaValidation(db: Db) {
       },
       startDate: {
         bsonType: 'date',
-        description: "'date' is required and must be in the format YYYY-MM-DD"
+        description: "'startDate' is required and must be in the format YYYY-MM-DD"
       },
       endDate: {
         bsonType: 'date',
-        description: "'date' is required and must be in the format YYYY-MM-DD"
+        description: "'endDate' is required and must be in the format YYYY-MM-DD"
       },
       startTime: {
         bsonType: 'string',
-        pattern: '^(0?[1-9]|1[02]):[0-5][0-9] (AM|PM)$',
+        pattern: '^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$',
         description: 'Start time must be in hh:mm AM/PM format'
       },
       endTime: {
         bsonType: 'string',
-        pattern: '^(0?[1-9]|1[02]):[0-5][0-9] (AM|PM)$',
+        pattern: '^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$',
         description: 'End time must be in hh:mm AM/PM format'
       },
       image: {
@@ -72,6 +76,7 @@ export async function applySchemaValidation(db: Db) {
       },
       type: {
         bsonType: 'string',
+        enum: [...EVENT_TYPES],
         description: 'type must describe the event type'
       },
       postStartDate: {
@@ -90,19 +95,10 @@ export async function applySchemaValidation(db: Db) {
     }
   };
 
-    const collectionName = 
-      process.env.EVENTS_COLLECTION_NAME;
-  
-      if (!collectionName) {
-        throw new Error(
-          'EVENTS_COLLECTION_NAME environment variable is missing'
-        );
-      }
-  
+    const collectionName = getEnv('EVENTS_COLLECTION_NAME');
       const validator = {
         $jsonSchema: jsonSchema
       };
-  
       try {
         await db.command({
           collMod: collectionName,
@@ -117,10 +113,8 @@ export async function applySchemaValidation(db: Db) {
             collectionName,
             { validator }
           );
-  
           return;
         }
-  
         throw error;
       }
     }
