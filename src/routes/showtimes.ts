@@ -4,7 +4,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
 import { showtimeValidationRules, validate } from '../middleware/validator';
 
-export const showtimeRouter = express.Router();
+const showtimeRouter = express.Router();
 const controller = new ShowtimesController();
 
 showtimeRouter.get('/all', controller.getShowtimes);

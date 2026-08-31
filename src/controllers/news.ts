@@ -1,119 +1,241 @@
 import { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
+import { matchedData } from 'express-validator';
+import type { News } from '../models/news';
+import type { CreateNewsInput, UpdateNewsInput } from '../dto/news.dto';
 import { collections } from '../services/database.services';
+import { CONTENT_STATUSES } from '../types/contentStatuses';
+import type { ContentStatus } from '../types/contentStatuses';
 
 export class NewsController {
-  getActivePublicNews = async (req: Request, res: Response): Promise<void> => {
+  getActivePublicNews = async (
+    _req: Request, 
+    res: Response
+  ): Promise<void> => {
     try {
-      const activePublicNews = await collections.news.find({ status: 'public', isActive: true }).sort({ date: 1 }).toArray();
-      if (activePublicNews.length > 0) {
-        res.status(200).json(activePublicNews);
-      } else {
-        res.status(404).send(`Unable to find any current public news items.`);
-      }
+      const activePublicNews = await collections.news
+        .find({ status: 'public', isActive: true })
+        .sort({ date: 1 })
+        .toArray();
+      res.status(200).json(activePublicNews);
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error getting active public news:', error);
+      res.status(500).json({
+        message: 'Error getting active public news'
+      });
     }
   };
 
-  getAllNews = async (req: Request, res: Response): Promise<void> => {
+  getAllNews = async (
+    _req: Request, 
+    res: Response
+  ): Promise<void> => {
     try {
-      const news = await collections.news.find().sort({ date: 1 }).toArray();
-      if (news.length > 0) {
-        res.status(200).json(news);
-      } else {
-        res.status(400).send(`No news found`);
-      }
+      const news = await collections.news
+        .find()
+        .sort({ date: 1 })
+        .toArray();
+      res.status(200).json(news);
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error getting all news:', error);
+      res.status(500).json({
+        message: 'Error getting all news'
+      });
     }
   };
 
-  getActiveNews = async (req: Request, res: Response): Promise<void> => {
+  getActiveNews = async (
+    _req: Request, 
+    res: Response
+  ): Promise<void> => {
     try {
-      const activeNews = await collections.news.find({ isActive: true }).sort({ date: 1 }).toArray();
-      if (activeNews.length > 0) {
-        res.status(200).json(activeNews);
-      } else {
-        res.status(404).send(`Unable to find any active news items`);
-      }
+      const activeNews = await collections.news
+        .find({ isActive: true })
+        .sort({ date: 1 })
+        .toArray();
+      res.status(200).json(activeNews);
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error getting active news:', error);
+      res.status(500).json({
+        message: 'Error getting active news'
+      });
     }
   };
 
-  getNewsByStatus = async (req: Request, res: Response): Promise<void> => {
+  getNewsByStatus = async (
+      req: Request, 
+      res: Response
+    ): Promise<void> => {
     const { status } = req.params;
+    if (typeof status !== 'string' || !status.trim()) {
+      res.status(400).json({
+        message: 'News status is required'
+      });
+      return;
+    }
+    const normalizedStatus = status
+      .trim()
+      .toLowerCase();
+    if (
+      !CONTENT_STATUSES.includes(
+        normalizedStatus as ContentStatus
+      )
+    ) {
+      res.status(400).json({
+        message: 'Invalid news status'
+      });
+      return;
+    }
     try {
-      const newsByStatus = await collections.news.find({ status: status.toLowerCase() }).sort({ date: 1 }).toArray();
-      if (newsByStatus.length > 0) {
-        res.status(200).json(newsByStatus);
-      } else {
-        res.status(404).send(`Unable to find any ${status} news items.`);
-      }
+      const newsByStatus = await collections.news
+        .find({ status: normalizedStatus as ContentStatus })
+        .sort({ date: 1 })
+        .toArray();
+      res.status(200).json(newsByStatus);
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error getting news by status:', error);
+      res.status(500).json({
+        message: 'Error getting news by status'
+      });
     }
   };
 
-  getNewsById = async (req: Request, res: Response): Promise<void> => {
+  getNewsById = async (
+      req: Request, 
+      res: Response
+    ): Promise<void> => {
     const { id } = req.params;
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+      res.status(400).json({
+        message: 'Invalid news id'
+      });
+      return;
+    }
     try {
-      const newsId = new ObjectId(id);
-      const news = await collections.news.findOne({ _id: newsId });
-      if (news) {
-        res.status(200).json(news);
-      } else {
-        res.status(404).send(`Unable to find any news with id: ${id}`);
+      const news = await collections.news.findOne({ _id: new ObjectId(id) });
+      if (!news) {
+        res.status(404).json({
+          message: 'News not found'
+        });
+        return;
       }
+      res.status(200).json(news);
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error getting news by ID:', error);
+      res.status(500).json({
+        message: 'Error getting active news by ID'
+      });
     }
   };
 
-  postNews = async (req: Request, res: Response): Promise<void> => {
+  postNews = async (
+    req: Request, 
+    res: Response
+  ): Promise<void> => {
     try {
-      const newNews = req.body;
+      const data = matchedData(req) as CreateNewsInput;
+      const newNews: News = {
+        ...data,
+        date: new Date(
+          `${data.date}T00:00:00.000Z`
+        )
+      };
       const result = await collections.news.insertOne(newNews);
-      if (result.acknowledged) {
-        res.status(201).send(`Successfully created a news item with id ${result.insertedId}`);
-      } else {
-        res.status(500).send({ error: 'Failed to create a news event' });
-      }
+      res.status(201).json({
+        message: 'Successfully created news item',
+        newsId: result.insertedId
+      });
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      console.error('Error creating a news item', error);
+      res.status(500).json({
+        message: 'Unable to create news item'
+      });
     }
   };
 
-  updateNewsById = async (req: Request, res: Response): Promise<void> => {
+  updateNewsById = async (
+    req: Request, 
+    res: Response
+  ): Promise<void> => {
     const { id } = req.params;
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+      res.status(400).json({
+        message: 'Invalid news ID'
+      });
+      return;
+    }
     try {
-      const updatedNews = req.body;
-      const newsId = new ObjectId(id);
-      const result = await collections.news.updateOne({ _id: newsId }, { $set: updatedNews });
-
-      if (result.modifiedCount > 0) {
-        res.status(200).send(`Successfully updated news item with id ${id}`);
-      } else {
-        res.status(304).send(`News item with id: ${id} not updated`);
+      const data = matchedData(req) as UpdateNewsInput;
+      if (Object.keys(data).length === 0) {
+        res.status(400).json({
+          message: 'No news item fields provided for update'
+        });
+        return;
       }
+      const {
+        date,
+        ...newsData
+      } = data;
+      const updatedNews: Partial<News> = {
+        ...newsData,
+        ...(date !== undefined && {
+          date: new Date(
+            `${date}T00:00:00.000Z`
+          )
+        })
+      };
+      const result = await collections.news.updateOne(
+        { _id: new ObjectId(id) }, 
+        { $set: updatedNews }
+      );
+      if (result.matchedCount === 0) {
+        res.status(404).json({
+          message: 'News item not found'
+        });
+        return;
+      }
+      res.status(200).json({
+        message:
+        result.modifiedCount > 0
+        ? `Successfully updated news item with id ${id}`
+        : 'News item is already up to date'
+      });
     } catch (error) {
-      res.status(400).send(error.message);
+      console.error('Error updating news item', error);
+      res.status(500).json({ 
+        message: 'Unable to update news item' 
+      });
     }
   };
 
-  deleteNewsById = async (req: Request, res: Response): Promise<void> => {
+  deleteNewsById = async (
+    req: Request, 
+    res: Response
+  ): Promise<void> => {
     const { id } = req.params;
+    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+      res.status(400).json({
+        message: 'Invalid news item ID'
+      });
+      return;
+    }
     try {
       const newsId = new ObjectId(id);
       const result = await collections.news.deleteOne({ _id: newsId });
-      if (result.deletedCount === 1) {
-        res.status(202).send(`Successfully removed news item with id ${id}`);
-      } else {
-        res.status(404).send(`News item with id ${id} does not exist`);
+      if (result.deletedCount === 0) {
+        res.status(404).json({
+          message: 'News item not found'
+        });
+        return;
       }
+      res.status(200).json({
+        message: 'Successfully deleted news item'
+      });
     } catch (error) {
-      res.status(500).send(error.message);
+      console.error('Error deleting news item', error);
+      res.status(500).json({
+        message: 'Unable to delete news item'
+      });
     }
   };
 }

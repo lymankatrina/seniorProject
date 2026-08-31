@@ -1,8 +1,11 @@
 import * as mongoDB from 'mongodb';
-import { Db } from 'mongodb';
+import type { Db } from 'mongodb';
 import { CONTENT_STATUSES } from '../types/contentStatuses';
+import { getEnv } from '../config/env'
 
-export async function applySchemaValidation(db: Db) {
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
     required: [
@@ -63,19 +66,10 @@ export async function applySchemaValidation(db: Db) {
     }
   };
 
-    const collectionName = 
-      process.env.NEWS_COLLECTION_NAME;
-  
-      if (!collectionName) {
-        throw new Error(
-          'NEWS_COLLECTION_NAME environment variable is missing'
-        );
-      }
-  
+    const collectionName = getEnv('NEWS_COLLECTION_NAME');
       const validator = {
         $jsonSchema: jsonSchema
       };
-  
       try {
         await db.command({
           collMod: collectionName,
@@ -90,10 +84,8 @@ export async function applySchemaValidation(db: Db) {
             collectionName,
             { validator }
           );
-  
           return;
         }
-  
         throw error;
       }
     }

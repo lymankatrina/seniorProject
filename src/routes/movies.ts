@@ -4,7 +4,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
 import { movieValidationRules, updateMovieValidationRules, validate } from '../middleware/validator';
 
-export const movieRouter = express.Router();
+const movieRouter = express.Router();
 const controller = new MoviesController();
 
 movieRouter.get('/all', controller.getMovies);

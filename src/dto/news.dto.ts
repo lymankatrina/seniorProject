@@ -1,14 +1,15 @@
-import type { ObjectId } from 'mongodb';
 import type { ContentStatus } from '../types/contentStatuses';
 
-export interface News {
+export interface CreateNewsInput {
   title: string;
   tagline: string;
   description: string;
-  date: Date;
+  date: string;
   image: string;
   link: string;
   status: ContentStatus;
   isActive: boolean;
-  _id?: ObjectId;
 }
+
+export type UpdateNewsInput =
+  Partial<CreateNewsInput>;

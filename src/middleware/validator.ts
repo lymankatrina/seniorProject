@@ -275,60 +275,66 @@ const eventValidationRules = () => {
   return rules;
 };
 
-const newsValidationRules = () => {
-  const rules = [
-body('title')
-      .exists()
-      .withMessage('News title is required')
+const newsFieldValidationRules = (isUpdate = false) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate ? chain.optional() : chain;
+  };
+  return [
+    field('title')
       .isString()
+      .withMessage('News title must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
       .withMessage('News title must be between 1 and 85 characters'),
-    body('tagline')
-      .exists()
-      .withMessage('News tagline is required')
+    field('tagline')
       .isString()
+      .withMessage('News tagline must be a string')
       .trim()
       .isLength({ min: 1, max: 85 })
       .withMessage('News tagline must be between 1 and 85 characters'),
-    body('description')
-      .exists()
-      .withMessage('News description is required')
+    field('description')
       .isString()
+      .withMessage('News description must be a string')
       .trim()
       .isLength({ min: 1, max: 850 })
       .withMessage('News description must be between 1 and 850 characters'),
-    body('date')
-      .exists()
-      .withMessage('Date is required')
+    field('date')
       .isString()
+      .withMessage('Date must be a string')
       .trim()
       .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Date is required and must be in the format YYYY-MM-DD'),
-    body('image')
-      .exists()
-      .withMessage('Image is required')
+      .withMessage('Date must be in the format YYYY-MM-DD'),
+    field('image')
+      .isString()
+      .trim()
       .isURL()
-      .withMessage('Image must be a link to a publicly shared image'),
-    body('link')
-      .exists()
-      .withMessage('Link is required')
+      .withMessage('Image must be a URL to a publicly shared image'),
+    field('link')
+      .isString()
+      .trim()
       .isURL()
-      .withMessage('Link must be a url link to a shareable source'),
-    body('status')
-      .exists()
-      .withMessage('Status is required')
+      .withMessage('Link must be a URL to a shareable source'),
+    field('status')
+      .isString()
+      .withMessage('Status must be a string')
       .trim()
       .toLowerCase()
       .isIn([...CONTENT_STATUSES])
-      .withMessage('Status must be public or private'),
-    body('isActive')
-      .exists()
-      .withMessage('isActive is required')
+      .withMessage('Status must be a valid content status'),
+    field('isActive')
       .isBoolean()
       .withMessage('isActive must be true or false')
+      .toBoolean()
   ];
-  return rules;
+};
+
+const newsValidationRules = () => {
+  return newsFieldValidationRules(false);
+};
+
+const updateNewsValidationRules = () => {
+  return newsFieldValidationRules(true);
 };
 
 const ticketValidationRules = () => {
@@ -508,6 +514,7 @@ export {
   updateMovieValidationRules,
   eventValidationRules,
   newsValidationRules,
+  updateNewsValidationRules,
   ticketValidationRules,
   showtimeValidationRules,
   updateShowtimeValidationRules,
