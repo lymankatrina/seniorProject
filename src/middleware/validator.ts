@@ -19,22 +19,6 @@ const capitalizeFirstWords = (value: string): string => {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const surveyValidationRules = () => {
-  const rules = [
-    body('surveyLink')
-      .exists()
-      .withMessage('Survey link is required')
-      .isURL()
-      .withMessage('Survey link must be a valid URL'),
-    body('isActive')
-      .exists()
-      .withMessage('isActive is required')
-      .isBoolean()
-      .toBoolean()
-      .withMessage('isActive must be true or false')
-  ]
-}
-
 const userValidationRules = () => {
   const rules = [
     body('firstName')
@@ -355,6 +339,33 @@ const updateNewsValidationRules = () => {
   return newsFieldValidationRules(true);
 };
 
+const surveyFieldValidationRules = (isUpdate = false) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate ? chain.optional() : chain;
+  };
+  return [
+    field('surveyLink')
+      .isString()
+      .withMessage('Survey link must be a string')
+      .trim()
+      .isURL()
+      .withMessage('Survey link must be a valid URL'),
+    field('isActive')
+      .isBoolean()
+      .withMessage('isActive must be true or false')
+      .toBoolean()
+  ];
+};
+
+const surveyValidationRules = () => {
+  return surveyFieldValidationRules(false);
+};
+
+const updateSurveyValidationRules = () => {
+  return surveyFieldValidationRules(true);
+};
+
 const ticketValidationRules = () => {
   const rules = [
     body('movieId')
@@ -534,6 +545,8 @@ export {
   updateEventValidationRules,
   newsValidationRules,
   updateNewsValidationRules,
+  surveyValidationRules,
+  updateSurveyValidationRules,
   ticketValidationRules,
   showtimeValidationRules,
   updateShowtimeValidationRules,

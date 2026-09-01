@@ -1,9 +1,7 @@
-import { ObjectId } from 'mongodb';
+import type { ObjectId } from 'mongodb';
 
-export default class Survey {
-  constructor(
-    public surveyLink: string,
-    public isActive: boolean,
-    public _id?: ObjectId
-  ) {}
+export interface Survey {
+  surveyLink: string;
+  isActive: boolean;
+  _id?: ObjectId;
 }

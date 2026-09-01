@@ -1,7 +1,10 @@
 import * as mongoDB from 'mongodb';
 import { Db } from 'mongodb';
+import { getEnv } from '../config/env';
 
-export async function applySchemaValidation(db: Db) {
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
     required: [
@@ -25,20 +28,10 @@ export async function applySchemaValidation(db: Db) {
       }
     }
   };
-
-    const collectionName = 
-      process.env.SURVEYS_COLLECTION_NAME;
-  
-      if (!collectionName) {
-        throw new Error(
-          'SURVEYS_COLLECTION_NAME environment variable is missing'
-        );
-      }
-  
+    const collectionName = getEnv('SURVEYS_COLLECTION_NAME');
       const validator = {
         $jsonSchema: jsonSchema
       };
-  
       try {
         await db.command({
           collMod: collectionName,
@@ -53,10 +46,8 @@ export async function applySchemaValidation(db: Db) {
             collectionName,
             { validator }
           );
-  
           return;
         }
-  
         throw error;
       }
     }
