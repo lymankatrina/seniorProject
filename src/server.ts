@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { connectToDatabase } from './services/database.services';
+import { connectToDatabase, mongoClient } from './services/database.services';
 import routes from './routes/index';
 import { routeNotFound } from './middleware/routeNotFound';
 import { authMiddleware } from './middleware/authMiddleware';
@@ -19,9 +19,26 @@ connectToDatabase()
     app.use('/', routes);
     app.use(routeNotFound);
 
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(`Server is listening at port ${port}`);
     });
+
+    const shutdown = async () => {
+      console.log('Shutting down server...');
+
+      server.close(async () => {
+        await mongoClient.close();
+
+        console.log(
+          'MongoDB connection closed'
+        );
+
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
   })
   .catch((error: Error) => {
     console.error('Database connection failed', error);

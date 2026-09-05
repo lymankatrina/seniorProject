@@ -1,15 +1,27 @@
 import * as mongoDB from 'mongodb';
 import { Db } from 'mongodb';
 import { TICKET_STATUSES } from '../types/ticketStatuses';
+import { getEnv } from '../config/env';
 
-export async function applySchemaValidation(db: Db) {
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
-    required: ['movieId', 'showtimeId', 'date', 'time', 'status', 'ticketNumber'],
+    required: [
+      '_id',
+      'movieId', 
+      'showtimeId',
+      'seatId',
+      'date', 
+      'time', 
+      'status'
+    ],
     additionalProperties: false,
     properties: {
       _id: {
-        bsonType: 'objectId'
+        bsonType: 'objectId',
+        description: 'Unique identifier automatically assigned by MongoDB'
       },
       movieId: {
         bsonType: 'objectId',
@@ -19,6 +31,10 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'objectId',
         description: 'Showtime ID must be the object Id of the showtime'
       },
+      seatId: {
+        bsonType: 'objectId',
+        description: 'Seat ID must be the ObjectId of the physical seat'
+      },
       date: {
         bsonType: 'string',
         pattern: '^\\d{4}-\\d{2}-\\d{2}$',
@@ -26,54 +42,55 @@ export async function applySchemaValidation(db: Db) {
       },
       time: {
         bsonType: 'string',
-        pattern: '^(0?[1-9]|1[0-2]:[0-5][0-9] (AM|PM)$',
+        pattern: '^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$',
         description: 'Time should be the time the movie begins'
       },
       status: {
         bsonType: 'string',
         enum: [...TICKET_STATUSES],
-        description: 'Status should be available, reserved, or sold'
+        description: 'Status should be a valid ticket status'
       },
-      ticketNumber: {
-        bsonType: 'int',
-        minimum: 1,
-        description: 'Ticket number must be a positive integer'
+      buyerId: {
+        bsonType: 'string',
+        description: 'Auth0 user ID of the buyer'
+      },
+      addedAt: {
+        bsonType: 'date',
+        description: 'Date and time the ticket was reserved'
       }
     }
   };
 
-    const collectionName = 
-      process.env.TICKETS_COLLECTION_NAME;
-  
-      if (!collectionName) {
-        throw new Error(
-          'TICKETS_COLLECTION_NAME environment variable is missing'
-        );
-      }
-  
-      const validator = {
-        $jsonSchema: jsonSchema
-      };
-  
-      try {
-        await db.command({
-          collMod: collectionName,
-          validator
-        });
-      } catch (error) {
-        if (
-          error instanceof mongoDB.MongoServerError &&
-          error.codeName === 'NamespaceNotFound'
-        ){
-          await db.createCollection(
-            collectionName,
-            { validator }
-          );
-  
-          return;
-        }
-  
-        throw error;
-      }
+  const collectionName = getEnv('TICKETS_COLLECTION_NAME');
+  const validator = {
+    $jsonSchema: jsonSchema
+  };
+  try {
+    await db.command({
+      collMod: collectionName,
+      validator
+    });
+  } catch (error) {
+    if (
+      error instanceof mongoDB.MongoServerError &&
+      error.codeName === 'NamespaceNotFound'
+    ){
+      await db.createCollection(
+        collectionName,
+        { validator }
+      );
+    } else {
+      throw error;
     }
-  
+  }
+  await db.collection(collectionName).createIndex(
+    {
+      showtimeId: 1,
+      date: 1,
+      seatId: 1
+    },
+    {
+      unique: true
+    }
+  );
+}

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { param, body, Result, validationResult, ValidationChain } from 'express-validator';
 import { collections } from '../services/database.services';
-import { ObjectId } from 'mongodb';
 import { MOVIE_CERTIFICATIONS } from '../types/movieCertifications';
 import { TICKET_STATUSES } from '../types/ticketStatuses';
 import { CONTENT_STATUSES } from '../types/contentStatuses';
@@ -9,6 +8,8 @@ import { PRODUCT_TYPES } from '../types/productTypes';
 import { PRODUCT_STATUSES } from '../types/productStatuses';
 import { SHOWTIME_TYPES } from '../types/showtimeTypes';
 import { EVENT_TYPES } from '../types/eventTypes';
+import { SECTION_TYPES } from '../types/section';
+import { validDateString } from '../helpers/validationHelpers';
 
 const validateEmailRule = () => {
   const rules = [param('email').notEmpty().isEmail().withMessage('Valid email is required')];
@@ -70,6 +71,14 @@ const userValidationRules = () => {
   return rules;
 };
 
+const movieIdParamValidationRules = () => {
+  return [
+    param('movieId')
+      .isMongoId()
+      .withMessage('Movie ID must be a valid ObjectId')
+  ];
+};
+
 const movieFieldValidationRules = (isUpdate = false) => {
   const field = (name: string) => {
     const chain = body(name);
@@ -108,14 +117,22 @@ const movieFieldValidationRules = (isUpdate = false) => {
       .isString()
       .withMessage('Release Date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Release Date must be YYYY-MM-DD'),
+      .custom(validDateString),
     field('genres')
       .isString()
       .withMessage('Genres must be a string')
       .trim()
-      .notEmpty()
-      .withMessage('Genres cannot be empty'),
+      .isLength({
+        min: 2,
+        max: 100
+      })
+      .withMessage('Genres must be between 2 and 100 characters')
+      .matches(
+        /^[A-Za-z]+(?: [A-Za-z]+)*(?:, [A-Za-z]+(?: [A-Za-z]+)*)*$/
+      )
+      .withMessage(
+        'Genres must contain letters and be seperated by commas'
+      ),
     field('runtime')
       .isString()
       .withMessage('runtime must be a string')
@@ -123,18 +140,18 @@ const movieFieldValidationRules = (isUpdate = false) => {
       .matches(/^[0-9]+h\s+[0-5]?[0-9]m$/)
       .withMessage('runtime must be in the format 1h 55m'),
     body('imdbScore')
-      .optional({ values: 'falsy' })
+      .optional()
       .isFloat({ min: 0, max: 10 })
       .withMessage('IMDB Score must be a number between 0 and 10')
       .toFloat(),
     body('rottenTomatoes')
-      .optional({ values: 'falsy' })
+      .optional()
       .isString()
       .trim()
       .matches(/^(100|\d{1,2})%$/)
       .withMessage('rottenTomatoes must be between 0% and 100%'),
     body('fandangoAudienceScore')
-      .optional({ values: 'falsy' })
+      .optional()
       .isString()
       .trim()
       .matches(/^(100|\d{1,2})%$/)
@@ -150,6 +167,21 @@ const movieFieldValidationRules = (isUpdate = false) => {
       .isURL()
       .withMessage('Trailer must be a URL to an official trailer')
   ];  
+};
+
+const movieTitleParamValidationRules = () => {
+  return [
+    param('title')
+      .isString()
+      .withMessage('Movie title must be a string')
+      .trim()
+      .notEmpty()
+      .withMessage('Movie title is required')
+      .isLength({ max: 85 })
+      .withMessage(
+        'Movie title cannot exceed 85 characters'
+      )
+  ];
 };
 
 const movieValidationRules = () => {
@@ -188,14 +220,12 @@ const eventFieldValidationRules = (isUpdate = false) => {
       .isString()
       .withMessage('Start date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Start date must be in the format YYYY-MM-DD'),
+      .custom(validDateString),
     field('endDate')
       .isString()
       .withMessage('End date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('End date must be in the format YYYY-MM-DD')
+      .custom(validDateString)
       .custom((endDate, { req }) => {
         if (
           req.body.startDate && 
@@ -240,14 +270,12 @@ const eventFieldValidationRules = (isUpdate = false) => {
       .isString()
       .withMessage('Post start date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Post start date must be in the format YYYY-MM-DD'),
+      .custom(validDateString),
     field('postEndDate')
       .isString()
       .withMessage('Post end date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Post end date must be in the format YYYY-MM-DD')
+      .custom(validDateString)
       .custom((postEndDate, { req }) => {
         if (
           req.body.postStartDate && 
@@ -305,8 +333,7 @@ const newsFieldValidationRules = (isUpdate = false) => {
       .isString()
       .withMessage('Date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Date must be in the format YYYY-MM-DD'),
+      .custom(validDateString),
     field('image')
       .isString()
       .trim()
@@ -339,6 +366,41 @@ const updateNewsValidationRules = () => {
   return newsFieldValidationRules(true);
 };
 
+const seatFieldValidationRules = (isUpdate = false) => {
+  const field = (name: string) => {
+    const chain = body(name);
+    return isUpdate ? chain.optional() : chain;
+  };
+  return [
+    field('seat')
+      .isInt({ min: 1, max: 20 })
+      .withMessage('Seat must be a number between 1 and 20')
+      .toInt(),
+    field('row')
+      .isString()
+      .withMessage('Row must be a string')
+      .trim()
+      .toUpperCase()
+      .matches(/^[A-Za-z]$/)
+      .withMessage('Row must be a single letter'),
+    field('section')
+      .isString()
+      .withMessage('Section must be a string')
+      .trim()
+      .toLowerCase()
+      .isIn([...SECTION_TYPES])
+      .withMessage('Section must be a valid section type')
+  ];
+};
+
+const seatValidationRules = () => {
+  return seatFieldValidationRules(false);
+};
+
+const updateSeatValidationRules = () => {
+  return seatFieldValidationRules(true);
+};
+
 const surveyFieldValidationRules = (isUpdate = false) => {
   const field = (name: string) => {
     const chain = body(name);
@@ -367,7 +429,7 @@ const updateSurveyValidationRules = () => {
 };
 
 const ticketValidationRules = () => {
-  const rules = [
+  return [
     body('movieId')
       .exists()
       .withMessage('Movie ID is required')
@@ -375,98 +437,156 @@ const ticketValidationRules = () => {
       .withMessage('Movie ID must be a valid ObjectId'),
     body('showtimeId')
       .exists()
-      .withMessage('Showtime ID must be a valid ObjectId')
+      .withMessage('Showtime ID is required')
       .isMongoId()
       .withMessage('Showtime ID must be a valid ObjectId'),
+    body('seatId')
+      .exists()
+      .withMessage('Seat ID is required')
+      .isMongoId()
+      .withMessage('Seat ID must be a valid ObjectId'),
     body('date')
       .exists()
       .withMessage('Date is required')
       .isString()
+      .withMessage('Date must be a string')
       .trim()
-      .matches(/^\d{4}-\d(2)-\d{2}$/)
-      .withMessage('Date must be in the format YYYY-MM-DD'),
+      .custom(validDateString),
     body('time')
       .exists()
       .withMessage('Time is required')
       .isString()
+      .withMessage('Time must be a string')
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
       .withMessage('Time must be in the hh:mm AM/PM format'),
     body('status')
       .exists()
       .withMessage('Ticket status is required')
+      .isString()
+      .withMessage('Ticket status must be a string')
+      .trim()
+      .toLowerCase()
       .isIn([...TICKET_STATUSES])
-      .withMessage('Ticket status must be available, reserved, or sold'),
-    body('ticketNumber')
-      .exists()
-      .withMessage('Ticket number is required')
-      .isInt({ min: 1 })
-      .withMessage('Ticket number must be a positive whole number')
-      .toInt()
+      .withMessage('Ticket status must be a valid ticket status')
   ];
-  return rules;
 };
 
-const showtimeFieldValidationRules = (
-  isUpdate = false
-) => {
-  const field = (name: string) => {
-    const chain = body(name);
-    return isUpdate
-      ? chain.optional()
-      : chain;
-  };
+const updateTicketValidationRules = () => {
   return [
-    field('movieId')
+    body('seatId')
+      .optional()
       .isMongoId()
-      .withMessage('Movie Id must be a valid object Id'),
-    field('startDate')
+      .withMessage('Seat ID must be a valid ObjectId'),
+    body('status')
+      .optional()
+      .isString()
+      .withMessage('Ticket status must be a string')
+      .trim()
+      .toLowerCase()
+      .isIn([...TICKET_STATUSES])
+      .withMessage('Ticket status must be a valid ticket status')
+  ];
+};
+
+const ticketIdParamValidationRules = () => {
+  return [
+    param('ticketId')
+      .isMongoId()
+      .withMessage('Ticket ID must be a valid ObjectId')
+  ];
+};
+
+const ticketDateParamValidationRules = () => {
+  return [
+    param('showtimeId')
+      .isMongoId()
+      .withMessage('Showtime ID must be a valid ObjectId'),
+    param('date')
+      .isString()
+      .trim()
+      .custom(validDateString)
+  ];
+};
+
+const showtimeIdParamValidationRules = () => {
+  return [
+    param('showtimeId')
+      .isMongoId()
+      .withMessage('Showtime ID must be a valid ObjectId')
+  ];
+};
+
+const showtimeValidationRules = () => {
+  return [
+    body('movieId')
+      .isMongoId()
+      .withMessage('Movie ID must be a valid ObjectId'),
+    body('startDate')
       .isString()
       .withMessage('Start date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('Start date must be in the format YYYY-MM-DD'),
-    field('endDate')
+      .custom(validDateString)
+      .bail(),
+    body('endDate')
       .isString()
       .withMessage('End date must be a string')
       .trim()
-      .matches(/^\d{4}-\d{2}-\d{2}$/)
-      .withMessage('End date must be in the format YYYY-MM-DD')
-      .custom((endDate, {req}) => {
-        if (
-          req.body.startDate && 
-          endDate < req.body.startDate
-      ) {
-        throw new Error(
-          'End date must be on or after start date'
+      .custom(validDateString)
+      .bail()
+      .custom((endDate, { req }) => {
+        const startDate = req.body.startDate;
+        if (startDate && endDate < startDate) {
+          throw new Error(
+            'End date must be on or after the start date'
           );
         }
-      return true;
+        return true;
       }),
-    field('time')
+    body('time')
       .isString()
       .withMessage('Time must be a string')
       .trim()
       .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
       .withMessage('Time should be in the hh:mm AM/PM format'),
-    field('showtimeType')
+    body('showtimeType')
       .isString()
       .withMessage('Showtime type must be a string')
+      .trim()
+      .toLowerCase()
       .isIn([...SHOWTIME_TYPES])
-      .withMessage('Showtime type must be valid'),
-    field('seatCapacity')
-      .isInt({ min: 1, max: 225 })
-      .withMessage('Seating capacity must be a whole number between 1 and 225')
-      .toInt()
+      .withMessage('Showtime type must be valid')
   ];
 };
 
-const showtimeValidationRules = () => {
-  return showtimeFieldValidationRules(false);
-};
-
 const updateShowtimeValidationRules = () => {
-  return showtimeFieldValidationRules(true);
+  return [
+    body('movieId')
+      .optional()
+      .isMongoId()
+      .withMessage('Movie Id must be a valid ObjectId'),
+    body('date')
+      .optional()
+      .isString()
+      .withMessage('Date must be a string')
+      .trim()
+      .custom(validDateString),
+    body('time')
+      .optional()
+      .isString()
+      .withMessage('Time must be a string')
+      .trim()
+      .matches(/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/)
+      .withMessage('Time should be in the hh:mm AM/PM format'),
+    body('showtimeType')
+      .optional()
+      .isString()
+      .withMessage('Showtime type must be a string')
+      .trim()
+      .toLowerCase()
+      .isIn([...SHOWTIME_TYPES])
+      .withMessage('Showtime type must be valid')
+  ]
 };
 
 const productValidationRules = () => {
@@ -539,15 +659,23 @@ const validate = (req: Request, res: Response, next: NextFunction) => {
 export {
   validateEmailRule,
   userValidationRules,
+  movieIdParamValidationRules,
+  movieTitleParamValidationRules,
   movieValidationRules,
   updateMovieValidationRules,
   eventValidationRules,
   updateEventValidationRules,
   newsValidationRules,
   updateNewsValidationRules,
+  seatValidationRules,
+  updateSeatValidationRules,
   surveyValidationRules,
   updateSurveyValidationRules,
+  ticketDateParamValidationRules,
+  ticketIdParamValidationRules,
   ticketValidationRules,
+  updateTicketValidationRules,
+  showtimeIdParamValidationRules,
   showtimeValidationRules,
   updateShowtimeValidationRules,
   productValidationRules,

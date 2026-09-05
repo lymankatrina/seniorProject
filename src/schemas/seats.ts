@@ -1,7 +1,7 @@
 import * as mongoDB from 'mongodb';
-import type { Db } from 'mongodb';
-import { SHOWTIME_TYPES } from '../types/showtimeTypes';
-import { COLLECTION_NAMES } from '../config/collectionNames';
+import { Db } from 'mongodb';
+import { getEnv } from '../config/env';
+import { SECTION_TYPES } from '../types/section';
 
 export async function applySchemaValidation(
   db: Db
@@ -9,39 +9,38 @@ export async function applySchemaValidation(
   const jsonSchema = {
     bsonType: 'object',
     required: [
-      '_id', 
-      'movieId', 
-      'date',
-      'time', 
-      'showtimeType'
+      '_id',
+      'seat',
+      'row',
+      'section'
     ],
     additionalProperties: false,
     properties: {
       _id: {
-        bsonType: 'objectId'
-      },
-      movieId: {
         bsonType: 'objectId',
-        description: 'Movie ID must reference a movie'
+        description: 'Unique identifier automatically assigned by MongoDB'
       },
-      date: {
-        bsonType: 'string',
-        pattern: '^\\d{4}-\\d{2}-\\d{2}$',
-        description: 'Date must be in YYYY-MM-DD format'
+      seat: {
+        bsonType: 'int',
+        minimum: 1,
+        maximum: 20,
+        description: 'Seat must be a number between 1 and 20'
       },
-      time: {
+      row: {
         bsonType: 'string',
-        pattern: '^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$',
-        description: 'Time must be in hh:mm AM/PM format'
+        minLength: 1,
+        maxLength: 1,
+        pattern: '^[A-Z]$',
+        description: 'Row must be a single uppercase letter'
       },
-      showtimeType: {
+      section: {
         bsonType: 'string',
-        enum: [...SHOWTIME_TYPES],
-        description: 'Must be a valid showtime type'
+        enum: [...SECTION_TYPES],
+        description: 'Must be a valid section'
       }
     }
   };
-  const collectionName = COLLECTION_NAMES.showtimes;
+  const collectionName = getEnv('SEATS_COLLECTION_NAME');
   const validator = {
     $jsonSchema: jsonSchema
   };
@@ -63,11 +62,11 @@ export async function applySchemaValidation(
       throw error;
     }
   }
-
   await db.collection(collectionName).createIndex(
     {
-      date: 1,
-      time: 1
+      section: 1,
+      row: 1,
+      seat: 1
     },
     {
       unique: true

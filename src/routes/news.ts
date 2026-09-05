@@ -4,7 +4,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
 import { newsValidationRules, updateNewsValidationRules, validate } from '../middleware/validator';
 
-const newsRouter = express.Router();
+export const newsRouter = express.Router();
 const controller = new NewsController();
 
 newsRouter.get('/public', controller.getActivePublicNews);

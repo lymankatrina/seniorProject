@@ -4,7 +4,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
 import { eventValidationRules, updateEventValidationRules, validate } from '../middleware/validator';
 
-const eventRouter = express.Router();
+export const eventRouter = express.Router();
 const controller = new EventsController();
 
 eventRouter.get('/all', requiresAuth(), validUserEmail, validAdmin, controller.getAllEvents);

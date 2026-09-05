@@ -1,7 +1,11 @@
 import * as mongoDB from 'mongodb';
-import { Db } from 'mongodb';
+import type { Db } from 'mongodb';
 
-export async function applySchemaValidation(db: Db) {
+import { COLLECTION_NAMES } from '../config/collectionNames';
+
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
     required: [
@@ -21,13 +25,13 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'string',
         minLength: 1,
         maxLength: 75,
-        description: "'firstName' must be between 1 and 75 characters"
+        description: 'First name must be between 1 and 75 characters'
       },
       lastName: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 75,
-        description: "'lastName' must be between 1 and 75 characters"
+        description: 'Last name must be between 1 and 75 characters'
       },
       userName: {
         bsonType: 'string',
@@ -36,29 +40,22 @@ export async function applySchemaValidation(db: Db) {
       },
       email: {
         bsonType: 'string',
-        format: 'email',
-        description: "'email' is required and must be valid"
+        description: 'email is required and must be valid'
       },
       isAdmin: {
         bsonType: 'bool',
-        description: "Indicates whether the user is an administrator"
+        description: 'Indicates whether the user is an administrator'
       },
       // Optional fields
         phone: {
         bsonType: 'string',
-        description: "'phone' must be a valid US phone number"
+        description: 'phone must be a valid US phone number'
       }
     }
   };
 
     const collectionName = 
-      process.env.USERS_COLLECTION_NAME;
-  
-      if (!collectionName) {
-        throw new Error(
-          'USERS_COLLECTION_NAME environment variable is missing'
-        );
-      }
+      COLLECTION_NAMES.users;
   
       const validator = {
         $jsonSchema: jsonSchema

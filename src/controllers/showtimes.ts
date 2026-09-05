@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
+import { MongoServerError, ObjectId } from 'mongodb';
 import { matchedData } from 'express-validator';
 import type { Showtime } from '../models/showtimes';
 import type { CreateShowtimeInput, UpdateShowtimeInput } from '../dto/showtimes.dto';
 import { collections } from '../services/database.services';
-import { showtimeValidationRules } from '../middleware/validator';
-
+import { getDatesBetween } from '../helpers/helpers';
 
 export class ShowtimesController {
   getShowtimes = async (
@@ -15,6 +14,10 @@ export class ShowtimesController {
     try {
       const showtimes = await collections.showtimes
         .find()
+        .sort({
+          date: 1,
+          time: 1
+        })
         .toArray();
       res.status(200).json(showtimes);
     } catch (error) {
@@ -29,15 +32,14 @@ export class ShowtimesController {
     req: Request, 
     res: Response
   ): Promise<void> => {
-    const { id } = req.params;
-    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-      res.status(400).json({
-        message: 'Invalid showtime ID'
-      });
-      return;
-    }
+    const { showtimeId } = matchedData(req, {
+      locations: ['params']
+    });
     try {
-      const showtime = await collections.showtimes.findOne({ _id: new ObjectId(id) });
+      const showtime = 
+        await collections.showtimes.findOne({ 
+          _id: new ObjectId(showtimeId)
+        });
       if (!showtime) {
         res.status(404).json({
           message: 'Showtime not found'
@@ -53,105 +55,21 @@ export class ShowtimesController {
     }
   };
 
-  getNowPlayingMovies = async (
-    _req: Request, 
-    res: Response
-  ): Promise<void> => {
-    try {
-      const today = new Date()
-        .toISOString()
-        .slice(0, 10);
-      const showtimes = await collections.showtimes
-        .find({
-          startDate: { $lte: today },
-          endDate: { $gte: today }
-        })
-        .toArray();
-      if (showtimes.length === 0) {
-        res.status(200).json([]);
-        return;
-      }
-      const movieIds = showtimes.map(
-        showtime => showtime.movieId
-      );
-      const movies = await collections.movies
-      .find({ 
-        _id: { $in: movieIds } 
-      })
-      .toArray();
-      const nowPlayingMovies = movies.map(movie => ({
-        ...movie,
-        showtimes: showtimes.filter(showtime => 
-          showtime.movieId.equals(movie._id)
-        )
-      }));
-      res.status(200).json(nowPlayingMovies);
-    } catch (error) {
-      console.error('Error getting now playing movies:', error);
-      res.status(500).json({
-        message: 'Error getting now playing movies'
-      });
-    }
-  };
-
-  getComingSoonMovies = async (
-    _req: Request, 
-    res: Response
-  ): Promise<void> => {
-    try {
-      const today = new Date()
-        .toISOString()
-        .slice(0, 10);
-      const showtimes = await collections.showtimes
-        .find({
-          startDate: { $gt: today }
-        })
-        .toArray();
-      if (showtimes.length === 0) {
-        res.status(200).json([]);
-        return;
-      }
-      const movieIds = showtimes.map(
-        showtime => showtime.movieId
-      );
-      const movies = await collections.movies
-        .find({
-          _id: { $in: movieIds } 
-        })
-        .toArray();
-      const comingSoonMovies = movies.map(movie => ({
-        ...movie,
-        showtimes: showtimes.filter(showtime => 
-          showtime.movieId.equals(movie._id)
-        )
-      }));
-      res.status(200).json(comingSoonMovies);
-    } catch (error) {
-      console.error('Error getting coming soon movies', error);
-      res.status(500).json({
-        message: 'Error getting coming soon movies'
-      });
-    }
-  };
-
   getShowtimesByMovie = async (
     req: Request, 
     res: Response
   ): Promise<void> => {
-    const { movieId } = req.params;
-    if (
-      typeof movieId !== 'string' ||
-      !ObjectId.isValid(movieId)
-    ) {
-      res.status(400).json({
-        message: 'Invalid movie ID'
-      });
-      return;
-    }
+    const { movieId } = matchedData(req, {
+      locations: ['params']
+    });
     try {
       const showtimes = await collections.showtimes
         .find({ 
           movieId: new ObjectId(movieId) 
+        })
+        .sort({
+          date: 1,
+          time: 1
         })
         .toArray();
       res.status(200).json(showtimes);
@@ -163,37 +81,83 @@ export class ShowtimesController {
     }
   };
 
-  postShowtime = async (
+  createShowtimes = async (
     req: Request, 
     res: Response
   ): Promise<void> => {
     try {
-      const data = matchedData(req) as CreateShowtimeInput;
+      const data = matchedData(req, {
+        locations: ['body']
+      }) as CreateShowtimeInput;
       const movieId = new ObjectId(data.movieId);
-      const movieExists = await collections.movies.findOne({
-        _id: movieId
+      const movieExists =
+        await collections.movies.findOne({
+          _id: movieId
+        });
+        if (!movieExists) {
+          res.status(404).json({
+            message: 'Movie not found'
+          });
+          return;
+        }
+        const dates = getDatesBetween(
+          data.startDate,
+          data.endDate
+        );
+        const conflicts = await collections.showtimes
+          .find({
+            date: {
+              $in: dates
+            },
+            time: data.time
+          })
+          .toArray();
+        if (conflicts.length > 0) {
+          res.status(409).json({
+            message: 'One or more showtimes conflict with existing showtimes',
+            conflicts: conflicts.map(showtime => ({
+              date: showtime.date,
+              time: showtime.time
+            }))
+          });
+          return;
+        }
+        const showtimes: Showtime[] = dates.map(
+          date => ({
+            movieId,
+            date,
+            time: data.time,
+            showtimeType: data.showtimeType
+          })
+        );
+        const result =
+          await collections.showtimes.insertMany(
+            showtimes
+          );
+      res.status(201).json({
+        message: 'Showtimes created successfully',
+        insertedCount: result.insertedCount,
+        showtimeIds: Object.values(
+          result.insertedIds
+        )
       });
-      if (!movieExists) {
-        res.status(404).json({
-          message: 'Movie not found'
+    } catch (error) {
+      if (
+        error instanceof MongoServerError && 
+        error.code === 11000
+      ) {
+        res.status(409).json({
+          message:
+            'A showtime already exists for one of the selected dates and time'
         });
         return;
       }
-      const newShowtime: Showtime = {
-        ...data,
-        movieId
-      };
-      const result = await collections.showtimes.insertOne(
-        newShowtime
+      console.error(
+        'Error creating showtimes:', 
+        error
       );
-      res.status(201).json({
-        message: 'Showtime created successfully',
-        showtimeId: result.insertedId
-      });
-    } catch (error) {
-      console.error('Error creating showtime:', error);
       res.status(500).json({
-        message: 'Error creating showtime'
+        message: 'Error creating showtimes'
       });
     }
   };
@@ -202,18 +166,17 @@ export class ShowtimesController {
     req: Request, 
     res: Response
   ): Promise<void> => {
-    const { id } = req.params;
-    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-      res.status(400).json({
-        message: 'Invalid showtime ID'
-      });
-      return;
-    }
+    const { showtimeId } = matchedData(req, {
+      locations: ['params']
+    });
+    const data = matchedData(req, {
+      locations: ['body']
+    }) as UpdateShowtimeInput;
     try {
-      const showtimeId = new ObjectId(id);
+      const showtimeObjectId = new ObjectId(showtimeId);
       const existingShowtime =
         await collections.showtimes.findOne({
-          _id: showtimeId
+          _id: showtimeObjectId
         });
       if(!existingShowtime) {
         res.status(404).json({
@@ -221,30 +184,19 @@ export class ShowtimesController {
         });
         return;
       }
-      const data = matchedData(req) as UpdateShowtimeInput;
       if (Object.keys(data).length === 0) {
         res.status(400).json({
           message: 'No showtime fields provided for update'
         });
         return;
       }
-      const existingTicket = await collections.tickets.findOne({
-        showtimeId
+      const existingTicket = 
+        await collections.tickets.findOne({
+          showtimeId: showtimeObjectId
       });
       if (existingTicket) {
         res.status(409).json({
           message: 'Showtime cannot be updated because tickets have already been generated'
-        });
-        return;
-      }
-      const finalStartDate =
-        data.startDate ?? existingShowtime.startDate;
-      const finalEndDate =
-        data.endDate ?? existingShowtime.endDate;
-      if (finalEndDate < finalStartDate) {
-        res.status(400).json({
-          message:
-            'End date must be on or after start date'
         });
         return;
       }
@@ -268,16 +220,15 @@ export class ShowtimesController {
         }
         updatedShowtime.movieId = movieObjectId;
       }
-      const result = await collections.showtimes.updateOne(
-        { _id: showtimeId },
-        { $set: updatedShowtime }
-      );
-      if (result.matchedCount === 0) {
-        res.status(404).json({
-          message: 'Showtime not found'
-        });
-        return;
-      }
+      const result = 
+        await collections.showtimes.updateOne(
+          { 
+            _id: showtimeObjectId 
+          },
+          { 
+            $set: updatedShowtime 
+          }
+        );
       res.status(200).json({
         message: 
           result.modifiedCount > 0
@@ -285,7 +236,20 @@ export class ShowtimesController {
           : 'Showtime is already up to date'
       });
     } catch (error) {
-      console.error('Error updating showtime:', error);
+      if (
+        error instanceof MongoServerError &&
+        error.code === 11000
+      ) {
+        res.status(409).json({
+          message:
+          'Another showtime already exists at that date and time'
+        });
+        return;
+      }
+      console.error(
+        'Error updating showtime:', 
+        error
+      );
       res.status(500).json({
         message: 'Error updating showtime'
       });
@@ -296,27 +260,26 @@ export class ShowtimesController {
     req: Request, 
     res: Response
   ): Promise<void> => {
-    const { id } = req.params;
-    if (typeof id !== 'string' || !ObjectId.isValid(id)) {
-      res.status(400).json({
-        message: 'Invalid showtime ID'
-      });
-      return;
-    }
+    const { showtimeId } = matchedData(req, {
+      locations: ['params']
+    });
     try {
-      const showtimeId = new ObjectId(id);
-      const showtime = await collections.showtimes.findOne({
-        _id: showtimeId
-      });
+      const showtimeObjectId = 
+        new ObjectId(showtimeId);
+      const showtime = 
+        await collections.showtimes.findOne({
+          _id: showtimeObjectId
+        });
       if (!showtime) {
         res.status(404).json({
           message: 'Showtime not found'
         });
         return;
       }
-      const existingTicket = await collections.tickets.findOne({
-        showtimeId
-      });
+      const existingTicket = 
+        await collections.tickets.findOne({
+          showtimeId: showtimeObjectId
+        });
       if (existingTicket) {
         res.status(409).json({
           message:
@@ -325,13 +288,16 @@ export class ShowtimesController {
         return;
       }
       await collections.showtimes.deleteOne({ 
-        _id: showtimeId 
+        _id: showtimeObjectId 
       });
       res.status(200).json({
         message: 'Successfully deleted showtime'
       });
     } catch (error) {
-      console.error('Error deleting showtime:', error);
+      console.error(
+        'Error deleting showtime:', 
+        error
+      );
       res.status(500).json({
         message: 'Error deleting showtime'
       });

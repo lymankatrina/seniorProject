@@ -1,17 +1,72 @@
 import express from 'express';
-import { MoviesController } from '../controllers/movies';
 import { requiresAuth } from 'express-openid-connect';
-import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
-import { movieValidationRules, updateMovieValidationRules, validate } from '../middleware/validator';
+import { MoviesController } from '../controllers/movies';
+import { 
+  validUserEmail, 
+  validAdmin 
+} from '../middleware/permissionMiddleware';
+import { 
+  movieIdParamValidationRules,
+  movieTitleParamValidationRules,
+  movieValidationRules, 
+  updateMovieValidationRules, 
+  validate 
+} from '../middleware/validator';
 
-const movieRouter = express.Router();
+export const movieRouter = express.Router();
 const controller = new MoviesController();
 
-movieRouter.get('/all', controller.getMovies);
-movieRouter.get('/search/:title', controller.searchByTitle);
-movieRouter.get('/:id', controller.getMoviesById);
-movieRouter.post('/new', requiresAuth(), validUserEmail, validAdmin, movieValidationRules(), validate, controller.postMovie);
-movieRouter.put('/update/:id', requiresAuth(), validUserEmail, validAdmin, updateMovieValidationRules(), validate, controller.updateMovieById);
-movieRouter.delete('/delete/:id', requiresAuth(), validUserEmail, validAdmin, controller.deleteMovieById);
+movieRouter.get(
+  '/all', 
+  controller.getMovies
+);
+movieRouter.get(
+  '/now-playing',
+  controller.getNowPlayingMovies
+);
+movieRouter.get(
+  '/coming-soon', 
+  controller.getComingSoonMovies
+);
+movieRouter.get(
+  '/search/:title', 
+  movieTitleParamValidationRules(),
+  validate,
+  controller.searchByTitle
+);
+movieRouter.get(
+  '/:movieId', 
+  movieIdParamValidationRules(),
+  validate,
+  controller.getMovieById
+);
+movieRouter.post(
+  '/new', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin, 
+  movieValidationRules(), 
+  validate, 
+  controller.createMovie
+);
+movieRouter.put(
+  '/update/:movieId', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin, 
+  movieIdParamValidationRules(),
+  updateMovieValidationRules(), 
+  validate, 
+  controller.updateMovieById
+);
+movieRouter.delete(
+  '/delete/:movieId', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin, 
+  movieIdParamValidationRules(),
+  validate,
+  controller.deleteMovieById
+);
 
 export default movieRouter;

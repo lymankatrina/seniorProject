@@ -18,19 +18,22 @@ export const getUserIdFromEmail = async (
   return user._id;
 };
 
-export function getDatesBetween(
+export const getDatesBetween = (
   startDate: string, 
   endDate: string
-): Date[] {
-  const dates: Date[] = [];
+): string[] => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const dates: string[] = [];
 
-  const currentDate = new Date(`${startDate}T00:00:00Z`);
-  const lastDate = new Date(`${endDate}T00:00:00Z`);
-
-  while (currentDate <= lastDate) {
-    dates.push(new Date(currentDate));
-    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+  for (
+    let date = new Date(start); 
+    date <= end; 
+    date.setUTCDate(date.getUTCDate() + 1)
+  ) {
+    dates.push(
+      date.toISOString().split('T')[0]
+    );
   }
-
   return dates;
-}
+};

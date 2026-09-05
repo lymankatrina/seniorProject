@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb';
-import { MovieCertification } from '../types/movieCertifications';
+import type { ObjectId } from 'mongodb';
+import type { MovieCertification } from '../types/movieCertifications';
 
 export interface Movie {
   _id?: ObjectId;
@@ -8,7 +8,7 @@ export interface Movie {
   overview: string;
   year: number;
   certification: MovieCertification;
-  releaseDate: Date;
+  releaseDate: string;
   genres: string;
   runtime: string;
   imdbScore?: number;

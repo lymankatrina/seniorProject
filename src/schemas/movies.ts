@@ -1,9 +1,12 @@
 import * as mongoDB from 'mongodb';
 import type { Db } from 'mongodb';
 import { MOVIE_CERTIFICATIONS } from '../types/movieCertifications';
-import { getEnv } from '../config/env'
+import { COLLECTION_NAMES } from '../config/collectionNames';
+import { kMaxLength } from 'node:buffer';
 
-export async function applySchemaValidation(db: Db) {
+export async function applySchemaValidation(
+  db: Db
+): Promise<void> {
   const jsonSchema = {
     bsonType: 'object',
     required: [
@@ -17,7 +20,8 @@ export async function applySchemaValidation(db: Db) {
       'genres', 
       'runtime', 
       'poster', 
-      'trailer'],
+      'trailer'
+    ],
     additionalProperties: false,
     properties: {
       _id: {
@@ -27,25 +31,25 @@ export async function applySchemaValidation(db: Db) {
         bsonType: 'string',
         minLength: 1,
         maxLength: 85,
-        description: "'title' is required and is a string"
+        description: 'Title is required and must be a string'
       },
       tagLine: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 85,
-        description: "'tagline' is required and is a string"
+        description: 'Tagline is required and must be a string'
       },
       overview: {
         bsonType: 'string',
         minLength: 1,
         maxLength: 850,
-        description: "'overview' is required and is a string"
+        description: 'Overview is required and must be a string'
       },
       year: {
         bsonType: 'int',
         minimum: 1888,
         maximum: 3000,
-        description: "'year' the movie was produced must be in the format YYYY"
+        description: 'Year must be a valid production year'
       },
       certification: {
         bsonType: 'string',
@@ -53,27 +57,30 @@ export async function applySchemaValidation(db: Db) {
         description: 'Must be a valid movie certification'
       },
       releaseDate: {
-        bsonType: 'date',
-        description: "'releaseDate' is required and must be a BSON date"
+        bsonType: 'string',
+        pattern: '^\\d{4}-\\d{2}-\\d{2}$',
+        description: 'Release date must be in YYYY-MM-DD format'
       },
       genres: {
         bsonType: 'string',
-        description: 'Genre is required and is a string'
+        minLength: 2,
+        kMaxLength: 100,
+        pattern: '^[A-Za-z] +(?: [A-Za-z]+)*(?:, [A-Za-z]+(?: [A-Za-z]+)*)*$',
+        description: 'Genres must be a string'
       },
       runtime: {
         bsonType: 'string',
         pattern: '^[0-9]+h\\s+[0-5]?[0-9]m$',
-        description: 'Enter run time in hours and minutes (example: 2h 16m)'
+        description: 'Runtime must be in hours and minutes such as 2h 16m'
       },
       poster: {
         bsonType: 'string',
-        description: 'Image must be a url link to a publicly shared image'
+        description: 'Poster must be a URL to a publicly shared image'
       },
       trailer: {
         bsonType: 'string',
-        description: 'Trailer must be a url link to an official trailer'
+        description: 'Trailer must be a url to an official trailer'
       },
-      // Optional fields
       imdbScore: {
         bsonType: ['double', 'int' ],
         minimum: 0,
@@ -93,7 +100,7 @@ export async function applySchemaValidation(db: Db) {
     }
   };
 
-  const collectionName = getEnv('MOVIES_COLLECTION_NAME');
+  const collectionName = COLLECTION_NAMES.movies;
 
   const validator = { 
     $jsonSchema: jsonSchema 
@@ -113,8 +120,8 @@ export async function applySchemaValidation(db: Db) {
         collectionName,
         { validator }
       );
-      return;
+    } else {
+      throw error;
     }
-    throw error;
   }
 }

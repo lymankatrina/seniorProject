@@ -2,11 +2,9 @@ import type { ObjectId } from 'mongodb';
 import type { ShowtimeType } from '../types/showtimeTypes';
 
 export interface Showtime {
-  _id?: ObjectId;
   movieId: ObjectId;
-  startDate: string;
-  endDate: string;
+  date: string;
   time: string;
   showtimeType: ShowtimeType;
-  seatCapacity: number;
+  _id?: ObjectId;
 }

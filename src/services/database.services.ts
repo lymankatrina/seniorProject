@@ -2,18 +2,20 @@
 import * as mongoDB from 'mongodb';
 
 import User from '../models/users';
-import Event from '../models/events';
-import News from '../models/news';
-import Survey from '../models/surveys';
+import { Event } from '../models/events';
+import { News } from '../models/news';
+import { Survey } from '../models/surveys';
 import { Movie } from '../models/movies';
-import Ticket from '../models/tickets';
-import Showtime from '../models/showtimes';
-import Cart from '../models/carts';
+import { Ticket } from '../models/tickets';
+import { Seat } from '../models/seats';
+import { Showtime } from '../models/showtimes';
+import { Cart } from '../models/carts';
 import Price from '../models/prices';
 import Order from '../models/orders';
 import Product from '../models/products';
 
 import { getEnv } from '../config/env';
+import { COLLECTION_NAMES } from '../config/collectionNames';
 
 interface Collections {
   users: mongoDB.Collection<User>;
@@ -22,6 +24,7 @@ interface Collections {
   surveys: mongoDB.Collection<Survey>;
   movies: mongoDB.Collection<Movie>;
   tickets: mongoDB.Collection<Ticket>;
+  seats: mongoDB.Collection<Seat>;
   showtimes: mongoDB.Collection<Showtime>;
   carts: mongoDB.Collection<Cart>;
   prices: mongoDB.Collection<Price>;
@@ -30,29 +33,33 @@ interface Collections {
 }
 // Global Variables
 export let collections: Collections;
+export let mongoClient: mongoDB.MongoClient;
 
 export async function connectToDatabase(): Promise<void> {
   const connectionString = getEnv('DB_CONN_STRING');
   const databaseName = getEnv('DB_NAME');
 
-  const client = new mongoDB.MongoClient(connectionString);
+  mongoClient = new mongoDB.MongoClient(
+    connectionString
+  );
 
-  await client.connect();
+  await mongoClient.connect();
 
-  const db = client.db(databaseName);
+  const db = mongoClient.db(databaseName);
 
   collections = {
-    users: db.collection<User>(getEnv('USERS_COLLECTION_NAME')),
-    events: db.collection<Event>(getEnv('EVENTS_COLLECTION_NAME')),
-    news: db.collection<News>(getEnv('NEWS_COLLECTION_NAME')),
-    surveys: db.collection<Survey>(getEnv('SURVEYS_COLLECTION_NAME')),
-    movies: db.collection<Movie>(getEnv('MOVIES_COLLECTION_NAME')),
-    tickets: db.collection<Ticket>(getEnv('TICKETS_COLLECTION_NAME')),
-    showtimes: db.collection<Showtime>(getEnv('SHOWTIMES_COLLECTION_NAME')),
-    carts: db.collection<Cart>(getEnv('CARTS_COLLECTION_NAME')),
-    prices: db.collection<Price>(getEnv('PRICES_COLLECTION_NAME')),
-    orders: db.collection<Order>(getEnv('ORDERS_COLLECTION_NAME')),
-    products: db.collection<Product>(getEnv('PRODUCTS_COLLECTION_NAME'))
+    users: db.collection<User>(COLLECTION_NAMES.users),
+    events: db.collection<Event>(COLLECTION_NAMES.users),
+    news: db.collection<News>(COLLECTION_NAMES.users),
+    surveys: db.collection<Survey>(COLLECTION_NAMES.users),
+    movies: db.collection<Movie>(COLLECTION_NAMES.users),
+    tickets: db.collection<Ticket>(COLLECTION_NAMES.users),
+    seats: db.collection<Seat>(COLLECTION_NAMES.users),
+    showtimes: db.collection<Showtime>(COLLECTION_NAMES.users),
+    carts: db.collection<Cart>(COLLECTION_NAMES.users),
+    prices: db.collection<Price>(COLLECTION_NAMES.users),
+    orders: db.collection<Order>(COLLECTION_NAMES.users),
+    products: db.collection<Product>(COLLECTION_NAMES.users)
   };
 
   console.log(`Successfully connected to database: ${db.databaseName}`);

@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { userRouter } from './users';
+
 import { authRouter } from './auth';
 import { swaggerRouter } from './swagger';
+
+import { userRouter } from './users';
 import { movieRouter } from './movies';
 import { eventRouter } from './events';
 import { newsRouter } from './news';

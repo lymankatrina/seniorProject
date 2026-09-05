@@ -1,19 +1,61 @@
 import express from 'express';
-import { ShowtimesController } from '../controllers/showtimes';
 import { requiresAuth } from 'express-openid-connect';
+import { ShowtimesController } from '../controllers/showtimes';
 import { validUserEmail, validAdmin } from '../middleware/permissionMiddleware';
-import { showtimeValidationRules, validate } from '../middleware/validator';
+import { 
+  showtimeIdParamValidationRules, 
+  movieIdParamValidationRules, 
+  showtimeValidationRules, 
+  updateShowtimeValidationRules, 
+  validate 
+} from '../middleware/validator';
 
-const showtimeRouter = express.Router();
+export const showtimeRouter = express.Router();
 const controller = new ShowtimesController();
 
-showtimeRouter.get('/all', controller.getShowtimes);
-showtimeRouter.get('/now-playing', controller.getNowPlayingMovies);
-showtimeRouter.get('/coming-soon', controller.getComingSoonMovies);
-showtimeRouter.get('/showtime/:id', controller.getShowtimeById);
-showtimeRouter.get('/search/:movieId', controller.getShowtimesByMovie);
-showtimeRouter.post('/new', requiresAuth(), validUserEmail, validAdmin, showtimeValidationRules(), validate, controller.postShowtime);
-showtimeRouter.put('/update/:id', requiresAuth(), validUserEmail, validAdmin, showtimeValidationRules(), validate, controller.updateShowtimeById);
-showtimeRouter.delete('/delete/:id', requiresAuth(), validUserEmail, validAdmin, controller.deleteShowtimeById);
+showtimeRouter.get(
+  '/all', 
+  controller.getShowtimes
+);
+showtimeRouter.get(
+  '/showtime/:showtimeId', 
+  showtimeIdParamValidationRules(),
+  validate,
+  controller.getShowtimeById
+);
+showtimeRouter.get(
+  '/search/:movieId', 
+  movieIdParamValidationRules(),
+  validate,
+  controller.getShowtimesByMovie
+);
+showtimeRouter.post(
+  '/new', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin, 
+  showtimeValidationRules(), 
+  validate, 
+  controller.createShowtimes
+);
+showtimeRouter.put(
+  '/update/:showtimeId', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin,
+  showtimeIdParamValidationRules(), 
+  updateShowtimeValidationRules(), 
+  validate, 
+  controller.updateShowtimeById
+);
+showtimeRouter.delete(
+  '/delete/:showtimeId', 
+  requiresAuth(), 
+  validUserEmail, 
+  validAdmin, 
+  showtimeIdParamValidationRules(),
+  validate,
+  controller.deleteShowtimeById
+);
 
 export default showtimeRouter;

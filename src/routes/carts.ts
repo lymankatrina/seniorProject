@@ -4,7 +4,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { validUserEmail } from '../middleware/permissionMiddleware';
 import { checkUserExists } from '../middleware/user';import { cartTicketValidationRules, validate } from '../middleware/validator';
 
-const cartRouter = express.Router();
+export const cartRouter = express.Router();
 const controller = new CartController();
 
 cartRouter.get('/user', requiresAuth(), checkUserExists, validUserEmail, controller.displayCurrentUsersShoppingCart);

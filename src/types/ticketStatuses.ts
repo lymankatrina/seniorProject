@@ -1,7 +1,8 @@
 export const TICKET_STATUSES = [
   'available',
   'reserved',
-  'sold'
+  'sold',
+  'cancelled'
 ] as const;
 
 export type TicketStatus =

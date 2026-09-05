@@ -1,6 +1,6 @@
 async function fetchNowPlayingMovies() {
   try {
-    const response = await fetch('/showtimes/now-playing');
+    const response = await fetch('/movies/now-playing');
     if (!response.ok) {
       throw new Error('Failed to fetch movies now playing');
     }

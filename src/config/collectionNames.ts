@@ -1,0 +1,16 @@
+import { getEnv } from './env';
+
+export const COLLECTION_NAMES = {
+      users: getEnv('USERS_COLLECTION_NAME'),
+      events: getEnv('EVENTS_COLLECTION_NAME'),
+      news: getEnv('NEWS_COLLECTION_NAME'),
+      surveys: getEnv('SURVEYS_COLLECTION_NAME'),
+      movies: getEnv('MOVIES_COLLECTION_NAME'),
+      tickets:getEnv('TICKETS_COLLECTION_NAME'),
+      seats: getEnv('SEATS_COLLECTION_NAME'),
+      showtimes: getEnv('SHOWTIMES_COLLECTION_NAME'),
+      carts: getEnv('CARTS_COLLECTION_NAME'),
+      prices: getEnv('PRICES_COLLECTION_NAME'),
+      orders: getEnv('ORDERS_COLLECTION_NAME'),
+      products: getEnv('PRODUCTS_COLLECTION_NAME')
+} as const;

@@ -1,12 +1,22 @@
 import { ObjectId} from 'mongodb';
 import { CustomerType } from './customerTypes'
 
-export type CartItemType = 'ticket' | 'product';
-
-export interface CartItem {
-  itemType: CartItemType;
+export interface TicketCartItem {
+  itemType: 'ticket';
   itemId: ObjectId;
-  quantity: number;
+  quantity: 1;
   addedAt: Date;
   customerType?: CustomerType;
 }
+
+export interface ProductCartItem {
+  itemType: 'product';
+  itemId: ObjectId;
+  quantitye: number;
+  addedAt: Date;
+}
+
+export type CartItem = 
+  | TicketCartItem 
+  | ProductCartItem;
+  

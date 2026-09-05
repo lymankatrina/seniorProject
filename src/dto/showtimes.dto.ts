@@ -6,7 +6,11 @@ export interface CreateShowtimeInput {
   endDate: string;
   time: string;
   showtimeType: ShowtimeType;
-  seatCapacity: number;
 }
 
-export type UpdateShowtimeInput = Partial<CreateShowtimeInput>;
+export interface UpdateShowtimeInput {
+  movieId?: string;
+  date?: string;
+  time?: string;
+  showtimeType?: ShowtimeType;
+}
